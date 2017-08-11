@@ -16,21 +16,23 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText et_phn;
     private Button btn_nxt;
-    private String phn_no, mVerificationId,isd_code,code;
+    private String phn_no, isd_code;
     CountryCodePicker ccp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ccp=(CountryCodePicker) findViewById(R.id.sp_country);
-        et_phn=(EditText)findViewById(R.id.et_phone);
-        btn_nxt=(Button)findViewById(R.id.btn_next);
-        isd_code=ccp.getSelectedCountryCodeWithPlus();
+        ccp = (CountryCodePicker) findViewById(R.id.sp_country);
+        et_phn = (EditText) findViewById(R.id.et_phone);
+        btn_nxt = (Button) findViewById(R.id.btn_next);
+        isd_code = ccp.getSelectedCountryCodeWithPlus();
+
         ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
             @Override
 
             public void onCountrySelected() {
-                isd_code=ccp.getSelectedCountryCodeWithPlus();
+                isd_code = ccp.getSelectedCountryCodeWithPlus();
                 Toast.makeText(MainActivity.this, "" + ccp.getSelectedCountryCodeWithPlus(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -40,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
                 if (!validatePhoneNumber()) {
                     return;
                 }
-                phn_no=isd_code+et_phn.getText().toString().trim();
-                Intent intent =new Intent(MainActivity.this,VerifyOTP.class);
-                intent.putExtra("phn_number",phn_no);
-                Log.i("onCodeSent4:" ,""+ phn_no);
+                phn_no = isd_code + et_phn.getText().toString().trim();
+                Intent intent = new Intent(MainActivity.this, VerifyOTP.class);
+                intent.putExtra("phn_number", phn_no);
+                Log.i("onCodeSent4:", "" + phn_no);
                 startActivity(intent);
                 finish();
 //                startPhoneNumberVerification(et_phn.getText().toString());
@@ -51,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
+
     private boolean validatePhoneNumber() {
         String phoneNumber = et_phn.getText().toString();
         if (TextUtils.isEmpty(phoneNumber)) {
