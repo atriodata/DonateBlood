@@ -16,6 +16,12 @@
         <activity android:name=".HomeActivity"></activity>
         <activity android:name=".VerifyOTP" />
         <activity android:name=".RegistraionActivity">
+        <activity android:name=".MainActivity">
+
+        </activity>
+        <activity android:name=".VerifyOTP"/>
+        <activity android:name=".ResigrationActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
