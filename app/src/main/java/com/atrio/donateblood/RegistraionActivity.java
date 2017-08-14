@@ -196,7 +196,7 @@ public class RegistraionActivity extends AppCompatActivity {
             // Building the url to the web service
             String url =
 //                    "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=India&sensor=false&types=(regions)&key=AIzaSyAG-AdjAgToyXceK6-ghWS38ho8cALPaUw";
-                    "https://maps.googleapis.com/maps/api/place/autocomplete/"+output+"?"+parameters+"&components=country:IN&locality:Karnataka";
+                    "https://maps.googleapis.com/maps/api/place/autocomplete/"+output+"?"+parameters+"&components=country:IN";
 
             try{
                 // Fetching the data from we service
