@@ -1,3 +1,4 @@
+/*
 package com.atrio.donateblood;
 
 import android.os.AsyncTask;
@@ -57,7 +58,8 @@ public class RegistraionActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
             }
         });
-     /*   LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+     */
+/*   LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 1000, 1, new MyLocationListners());
 //        LocationListener ll = new MyLocation();
@@ -101,10 +103,12 @@ public class RegistraionActivity extends AppCompatActivity {
 
         citizenship = (Spinner)findViewById(R.id.input_citizenship);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, countries);
-        citizenship.setAdapter(adapter);*/
+        citizenship.setAdapter(adapter);*//*
+
 
 
     }
+*/
 /*
     private String getAddress(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
@@ -139,8 +143,10 @@ public class RegistraionActivity extends AppCompatActivity {
         }
         return strAdd;
     }
-*/
+*//*
 
+
+*/
 /*
     public class MyLocationListners implements LocationListener {
 
@@ -161,7 +167,8 @@ public class RegistraionActivity extends AppCompatActivity {
         }
 
     }
-*/
+*//*
+
 
     private class PlacesTask extends AsyncTask<String, Void, String> {
 
@@ -295,3 +302,4 @@ public class RegistraionActivity extends AppCompatActivity {
         }
     }
 }
+*/

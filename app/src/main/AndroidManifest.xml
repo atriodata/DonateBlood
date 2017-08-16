@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".HomeActivity"></activity>
         <activity android:name=".VerifyOTP" />
-        <activity android:name=".RegistraionActivity">
+        <activity android:name=".ResigrationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
