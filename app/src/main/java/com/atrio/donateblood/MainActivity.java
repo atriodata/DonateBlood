@@ -2,7 +2,6 @@ package com.atrio.donateblood;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_nxt;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private String phn_no, isd_code;
     CountryCodePicker ccp;
 
@@ -37,23 +35,18 @@ public class MainActivity extends AppCompatActivity {
 
 
         mAuth=FirebaseAuth.getInstance();
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    startActivity(new Intent(MainActivity.this,ResigrationActivity.class));
-                    finish();
+        user= mAuth.getCurrentUser();
+        Log.i("usercurrent",""+user);
+        if (user != null) {
+            // User is signed in
+            startActivity(new Intent(MainActivity.this,ResigrationActivity.class));
+            finish();
 //                    Log.i("signed_in:","" + user.getUid());
-                } else {
-                    // User is signed out
+        } else {
+            // User is signed out
 //                    Log.i("signed_out",""+user);
-                }
+        }
 
-            }
-        };
 
         ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
             @Override

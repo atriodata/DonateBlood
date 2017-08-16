@@ -165,6 +165,7 @@ public class VerifyOTP extends AppCompatActivity {
                             Toast.makeText(VerifyOTP.this, "Phone number verified", Toast.LENGTH_SHORT).show();
                             Intent intent=new Intent(VerifyOTP.this,ResigrationActivity.class);
                             startActivity(intent);
+                            finish();
                             // ...
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {

@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
@@ -30,8 +35,12 @@ public class ResigrationActivity extends AppCompatActivity {
     AutoCompleteTextView atvPlaces;
     PlacesTask placesTask;
     ParserTask parserTask;
-    Spinner spin_state;
-
+    Spinner spin_state,sp_bloodgr;
+    RadioButton rb_male,rb_female;
+    RadioGroup rg_group;
+    CheckBox cb_never,cb_above,cb_below;
+    Button btn_reg;
+    EditText et_name,et_age,et_weight;
     String state_data;
 
     @Override
@@ -39,6 +48,13 @@ public class ResigrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resigration);
         spin_state=(Spinner)findViewById(R.id.spin_state);
+        sp_bloodgr=(Spinner)findViewById(R.id.spin_bloodGrp);
+//        rb_male=(RadioButton) findViewById(R.id);
+        et_name=(EditText)findViewById(R.id.input_name);
+        et_age=(EditText)findViewById(R.id.input_age);
+        et_weight=(EditText)findViewById(R.id.input_weight);
+
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
