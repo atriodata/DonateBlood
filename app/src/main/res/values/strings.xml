@@ -57,4 +57,11 @@
         <item>West Bengal</item>
     </string-array>
 
+    <string name="radio_male">Male</string>
+    <string name="radio_female">Female</string>
+    <string name="chk_ios">NEVER</string>
+    <string name="chk_never">NEVER</string>
+    <string name="chk_abv">Above 3 months</string>
+    <string name="chk_bel">Below 3 month</string>
+
 </resources>

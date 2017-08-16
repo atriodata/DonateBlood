@@ -215,7 +215,7 @@ public class ResigrationActivity extends AppCompatActivity {
         protected void onPostExecute(List<HashMap<String, String>> result) {
 
             String[] from = new String[]{"description"};
-            Log.i("data4555", "" + result);
+            Log.i("data4555", "" + from.length);
 
 //            String[] desdatas=from.substring(from.indexOf(state_data));
 
