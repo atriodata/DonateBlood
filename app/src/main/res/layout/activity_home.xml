@@ -29,7 +29,7 @@
         android:layout_width="88dp"
         android:layout_height="wrap_content"
         android:background="@drawable/ripple_effect"
-        android:text="Reciver"
+        android:text="Recipient"
         android:textColor="@color/white"
         app:layout_constraintLeft_toRightOf="@+id/btn_doner"
         app:layout_constraintRight_toRightOf="parent"

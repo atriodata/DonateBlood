@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth=FirebaseAuth.getInstance();
         user= mAuth.getCurrentUser();
-        Log.i("usercurrent",""+user);
         if (user != null) {
             // User is signed in
             startActivity(new Intent(MainActivity.this,ResigrationActivity.class));
@@ -65,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 phn_no = isd_code + et_phn.getText().toString().trim();
                 Intent intent = new Intent(MainActivity.this, VerifyOTP.class);
                 intent.putExtra("phn_number", phn_no);
-                Log.i("onCodeSent4:", "" + phn_no);
                 startActivity(intent);
                 finish();
 //                startPhoneNumberVerification(et_phn.getText().toString());
@@ -77,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean validatePhoneNumber() {
         String phoneNumber = et_phn.getText().toString();
-        if (TextUtils.isEmpty(phoneNumber)) {
+        if (TextUtils.isEmpty(phoneNumber)||et_phn.getText().toString().trim().length() >12 ||et_phn.getText().toString().trim().length()<10) {
             et_phn.setError("Invalid phone number.");
             return false;
         }

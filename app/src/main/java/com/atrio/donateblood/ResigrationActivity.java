@@ -1,5 +1,6 @@
 package com.atrio.donateblood;
 
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +43,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
+
 public class ResigrationActivity extends AppCompatActivity {
     AutoCompleteTextView atvPlaces;
     PlacesTask placesTask;
@@ -50,14 +54,16 @@ public class ResigrationActivity extends AppCompatActivity {
     RadioButton radioSexButton;
     RadioGroup rg_group;
     CheckBox cb_never, cb_above, cb_below;
-    Button btn_reg;
-    EditText et_name;
-    String state_data, blood_data, radio_data, cb_data, name, age, weight, city_data;
+    Button btn_reg,btn_info;
+    EditText et_name,et_emailid;
+    TextView tv_info;
+    String state_data, blood_data, radio_data, cb_data, name,emailid, age,phoneno, weight, city_data;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     List age_data,weight_data;
+    private SpotsDialog dialog;
 
 
 
@@ -67,17 +73,19 @@ public class ResigrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_resigration);
         mAuth=FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+        dialog = new SpotsDialog(ResigrationActivity.this, R.style.Custom);
 
         spin_state = (Spinner) findViewById(R.id.spin_state);
         sp_bloodgr = (Spinner) findViewById(R.id.spin_bloodGrp);
-//        rb_male=(RadioButton) findViewById(R.id.radioMale);
-//        rb_female=(RadioButton) findViewById(R.id.radioFemale);
         rg_group = (RadioGroup) findViewById(R.id.radioSex);
         cb_never = (CheckBox) findViewById(R.id.cb_never);
         cb_above = (CheckBox) findViewById(R.id.cb_above);
         cb_below = (CheckBox) findViewById(R.id.cb_below);
         btn_reg = (Button) findViewById(R.id.bt_reg);
+        btn_info = (Button) findViewById(R.id.btn_info);
         et_name = (EditText) findViewById(R.id.input_name);
+        et_emailid = (EditText) findViewById(R.id.input_email);
+        tv_info = (TextView) findViewById(R.id.tv_info);
         et_age = (Spinner) findViewById(R.id.input_age);
         et_weight = (Spinner) findViewById(R.id.input_weight);
 
@@ -219,9 +227,11 @@ public class ResigrationActivity extends AppCompatActivity {
         btn_reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.show();
                 ConnectivityManager connMgr = (ConnectivityManager)getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo == null) {
+                    dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
                 }else {
                     if (validate()) {
@@ -231,13 +241,16 @@ public class ResigrationActivity extends AppCompatActivity {
                         int selectedId = rg_group.getCheckedRadioButtonId();
                         radioSexButton = (RadioButton)findViewById(selectedId);
                         name = et_name.getText().toString();
+                        emailid = et_emailid.getText().toString();
                         city_data = atvPlaces.getText().toString();
                         radio_data = radioSexButton.getText().toString();
+                        phoneno=user.getPhoneNumber();
 
-                        createUser(name, age, weight, blood_data,state_data, city_data, radio_data, cb_data);
+                        createUser(name,emailid, age, weight,phoneno, blood_data,state_data, city_data, radio_data, cb_data);
                         et_name.setText("");
+                        et_emailid.setText("");
                         atvPlaces.setText("");
-//                                          dialog.dismiss();
+                        dialog.dismiss();
                         Toast.makeText(getApplicationContext(), "SuccessFully Register", Toast.LENGTH_LONG).show();
 
 
@@ -247,12 +260,28 @@ public class ResigrationActivity extends AppCompatActivity {
 
             }
         });
+        btn_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(ResigrationActivity.this,InfoActivity.class);
+                startActivity(intent);
+            }
+        });
+        tv_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(ResigrationActivity.this,InfoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
-    private void createUser(String name, String age, String weight, String blood_data, String state_data, String city_data, String radio_data, String cb_data) {
+    private void createUser(String name,String emailid, String age,String phoneno, String weight, String blood_data, String state_data, String city_data, String radio_data, String cb_data) {
         UserDetail userDetail=new UserDetail();
 
         userDetail.setName(name);
+        userDetail.setEmailid(emailid);
+        userDetail.setPhoneno(phoneno);
         userDetail.setAge(age);
         userDetail.setWeight(weight);
         userDetail.setBloodgroup(blood_data);
@@ -261,7 +290,7 @@ public class ResigrationActivity extends AppCompatActivity {
         userDetail.setGender(radio_data);
         userDetail.setTimeperiod(cb_data);
 
-        db_ref.child(state_data).child(city_data).child(user.getUid()).setValue(userDetail);
+        db_ref.child(state_data).child(city_data).child(user.getUid()).child(name).setValue(userDetail);
 
     }
 
@@ -270,6 +299,11 @@ public class ResigrationActivity extends AppCompatActivity {
         if (et_name.getText().toString().trim().length() < 1) {
             et_name.setError("Please Fill This Field");
             et_name.requestFocus();
+            return false;
+
+        } else if (et_emailid.getText().toString().trim().length() < 1 || isEmailValid(et_emailid.getText().toString()) == false) {
+            et_emailid.setError("Invalid Email Address");
+            et_emailid.requestFocus();
             return false;
 
         } else  if (age.equals("Select Your Age")) {
@@ -303,6 +337,10 @@ public class ResigrationActivity extends AppCompatActivity {
         }  else
             return true;
 
+    }
+    boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email)
+                .matches();
     }
 
     private class PlacesTask extends AsyncTask<String, Void, String> {
