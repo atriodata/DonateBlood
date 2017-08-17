@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -36,6 +37,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,18 +45,20 @@ public class ResigrationActivity extends AppCompatActivity {
     AutoCompleteTextView atvPlaces;
     PlacesTask placesTask;
     ParserTask parserTask;
-    Spinner spin_state, sp_bloodgr;
+    Spinner spin_state, sp_bloodgr,et_age,et_weight;
     //    RadioButton rb_male,rb_female;
     RadioButton radioSexButton;
     RadioGroup rg_group;
     CheckBox cb_never, cb_above, cb_below;
     Button btn_reg;
-    EditText et_name, et_age, et_weight;
+    EditText et_name;
     String state_data, blood_data, radio_data, cb_data, name, age, weight, city_data;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
+    List age_data,weight_data;
+
 
 
     @Override
@@ -74,8 +78,8 @@ public class ResigrationActivity extends AppCompatActivity {
         cb_below = (CheckBox) findViewById(R.id.cb_below);
         btn_reg = (Button) findViewById(R.id.bt_reg);
         et_name = (EditText) findViewById(R.id.input_name);
-        et_age = (EditText) findViewById(R.id.input_age);
-        et_weight = (EditText) findViewById(R.id.input_weight);
+        et_age = (Spinner) findViewById(R.id.input_age);
+        et_weight = (Spinner) findViewById(R.id.input_weight);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
@@ -86,8 +90,13 @@ public class ResigrationActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                placesTask = new PlacesTask();
-                placesTask.execute(s.toString());
+                if (state_data.equals("Select Your State")) {
+                    Toast.makeText(getApplicationContext(), "Select Your state", Toast.LENGTH_LONG).show();
+                }else {
+                    placesTask = new PlacesTask();
+                    placesTask.execute(s.toString());
+                }
+
             }
 
             @Override
@@ -126,6 +135,48 @@ public class ResigrationActivity extends AppCompatActivity {
 
             }
         });
+        age_data = new ArrayList<Integer>();
+        age_data.add("Select Your Age");
+        for (int i = 18; i <= 60; i++) {
+            age_data.add(Integer.toString(i));
+        }
+        ArrayAdapter<Integer> spinnerArrayAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, age_data);
+        spinnerArrayAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+        et_age.setAdapter(spinnerArrayAdapter);
+        et_age.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                age = parent.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        weight_data = new ArrayList<Integer>();
+        weight_data.add("Select Your Weight");
+        for (int i = 45; i <= 100; i++) {
+            weight_data.add(Integer.toString(i));
+        }
+        ArrayAdapter<Integer> weightAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, weight_data);
+        spinnerArrayAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+        et_weight.setAdapter(weightAdapter);
+        et_weight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                weight = parent.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         if (cb_never.isChecked()) {
             cb_never.setChecked(false);
         } else if (cb_below.isChecked()) {
@@ -180,15 +231,11 @@ public class ResigrationActivity extends AppCompatActivity {
                         int selectedId = rg_group.getCheckedRadioButtonId();
                         radioSexButton = (RadioButton)findViewById(selectedId);
                         name = et_name.getText().toString();
-                        age = et_age.getText().toString();
-                        weight = et_weight.getText().toString();
                         city_data = atvPlaces.getText().toString();
                         radio_data = radioSexButton.getText().toString();
 
                         createUser(name, age, weight, blood_data,state_data, city_data, radio_data, cb_data);
                         et_name.setText("");
-                        et_age.setText("");
-                        et_weight.setText("");
                         atvPlaces.setText("");
 //                                          dialog.dismiss();
                         Toast.makeText(getApplicationContext(), "SuccessFully Register", Toast.LENGTH_LONG).show();
@@ -225,14 +272,12 @@ public class ResigrationActivity extends AppCompatActivity {
             et_name.requestFocus();
             return false;
 
-        } else if (et_age.getText().toString().trim().length() < 1) {
-            et_age.setError("Please Fill This Field");
-            et_age.requestFocus();
+        } else  if (age.equals("Select Your Age")) {
+            Toast.makeText(getApplicationContext(), "Select Your Age", Toast.LENGTH_LONG).show();
             return false;
 
-        } else if (et_weight.getText().toString().trim().length() < 1) {
-            et_weight.setError("Please Fill This Field");
-            et_weight.requestFocus();
+        } else   if (weight.equals("Select Your Weight")) {
+            Toast.makeText(getApplicationContext(), "Select Your weight", Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -279,7 +324,7 @@ public class ResigrationActivity extends AppCompatActivity {
             }
 
             // place type to be searched
-            String types = "types=geocode";
+            String types = "types=(cities)";
 
             // Sensor enabled
             String sensor = "sensor=false";
@@ -342,8 +387,6 @@ public class ResigrationActivity extends AppCompatActivity {
             }
 
             data = sb.toString();
-            Log.i("data4565", "" + data);
-
             br.close();
 
         } catch (Exception e) {
@@ -382,18 +425,13 @@ public class ResigrationActivity extends AppCompatActivity {
         protected void onPostExecute(List<HashMap<String, String>> result) {
 
             String[] from = new String[]{"description"};
-            Log.i("data4555", "" + from.length);
-
-//            String[] desdatas=from.substring(from.indexOf(state_data));
-
             int[] to = new int[]{android.R.id.text1};
 
-            // Creating a SimpleAdapter for the AutoCompleteTextView
             SimpleAdapter adapter = new SimpleAdapter(getBaseContext(), result, android.R.layout.simple_list_item_1, from, to);
-
-//            Log.i("data45", "" + adapter);
-            // Setting the adapter
             atvPlaces.setAdapter(adapter);
+            synchronized (adapter){
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 

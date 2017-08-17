@@ -4,8 +4,6 @@ package com.atrio.donateblood;
  * Created by Arpita Patel on 14-08-2017.
  */
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +25,7 @@ public class PlaceJSONParser {
         JSONArray jPlaces = null;
         try {
 /** Retrieves all the elements in the 'places' array */
+
             jPlaces = jObject.getJSONArray("predictions");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -42,19 +41,21 @@ public class PlaceJSONParser {
         int placesCount = jPlaces.length();
         List<HashMap<String, String>> placesList = new ArrayList<HashMap<String, String>>();
         HashMap<String, String> place = null;
-//        HashMap<String, String> State = null;
 /** Taking each place, parses and adds to list object */
         for (int i = 0; i < placesCount; i++) {
             try {
 /** Call getPlace with place JSON object to parse the place */
                 place = getPlace((JSONObject) jPlaces.get(i));
-//                Log.i("place4S", "" + place);
-                placesList.add(place);
+                if (!place.isEmpty()){
+                    placesList.add(place);
+                }
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
 
+        }
         return placesList;
     }
 
@@ -75,26 +76,15 @@ public class PlaceJSONParser {
         try {
 
             description = jPlace.getString("description");
-//            Log.i("place45city", "" + description.contains("Uttar Pradesh"));
-
             id = jPlace.getString("id");
             reference = jPlace.getString("reference");
             desdata = description.contains(state_data);//.substring(description.indexOf(state_data));
 
             if (desdata==true){
-                place.put("description", description);
-//            place.put("desdata",desdata);
+                place.put("description", description.substring(0,description.indexOf(",")));
                 place.put("_id", id);
-
                 place.put("reference", reference);
             }
-
-            Log.i("place45State", "" + description);
-            Log.i("place45Statesss", "" + desdata);
-
-
-//            Log.i("place45",""+id);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
