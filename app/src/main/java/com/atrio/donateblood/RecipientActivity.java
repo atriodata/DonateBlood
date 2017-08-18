@@ -23,8 +23,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
@@ -36,9 +40,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+
+import dmax.dialog.SpotsDialog;
 
 public class RecipientActivity extends AppCompatActivity {
     AutoCompleteTextView atvPlaces;
@@ -52,7 +59,9 @@ public class RecipientActivity extends AppCompatActivity {
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
-//    private SpotsDialog dialog;
+    private SpotsDialog dialog;
+    ArrayList<String> store_list;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +69,7 @@ public class RecipientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipient);
         mAuth=FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-//        dialog = new SpotsDialog(RecipientActivity.this, R.style.Custom);
+        dialog = new SpotsDialog(RecipientActivity.this, R.style.Custom);
 
         spin_state = (Spinner) findViewById(R.id.spin_state);
         sp_bloodgr = (Spinner) findViewById(R.id.spin_bloodGrp);
@@ -176,13 +185,14 @@ public class RecipientActivity extends AppCompatActivity {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                dialog.show();
+                dialog.show();
                 ConnectivityManager connMgr = (ConnectivityManager)getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo == null) {
-//                    dialog.dismiss();
+                    dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
                 }else {
+                    dialog.dismiss();
                     if (validate()) {
 
                         db_ref = db_instance.getReference();
@@ -195,6 +205,33 @@ public class RecipientActivity extends AppCompatActivity {
                         other_detail=et_remark.getText().toString();
                         phoneno=user.getPhoneNumber();
 
+                        dialog.show();
+
+                        Query readqery = db_ref.child(state_data).child(city_data).orderByChild("bloodgroup").equalTo(blood_data);
+
+                        readqery.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.getChildrenCount()==0){
+                                    dialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), "No Donor Available", Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    UserDetail user_info=dataSnapshot.getValue(UserDetail.class);
+                                    store_list.add(user_info.getEmailid());
+                                    Log.i("maildata",""+user_info);
+//                                    sendmail(store_list);
+                                    dialog.dismiss();
+                                    Toast.makeText(RecipientActivity.this, "Request Send", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 //                        et_date.setText("");
 //                        et_emailid.setText("");
 //                        atvPlaces.setText("");
@@ -210,6 +247,20 @@ public class RecipientActivity extends AppCompatActivity {
             }
         });
     }
+
+/*
+    private void sendmail(final ArrayList<String> store_list) {
+
+        Log.i("childrollno", "" + store_list);
+        String email ="info@atriodata.com";
+        String mail_subject = "Attendance Remark";
+        String message = "";
+        SendMail sm = new SendMail(getApplicationContext(), email, mail_subject, message, store_list);
+        sm.execute();
+        dialog.dismiss();
+
+    }
+*/
 
 
     private boolean validate() {

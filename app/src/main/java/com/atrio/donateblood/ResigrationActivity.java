@@ -64,6 +64,7 @@ public class ResigrationActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     List age_data,weight_data;
+    ListAdapter listAdapter;
     private SpotsDialog dialog;
 
 
@@ -89,7 +90,6 @@ public class ResigrationActivity extends AppCompatActivity {
         tv_info = (TextView) findViewById(R.id.tv_info);
         et_age = (Spinner) findViewById(R.id.input_age);
         et_weight = (Spinner) findViewById(R.id.input_weight);
-
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
@@ -119,6 +119,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
             }
         });
+/*
         atvPlaces.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -126,9 +127,9 @@ public class ResigrationActivity extends AppCompatActivity {
                     // on focus off
                     String str = atvPlaces.getText().toString();
 
-                    ListAdapter listAdapter = atvPlaces.getAdapter();
-                    for(int i = 0; i < listAdapter.getCount(); i++) {
-                        String temp = listAdapter.getItem(i).toString();
+                    listAdapter = atvPlaces.getAdapter();
+                    for(int address = 0; address < listAdapter.getCount(); address++) {
+                        String temp = listAdapter.getItem(address).toString();
                         if(str.compareTo(temp) == 0) {
                             return;
                         }
@@ -139,6 +140,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 }
             }
         });
+*/
 
         sp_bloodgr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -256,6 +258,7 @@ public class ResigrationActivity extends AppCompatActivity {
                     dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
                 }else {
+                    dialog.dismiss();
                     if (validate()) {
 
                         db_ref = db_instance.getReference();
@@ -269,6 +272,7 @@ public class ResigrationActivity extends AppCompatActivity {
                         phoneno=user.getPhoneNumber();
 
                         createUser(name,emailid, age, weight,phoneno, blood_data,state_data, city_data, radio_data, cb_data);
+                        dialog.show();
                         et_name.setText("");
                         et_emailid.setText("");
                         atvPlaces.setText("");
@@ -312,7 +316,7 @@ public class ResigrationActivity extends AppCompatActivity {
         userDetail.setGender(radio_data);
         userDetail.setTimeperiod(cb_data);
 
-        db_ref.child(state_data).child(city_data).child(user.getUid()).push().setValue(userDetail);
+        db_ref.child(state_data).child(city_data).push().setValue(userDetail);
 
     }
 

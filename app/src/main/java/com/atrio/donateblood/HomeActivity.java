@@ -71,7 +71,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -80,7 +79,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, RecipientActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
     }

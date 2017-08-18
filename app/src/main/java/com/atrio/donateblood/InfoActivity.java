@@ -13,6 +13,6 @@ public class InfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info);
 
         info = (WebView) findViewById(R.id.info_web);
-        info.loadUrl("file:///android_asset/info.html");
+        info.loadUrl("file:///android_asset/information.html");
     }
 }
