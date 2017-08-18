@@ -90,8 +90,6 @@ public class ResigrationActivity extends AppCompatActivity {
         et_age = (Spinner) findViewById(R.id.input_age);
         et_weight = (Spinner) findViewById(R.id.input_weight);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         atvPlaces.setThreshold(1);
 
@@ -127,14 +125,16 @@ public class ResigrationActivity extends AppCompatActivity {
                     String str = atvPlaces.getText().toString();
 
                     ListAdapter listAdapter = atvPlaces.getAdapter();
-                    for(int i = 0; i < listAdapter.getCount(); i++) {
-                        String temp = listAdapter.getItem(i).toString();
-                        if(str.compareTo(temp) == 0) {
-                            return;
+                    if (listAdapter!=null) {
+                        for (int i = 0; i < listAdapter.getCount(); i++) {
+                            String temp = listAdapter.getItem(i).toString();
+                            if (str.compareTo(temp) == 0) {
+                                return;
+                            }
                         }
-                    }
 
-                    atvPlaces.setText("");
+                        atvPlaces.setText("");
+                    }
 
                 }
             }
@@ -256,6 +256,7 @@ public class ResigrationActivity extends AppCompatActivity {
                     dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
                 }else {
+                    dialog.dismiss();
                     if (validate()) {
 
                         db_ref = db_instance.getReference();
@@ -267,8 +268,9 @@ public class ResigrationActivity extends AppCompatActivity {
                         city_data = atvPlaces.getText().toString();
                         radio_data = radioSexButton.getText().toString();
                         phoneno=user.getPhoneNumber();
-
+                        dialog.show();
                         createUser(name,emailid, age, weight,phoneno, blood_data,state_data, city_data, radio_data, cb_data);
+
                         et_name.setText("");
                         et_emailid.setText("");
                         atvPlaces.setText("");
@@ -312,7 +314,7 @@ public class ResigrationActivity extends AppCompatActivity {
         userDetail.setGender(radio_data);
         userDetail.setTimeperiod(cb_data);
 
-        db_ref.child(state_data).child(city_data).child(user.getUid()).push().setValue(userDetail);
+        db_ref.child(state_data).child(city_data).push().setValue(userDetail);
 
     }
 

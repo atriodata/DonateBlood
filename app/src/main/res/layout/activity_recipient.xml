@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="15dp"
+            android:paddingBottom="10dp"
             android:orientation="vertical">
 
             <TextView
@@ -56,6 +57,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Enter the required date."
                     android:inputType="text"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     />
 
             </android.support.design.widget.TextInputLayout>
@@ -91,6 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Search city"
+                android:maxLines="1"
                 android:padding="10dp" />
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_email"

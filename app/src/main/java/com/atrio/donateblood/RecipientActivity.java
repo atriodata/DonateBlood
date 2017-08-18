@@ -1,6 +1,7 @@
 package com.atrio.donateblood;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -11,6 +12,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -70,8 +72,6 @@ public class RecipientActivity extends AppCompatActivity {
         et_date = (EditText) findViewById(R.id.input_date);
         et_remark = (EditText) findViewById(R.id.et_remark);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         atvPlaces.setThreshold(1);
 
@@ -126,6 +126,10 @@ public class RecipientActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
         atvPlaces.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -158,14 +162,16 @@ public class RecipientActivity extends AppCompatActivity {
                     String str = atvPlaces.getText().toString();
 
                     ListAdapter listAdapter = atvPlaces.getAdapter();
-                    for(int i = 0; i < listAdapter.getCount(); i++) {
-                        String temp = listAdapter.getItem(i).toString();
-                        if(str.compareTo(temp) == 0) {
-                            return;
+                    if (listAdapter!=null) {
+                        for (int i = 0; i < listAdapter.getCount(); i++) {
+                            String temp = listAdapter.getItem(i).toString();
+                            if (str.compareTo(temp) == 0) {
+                                return;
+                            }
                         }
-                    }
 
-                    atvPlaces.setText("");
+                        atvPlaces.setText("");
+                    }
 
                 }
             }
