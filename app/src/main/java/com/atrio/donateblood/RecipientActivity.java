@@ -1,7 +1,6 @@
 package com.atrio.donateblood;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -11,8 +10,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -56,7 +53,7 @@ public class RecipientActivity extends AppCompatActivity {
     Spinner spin_state, sp_bloodgr;
     Button btn_send;
     EditText et_phoneno,et_emailid,et_date,et_remark;
-    String state_data, blood_data, emailid, phoneno, date_req, city_data,city_vali,other_detail;
+    String state_data, blood_data, emailid, phoneno, date_req, city_data,city_vali,other_detail,send_mail;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
@@ -83,7 +80,7 @@ public class RecipientActivity extends AppCompatActivity {
 
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         atvPlaces.setThreshold(1);
-
+        store_list = new ArrayList<>();
 
         sp_bloodgr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -224,8 +221,10 @@ public class RecipientActivity extends AppCompatActivity {
                                 }
                                 else {
                                     UserDetail user_info=dataSnapshot.getValue(UserDetail.class);
-                                    store_list.add(user_info.getEmailid());
-                                    Log.i("maildata",""+user_info);
+//                                    user_info.setEmailid(user_info.getEmailid());
+                                    send_mail=user_info.getEmailid();
+                                    store_list.add(send_mail);
+                                    Log.i("maildata",""+store_list);
 //                                    sendmail(store_list);
                                     dialog.dismiss();
                                     Toast.makeText(RecipientActivity.this, "Request Send", Toast.LENGTH_SHORT).show();
