@@ -92,6 +92,7 @@ public class ResigrationActivity extends AppCompatActivity {
         et_weight = (Spinner) findViewById(R.id.input_weight);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
+
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         atvPlaces.setThreshold(1);
 
@@ -119,7 +120,6 @@ public class ResigrationActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
             }
         });
-/*
         atvPlaces.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -127,20 +127,21 @@ public class ResigrationActivity extends AppCompatActivity {
                     // on focus off
                     String str = atvPlaces.getText().toString();
 
-                    listAdapter = atvPlaces.getAdapter();
-                    for(int address = 0; address < listAdapter.getCount(); address++) {
-                        String temp = listAdapter.getItem(address).toString();
-                        if(str.compareTo(temp) == 0) {
-                            return;
+                    ListAdapter listAdapter = atvPlaces.getAdapter();
+                    if (listAdapter!=null) {
+                        for (int i = 0; i < listAdapter.getCount(); i++) {
+                            String temp = listAdapter.getItem(i).toString();
+                            if (str.compareTo(temp) == 0) {
+                                return;
+                            }
                         }
-                    }
 
-                    atvPlaces.setText("");
+                        atvPlaces.setText("");
+                    }
 
                 }
             }
         });
-*/
 
         sp_bloodgr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -270,9 +271,8 @@ public class ResigrationActivity extends AppCompatActivity {
                         city_data = atvPlaces.getText().toString();
                         radio_data = radioSexButton.getText().toString();
                         phoneno=user.getPhoneNumber();
-
-                        createUser(name,emailid, age, weight,phoneno, blood_data,state_data, city_data, radio_data, cb_data);
                         dialog.show();
+                        createUser(name,emailid, age, weight,phoneno, blood_data,state_data, city_data, radio_data, cb_data);
                         et_name.setText("");
                         et_emailid.setText("");
                         atvPlaces.setText("");
