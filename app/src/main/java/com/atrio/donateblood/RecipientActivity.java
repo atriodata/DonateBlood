@@ -1,6 +1,6 @@
 package com.atrio.donateblood;
 
-import android.content.Intent;
+import android.app.DatePickerDialog;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -12,17 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListAdapter;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,61 +36,96 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import dmax.dialog.SpotsDialog;
-
-public class ResigrationActivity extends AppCompatActivity {
+public class RecipientActivity extends AppCompatActivity {
     AutoCompleteTextView atvPlaces;
     PlacesTask placesTask;
     ParserTask parserTask;
-    Spinner spin_state, sp_bloodgr,et_age,et_weight;
-    //    RadioButton rb_male,rb_female;
-    RadioButton radioSexButton;
-    RadioGroup rg_group;
-    CheckBox cb_never, cb_above, cb_below;
-    Button btn_reg,btn_info;
-    EditText et_name,et_emailid;
-    TextView tv_info;
-    String state_data, blood_data, radio_data, cb_data, name,emailid, age,phoneno, weight, city_data,city_vali;
+    Spinner spin_state, sp_bloodgr;
+    Button btn_send;
+    EditText et_phoneno,et_emailid,et_date,et_remark;
+    String state_data, blood_data, emailid, phoneno, date_req, city_data,city_vali,other_detail;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
-    List age_data,weight_data;
-    private SpotsDialog dialog;
-
-
+//    private SpotsDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resigration);
+        setContentView(R.layout.activity_recipient);
         mAuth=FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        dialog = new SpotsDialog(ResigrationActivity.this, R.style.Custom);
+//        dialog = new SpotsDialog(RecipientActivity.this, R.style.Custom);
 
         spin_state = (Spinner) findViewById(R.id.spin_state);
         sp_bloodgr = (Spinner) findViewById(R.id.spin_bloodGrp);
-        rg_group = (RadioGroup) findViewById(R.id.radioSex);
-        cb_never = (CheckBox) findViewById(R.id.cb_never);
-        cb_above = (CheckBox) findViewById(R.id.cb_above);
-        cb_below = (CheckBox) findViewById(R.id.cb_below);
-        btn_reg = (Button) findViewById(R.id.bt_reg);
-        btn_info = (Button) findViewById(R.id.btn_info);
-        et_name = (EditText) findViewById(R.id.input_name);
+        btn_send = (Button) findViewById(R.id.bt_reg);
+        et_phoneno = (EditText) findViewById(R.id.input_phoneno);
         et_emailid = (EditText) findViewById(R.id.input_email);
-        tv_info = (TextView) findViewById(R.id.tv_info);
-        et_age = (Spinner) findViewById(R.id.input_age);
-        et_weight = (Spinner) findViewById(R.id.input_weight);
+        et_date = (EditText) findViewById(R.id.input_date);
+        et_remark = (EditText) findViewById(R.id.et_remark);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         atvPlaces.setThreshold(1);
 
+
+        sp_bloodgr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                blood_data = parent.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        et_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(RecipientActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // set day of month , month and year value in the edit text
+                                et_date.setText(dayOfMonth + "/"
+                                        + (monthOfYear + 1) + "/" + year);
+
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.show();
+//                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            }
+        });
+        spin_state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                state_data = parent.getItemAtPosition(position).toString();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         atvPlaces.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -140,140 +171,36 @@ public class ResigrationActivity extends AppCompatActivity {
             }
         });
 
-        sp_bloodgr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                blood_data = parent.getItemAtPosition(position).toString();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spin_state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                state_data = parent.getItemAtPosition(position).toString();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        age_data = new ArrayList<Integer>();
-        age_data.add("Select Your Age");
-        for (int i = 18; i <= 60; i++) {
-            age_data.add(Integer.toString(i));
-        }
-        ArrayAdapter<Integer> spinnerArrayAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, age_data);
-        spinnerArrayAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
-        et_age.setAdapter(spinnerArrayAdapter);
-        et_age.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                age = parent.getItemAtPosition(position).toString();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        weight_data = new ArrayList<Integer>();
-        weight_data.add("Select Your Weight");
-        for (int i = 45; i <= 100; i++) {
-            weight_data.add(Integer.toString(i));
-        }
-        ArrayAdapter<Integer> weightAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, weight_data);
-        spinnerArrayAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
-        et_weight.setAdapter(weightAdapter);
-        et_weight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                weight = parent.getItemAtPosition(position).toString();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-        if (cb_never.isChecked()) {
-            cb_never.setChecked(false);
-        } else if (cb_below.isChecked()) {
-            cb_below.setChecked(false);
-        } else {
-            cb_above.setChecked(false);
-        }
-        cb_never.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cb_never.setChecked(true);
-                cb_below.setChecked(false);
-                cb_above.setChecked(false);
-                cb_data=cb_never.getText().toString();
-            }
-        });
-        cb_below.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cb_never.setChecked(false);
-                cb_below.setChecked(true);
-                cb_above.setChecked(false);
-                cb_data=cb_below.getText().toString();
-
-            }
-        });
-        cb_above.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cb_never.setChecked(false);
-                cb_below.setChecked(false);
-                cb_above.setChecked(true);
-                cb_data=cb_never.getText().toString();
-
-            }
-        });
-
         db_instance = FirebaseDatabase.getInstance();
 
-        btn_reg.setOnClickListener(new View.OnClickListener() {
+        btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
+//                dialog.show();
                 ConnectivityManager connMgr = (ConnectivityManager)getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo == null) {
-                    dialog.dismiss();
+//                    dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
                 }else {
                     if (validate()) {
 
                         db_ref = db_instance.getReference();
 
-                        int selectedId = rg_group.getCheckedRadioButtonId();
-                        radioSexButton = (RadioButton)findViewById(selectedId);
-                        name = et_name.getText().toString();
+
+                        phoneno=et_phoneno.getText().toString();
                         emailid = et_emailid.getText().toString();
                         city_data = atvPlaces.getText().toString();
-                        radio_data = radioSexButton.getText().toString();
+                        date_req = et_date.getText().toString();
+                        other_detail=et_remark.getText().toString();
                         phoneno=user.getPhoneNumber();
 
-                        createUser(name,emailid, age, weight,phoneno, blood_data,state_data, city_data, radio_data, cb_data);
-                        et_name.setText("");
-                        et_emailid.setText("");
-                        atvPlaces.setText("");
-                        dialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "SuccessFully Register", Toast.LENGTH_LONG).show();
+//                        et_date.setText("");
+//                        et_emailid.setText("");
+//                        atvPlaces.setText("");
+//
+//                        dialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "Send Your Request", Toast.LENGTH_LONG).show();
 
 
                     }
@@ -282,45 +209,29 @@ public class ResigrationActivity extends AppCompatActivity {
 
             }
         });
-        btn_info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(ResigrationActivity.this,InfoActivity.class);
-                startActivity(intent);
-            }
-        });
-        tv_info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(ResigrationActivity.this,InfoActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
-    private void createUser(String name,String emailid, String age,String phoneno, String weight, String blood_data, String state_data, String city_data, String radio_data, String cb_data) {
-        UserDetail userDetail=new UserDetail();
-
-        userDetail.setName(name);
-        userDetail.setEmailid(emailid);
-        userDetail.setPhoneno(phoneno);
-        userDetail.setAge(age);
-        userDetail.setWeight(weight);
-        userDetail.setBloodgroup(blood_data);
-        userDetail.setState(state_data);
-        userDetail.setCity(city_data);
-        userDetail.setGender(radio_data);
-        userDetail.setTimeperiod(cb_data);
-
-        db_ref.child(state_data).child(city_data).child(user.getUid()).push().setValue(userDetail);
-
-    }
 
     private boolean validate() {
 // check whether the field is empty or not
-        if (et_name.getText().toString().trim().length() < 1) {
-            et_name.setError("Please Fill This Field");
-            et_name.requestFocus();
+        if (blood_data.equals("Select Your Blood Group")) {
+            Toast.makeText(getApplicationContext(), "Select Your Blood Group", Toast.LENGTH_LONG).show();
+            return false;
+
+
+        }else if (et_date.getText().toString().trim().length() < 1) {
+            et_date.setError("Please Fill This Field");
+            et_date.requestFocus();
+            return false;
+
+        }else  if (state_data.equals("Select Your State")){
+            Toast.makeText(getApplicationContext(), "Select Your state", Toast.LENGTH_LONG).show();
+            return false;
+
+        }
+        else if (atvPlaces.getText().toString().trim().length() < 1) {
+            atvPlaces.setError("Please Fill This Field");
+            atvPlaces.requestFocus();
             return false;
 
         } else if (et_emailid.getText().toString().trim().length() < 1 || isEmailValid(et_emailid.getText().toString()) == false) {
@@ -328,33 +239,17 @@ public class ResigrationActivity extends AppCompatActivity {
             et_emailid.requestFocus();
             return false;
 
-        } else  if (age.equals("Select Your Age")) {
-            Toast.makeText(getApplicationContext(), "Select Your Age", Toast.LENGTH_LONG).show();
-            return false;
-
-        } else   if (weight.equals("Select Your Weight")) {
-            Toast.makeText(getApplicationContext(), "Select Your weight", Toast.LENGTH_LONG).show();
+        } else if (et_phoneno.getText().toString().trim().length() < 1 ||et_phoneno.getText().toString().trim().length() >12 ||et_phoneno.getText().toString().trim().length()<10 ) {
+            et_phoneno.setError("Please Fill This Field");
+            et_phoneno.requestFocus();
             return false;
         }
 
-        else if (blood_data.equals("Select Your Blood Group")) {
-            Toast.makeText(getApplicationContext(), "Select Your Blood Group", Toast.LENGTH_LONG).show();
+        else if (et_remark.getText().toString().trim().length() < 1) {
+            et_remark.setError("Please Fill This Field");
+            et_remark.requestFocus();
             return false;
 
-
-        }else if (state_data.equals("Select Your State")){
-            Toast.makeText(getApplicationContext(), "Select Your state", Toast.LENGTH_LONG).show();
-            return false;
-
-        }
-      else if (atvPlaces.getText().toString().trim().length() < 1) {
-            atvPlaces.setError("Please Fill This Field");
-            atvPlaces.requestFocus();
-            return false;
-
-        }  else  if (cb_data.equals("")) {
-            Toast.makeText(getApplicationContext(), "Select Donation Period", Toast.LENGTH_LONG).show();
-            return false;
 
         }  else
             return true;
@@ -496,3 +391,4 @@ public class ResigrationActivity extends AppCompatActivity {
     }
 
 }
+

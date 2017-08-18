@@ -18,10 +18,10 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        img_drop=(ImageView)findViewById(R.id.img_animation);
-        img_bgdrop=(ImageView)findViewById(R.id.img_bgdrop);
-        btn_donate=(Button)findViewById(R.id.btn_doner);
-        btn_recive=(Button)findViewById(R.id.btn_reciver);
+        img_drop = (ImageView) findViewById(R.id.img_animation);
+        img_bgdrop = (ImageView) findViewById(R.id.img_bgdrop);
+        btn_donate = (Button) findViewById(R.id.btn_doner);
+        btn_recive = (Button) findViewById(R.id.btn_reciver);
         btn_donate.setVisibility(View.GONE);
         btn_recive.setVisibility(View.GONE);
         img_bgdrop.setVisibility(View.GONE);
@@ -69,7 +69,16 @@ public class HomeActivity extends AppCompatActivity {
         btn_donate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(HomeActivity.this,MainActivity.class);
+                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        btn_recive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, RecipientActivity.class);
                 startActivity(intent);
                 finish();
             }
