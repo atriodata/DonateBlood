@@ -16,10 +16,11 @@ public class UserDetail {
     public String timeperiod;
     public String emailid;
     public String phoneno;
+    public String count;
     public UserDetail() {
     }
 
-    public UserDetail(String name, String age, String weight, String gender, String state, String bloodgroup, String country, String city, String timeperiod,String emailid,String phoneno) {
+    public UserDetail(String name, String age, String weight, String gender, String state, String bloodgroup, String country, String city, String timeperiod,String emailid,String phoneno,String count) {
         this.name = name;
         this.age = age;
         this.weight = weight;
@@ -31,6 +32,7 @@ public class UserDetail {
         this.timeperiod = timeperiod;
         this.emailid=emailid;
         this.phoneno=phoneno;
+        this.count=count;
     }
 
     public String getEmailid() {
@@ -123,6 +125,15 @@ public class UserDetail {
     public void setTimeperiod(String timeperiod) {
         this.timeperiod = timeperiod;
     }
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
+    }
+
 
 
 }

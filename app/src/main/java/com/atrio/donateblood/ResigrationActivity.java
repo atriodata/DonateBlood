@@ -27,8 +27,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
@@ -58,7 +62,7 @@ public class ResigrationActivity extends AppCompatActivity {
     Button btn_reg,btn_info;
     EditText et_name,et_emailid;
     TextView tv_info;
-    String state_data, blood_data, radio_data, cb_data, name,emailid, age,phoneno, weight, city_data,city_vali;
+    String state_data, blood_data, radio_data, cb_data, name,emailid, age,phoneno, weight, city_data,count;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
@@ -272,12 +276,42 @@ public class ResigrationActivity extends AppCompatActivity {
                         radio_data = radioSexButton.getText().toString();
                         phoneno=user.getPhoneNumber();
                         dialog.show();
-                        createUser(name,emailid, age, weight,phoneno, blood_data,state_data, city_data, radio_data, cb_data);
-                        et_name.setText("");
-                        et_emailid.setText("");
-                        atvPlaces.setText("");
-                        dialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "SuccessFully Register", Toast.LENGTH_LONG).show();
+
+                        Query writequery = db_ref.child(state_data).child(city_data).orderByKey();
+writequery.addListenerForSingleValueEvent(new ValueEventListener() {
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        if(dataSnapshot.getChildrenCount()==0){
+            count="001";
+            createUser(name,emailid, age, weight, blood_data,state_data, city_data, radio_data, cb_data,phoneno,count);
+            et_name.setText("");
+            et_emailid.setText("");
+            atvPlaces.setText("");
+            dialog.dismiss();
+            Toast.makeText(getApplicationContext(), "SuccessFully Register", Toast.LENGTH_LONG).show();
+        }
+        else {
+            long countchild = dataSnapshot.getChildrenCount();
+            countchild++;
+            count=String.format("%03d",countchild);
+            dialog.show();
+            createUser(name,emailid, age, weight, blood_data,state_data, city_data, radio_data, cb_data,phoneno,count);
+            et_name.setText("");
+            et_emailid.setText("");
+            atvPlaces.setText("");
+            dialog.dismiss();
+            Toast.makeText(getApplicationContext(), "SuccessFully Register", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+});
+
+
 
 
                     }
@@ -302,7 +336,7 @@ public class ResigrationActivity extends AppCompatActivity {
         });
     }
 
-    private void createUser(String name,String emailid, String age,String phoneno, String weight, String blood_data, String state_data, String city_data, String radio_data, String cb_data) {
+    private void createUser(String name, String emailid, String age, String weight, String blood_data, String state_data, String city_data, String radio_data, String cb_data, String phoneno, String count) {
         UserDetail userDetail=new UserDetail();
 
         userDetail.setName(name);
@@ -315,8 +349,9 @@ public class ResigrationActivity extends AppCompatActivity {
         userDetail.setCity(city_data);
         userDetail.setGender(radio_data);
         userDetail.setTimeperiod(cb_data);
+        userDetail.setCount(count);
 
-        db_ref.child(state_data).child(city_data).push().setValue(userDetail);
+        db_ref.child(state_data).child(city_data).child(count).setValue(userDetail);
 
     }
 
@@ -431,14 +466,8 @@ public class ResigrationActivity extends AppCompatActivity {
         HttpURLConnection urlConnection = null;
         try {
             URL url = new URL(strUrl);
-
-            // Creating an http connection to communicate with url
             urlConnection = (HttpURLConnection) url.openConnection();
-
-            // Connecting to url
             urlConnection.connect();
-
-            // Reading data from url
             iStream = urlConnection.getInputStream();
 
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
@@ -475,8 +504,6 @@ public class ResigrationActivity extends AppCompatActivity {
 
             try {
                 jObject = new JSONObject(jsonData[0]);
-
-                // Getting the parsed data as a List construct
                 places = placeJsonParser.parse(jObject);
 
             } catch (Exception e) {

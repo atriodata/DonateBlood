@@ -32,8 +32,11 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.hbb20:ccp:2.0.2'
     testCompile 'junit:junit:4.12'
+    compile files('libs/mail.jar')
     compile files('libs/activation.jar')
+    compile files('libs/additionnal.jar')
 }
+
 
 
 

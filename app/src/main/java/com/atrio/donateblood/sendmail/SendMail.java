@@ -3,6 +3,7 @@ package com.atrio.donateblood.sendmail;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -59,17 +60,19 @@ protected void onPostExecute(Void aVoid) {
 protected Void doInBackground(Void... params) {
         Properties props = new Properties();
 
-  /*  props.put("mail.smtp.host", "smtp.gmail.com");
+    props.put("mail.smtp.host", "smtp.gmail.com");
     props.put("mail.smtp.socketFactory.port", "465");
     props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
     props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.port", "465");*/
+    props.put("mail.smtp.port", "465");
 
+/*
     props.put("mail.smtp.host", "webmail.atriodata.com");
     props.put("mail.smtp.socketFactory.port", "465");
     props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.port", "465");
+*/
 
         session = Session.getDefaultInstance(props,new javax.mail.Authenticator() {
 //Authenticating the password
@@ -86,12 +89,12 @@ protected PasswordAuthentication getPasswordAuthentication() {
                    mm.addRecipient(Message.RecipientType.BCC, new InternetAddress(my2mail.get(i)));
 
                }
-
-
         mm.setSubject(mail_subject);
         mm.setText(message);
 
+           Log.i("mymsg",""+mm);
         Transport.send(mm);
+
 
 
        } catch (MessagingException e) {

@@ -20,6 +20,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.atrio.donateblood.sendmail.SendMail;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,6 +43,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import dmax.dialog.SpotsDialog;
@@ -52,8 +54,8 @@ public class RecipientActivity extends AppCompatActivity {
     ParserTask parserTask;
     Spinner spin_state, sp_bloodgr;
     Button btn_send;
-    EditText et_phoneno,et_emailid,et_date,et_remark;
-    String state_data, blood_data, emailid, phoneno, date_req, city_data,city_vali,other_detail,send_mail;
+    EditText et_phoneno, et_emailid, et_date, et_remark;
+    String state_data, blood_data, emailid, phoneno, date_req, city_data, count, other_detail, send_mail;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
@@ -66,7 +68,7 @@ public class RecipientActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipient);
-        mAuth=FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         dialog = new SpotsDialog(RecipientActivity.this, R.style.Custom);
 
@@ -81,6 +83,7 @@ public class RecipientActivity extends AppCompatActivity {
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         atvPlaces.setThreshold(1);
         store_list = new ArrayList<>();
+        count = "001";
 
         sp_bloodgr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -134,15 +137,13 @@ public class RecipientActivity extends AppCompatActivity {
         });
 
 
-
-
         atvPlaces.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (state_data.equals("Select Your State")) {
                     Toast.makeText(getApplicationContext(), "Select Your state", Toast.LENGTH_LONG).show();
-                }else {
+                } else {
                     placesTask = new PlacesTask();
                     placesTask.execute(s.toString());
                 }
@@ -163,12 +164,12 @@ public class RecipientActivity extends AppCompatActivity {
         atvPlaces.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) {
+                if (!b) {
                     // on focus off
                     String str = atvPlaces.getText().toString();
 
                     ListAdapter listAdapter = atvPlaces.getAdapter();
-                    if (listAdapter!=null) {
+                    if (listAdapter != null) {
                         for (int i = 0; i < listAdapter.getCount(); i++) {
                             String temp = listAdapter.getItem(i).toString();
                             if (str.compareTo(temp) == 0) {
@@ -187,26 +188,26 @@ public class RecipientActivity extends AppCompatActivity {
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 dialog.show();
-                ConnectivityManager connMgr = (ConnectivityManager)getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
+                ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo == null) {
                     dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
-                }else {
+                } else {
                     dialog.dismiss();
                     if (validate()) {
 
                         db_ref = db_instance.getReference();
 
 
-                        phoneno=et_phoneno.getText().toString();
+                        phoneno = et_phoneno.getText().toString();
                         emailid = et_emailid.getText().toString();
                         city_data = atvPlaces.getText().toString();
                         date_req = et_date.getText().toString();
-                        other_detail=et_remark.getText().toString();
-                        phoneno=user.getPhoneNumber();
+                        other_detail = et_remark.getText().toString();
+//                        phoneno = user.getPhoneNumber();
 
                         dialog.show();
 
@@ -215,17 +216,27 @@ public class RecipientActivity extends AppCompatActivity {
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.getChildrenCount()==0){
+                                if (dataSnapshot.getChildrenCount() == 0) {
                                     dialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "No Donor Available", Toast.LENGTH_LONG).show();
-                                }
-                                else {
-                                    UserDetail user_info=dataSnapshot.getValue(UserDetail.class);
-//                                    user_info.setEmailid(user_info.getEmailid());
-                                    send_mail=user_info.getEmailid();
-                                    store_list.add(send_mail);
-                                    Log.i("maildata",""+store_list);
-//                                    sendmail(store_list);
+                                } else {
+//                                    Log.i("maildata55555", "" + dataSnapshot.toString());
+                                    Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
+
+                                    while (item.hasNext()) {
+
+                                        DataSnapshot items = item.next();
+                                        UserDetail user_info = items.getValue(UserDetail.class);
+
+                                        send_mail = user_info.getEmailid();
+                                        store_list.add(send_mail);
+//                                        Log.i("maildata", "" + send_mail);
+
+                                    }
+                                    sendmail(v,store_list);
+
+//                                    Log.i("datalist1", "" + store_list);
+
                                     dialog.dismiss();
                                     Toast.makeText(RecipientActivity.this, "Request Send", Toast.LENGTH_SHORT).show();
 
@@ -242,7 +253,7 @@ public class RecipientActivity extends AppCompatActivity {
 //                        atvPlaces.setText("");
 //
 //                        dialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "Send Your Request", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(), "Send Your Request", Toast.LENGTH_LONG).show();
 
 
                     }
@@ -253,19 +264,17 @@ public class RecipientActivity extends AppCompatActivity {
         });
     }
 
-/*
-    private void sendmail(final ArrayList<String> store_list) {
+    private void sendmail(final View v,final ArrayList<String> store_list) {
 
         Log.i("childrollno", "" + store_list);
-        String email ="info@atriodata.com";
-        String mail_subject = "Attendance Remark";
-        String message = "";
-        SendMail sm = new SendMail(getApplicationContext(), email, mail_subject, message, store_list);
+        String email = "info@atriodata.com";
+        String mail_subject = "Blood Required";
+        String message = "There is requirement of blood group" + " " + blood_data + ".";
+        SendMail sm = new SendMail(v.getContext(), email, mail_subject, message, store_list);
         sm.execute();
         dialog.dismiss();
 
     }
-*/
 
 
     private boolean validate() {
@@ -275,17 +284,16 @@ public class RecipientActivity extends AppCompatActivity {
             return false;
 
 
-        }else if (et_date.getText().toString().trim().length() < 1) {
+        } else if (et_date.getText().toString().trim().length() < 1) {
             et_date.setError("Please Fill This Field");
             et_date.requestFocus();
             return false;
 
-        }else  if (state_data.equals("Select Your State")){
+        } else if (state_data.equals("Select Your State")) {
             Toast.makeText(getApplicationContext(), "Select Your state", Toast.LENGTH_LONG).show();
             return false;
 
-        }
-        else if (atvPlaces.getText().toString().trim().length() < 1) {
+        } else if (atvPlaces.getText().toString().trim().length() < 1) {
             atvPlaces.setError("Please Fill This Field");
             atvPlaces.requestFocus();
             return false;
@@ -295,22 +303,21 @@ public class RecipientActivity extends AppCompatActivity {
             et_emailid.requestFocus();
             return false;
 
-        } else if (et_phoneno.getText().toString().trim().length() < 1 ||et_phoneno.getText().toString().trim().length() >12 ||et_phoneno.getText().toString().trim().length()<10 ) {
+        } else if (et_phoneno.getText().toString().trim().length() < 1 || et_phoneno.getText().toString().trim().length() > 12 || et_phoneno.getText().toString().trim().length() < 10) {
             et_phoneno.setError("Please Fill This Field");
             et_phoneno.requestFocus();
             return false;
-        }
-
-        else if (et_remark.getText().toString().trim().length() < 1) {
+        } else if (et_remark.getText().toString().trim().length() < 1) {
             et_remark.setError("Please Fill This Field");
             et_remark.requestFocus();
             return false;
 
 
-        }  else
+        } else
             return true;
 
     }
+
     boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email)
                 .matches();
@@ -440,7 +447,7 @@ public class RecipientActivity extends AppCompatActivity {
 
             SimpleAdapter adapter = new SimpleAdapter(getBaseContext(), result, android.R.layout.simple_list_item_1, from, to);
             atvPlaces.setAdapter(adapter);
-            synchronized (adapter){
+            synchronized (adapter) {
                 adapter.notifyDataSetChanged();
             }
         }
