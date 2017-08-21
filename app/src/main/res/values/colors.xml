@@ -10,4 +10,7 @@
     <color name="centercolor">#e95165</color>
     <color name="endcolor">#940320</color>
     <color name="black">#000000</color>
+    <color name="view_col">#847e7e</color>
+
+
 </resources>

@@ -2,10 +2,8 @@ package com.atrio.donateblood;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_nxt;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private String phn_no, isd_code;
     CountryCodePicker ccp;
 
@@ -37,22 +34,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         mAuth=FirebaseAuth.getInstance();
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    startActivity(new Intent(MainActivity.this,RegistraionActivity.class));
-                    finish();
-                } else {
-                    // User is signed out
+        user= mAuth.getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            startActivity(new Intent(MainActivity.this,ResigrationActivity.class));
+            finish();
+//                    Log.i("signed_in:","" + user.getUid());
+        } else {
+            // User is signed out
 //                    Log.i("signed_out",""+user);
-                }
+        }
 
-            }
-        };
 
         ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
             @Override
@@ -71,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 phn_no = isd_code + et_phn.getText().toString().trim();
                 Intent intent = new Intent(MainActivity.this, VerifyOTP.class);
                 intent.putExtra("phn_number", phn_no);
-                Log.i("onCodeSent4:", "" + phn_no);
                 startActivity(intent);
                 finish();
 //                startPhoneNumberVerification(et_phn.getText().toString());
@@ -83,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean validatePhoneNumber() {
         String phoneNumber = et_phn.getText().toString();
-        if (TextUtils.isEmpty(phoneNumber)) {
+        if (TextUtils.isEmpty(phoneNumber)||et_phn.getText().toString().trim().length() >12 ||et_phn.getText().toString().trim().length()<10) {
             et_phn.setError("Invalid phone number.");
             return false;
         }

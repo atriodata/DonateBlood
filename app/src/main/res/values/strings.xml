@@ -3,4 +3,65 @@
     <string name="google_play_services_error">Google Play Services Error</string>
     <string name="otp_verify">A OTP has been send to your mobile no. Please enter the OTP below to Verify your Mobile Number</string>
     <string name="verify_phn">We will send an SMS message to verify your phone number.Enter your country code and phone number.</string>
+    <string name="hint_name">Enter Your Name</string>
+    <string name="registrationheader">Registration Form Of Donor</string>
+    <string name="hint_age">Enter Your Age. Age is in between 18 to 60</string>
+    <string name="hint_weight">weight must be above 45 Kilograms</string>
+
+    <string-array name="bloodgroup_arrays">
+        <item>Select Your Blood Group </item>
+        <item>A+</item>
+        <item>A-</item>
+        <item>B+</item>
+        <item>B-</item>
+        <item>O+</item>
+        <item>O-</item>
+        <item>AB+</item>
+        <item>AB-</item>
+
+    </string-array>
+
+    <string-array name="country_arrays">
+        <item>INDIA </item>
+    </string-array>
+    <string-array name="state_arrays">
+        <item>Select Your State</item>
+        <item>Andhra Pradesh </item>
+        <item>Arunachal Pradesh</item>
+        <item>Assam</item>
+        <item>Bihar</item>
+        <item>Chhattisgarh</item>
+        <item>Goa</item>
+        <item>Gujarat</item>
+        <item>Haryana</item>
+        <item>Himachal Pradesh</item>
+        <item>Jammu and Kashmir</item>
+        <item>Jharkhand</item>
+        <item>Karnataka</item>
+        <item>Kerala</item>
+        <item>Madhya Pradesh</item>
+        <item>Maharashtra</item>
+        <item>Manipur</item>
+        <item>Meghalaya</item>
+        <item>Mizoram</item>
+        <item>Nagaland</item>
+        <item>Odisha</item>
+        <item>Punjab</item>
+        <item>Rajasthan</item>
+        <item>Sikkim</item>
+        <item>Tamil Nadu</item>
+        <item>Telangana</item>
+        <item>Tripura</item>
+        <item>Uttar Pradesh</item>
+        <item>Uttarakhand</item>
+        <item>West Bengal</item>
+    </string-array>
+
+    <string name="radio_male">Male</string>
+    <string name="radio_female">Female</string>
+    <string name="chk_ios">NEVER</string>
+    <string name="chk_never">NEVER</string>
+    <string name="chk_abv">Above 3 months</string>
+    <string name="chk_bel">Below 3 month</string>
+
 </resources>

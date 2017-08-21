@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.atrio.donateblood.RecipientActivity">
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:isScrollContainer="true"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:paddingBottom="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_rg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:padding="10dp"
+                android:text="Find the Donor"
+                android:textColor="@color/colorAccent"
+                android:textSize="19sp"
+                android:typeface="normal" />
+            <Spinner
+                android:id="@+id/spin_bloodGrp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/bloodgroup_arrays"
+                android:padding="10dp"
+                android:spinnerMode="dialog" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorAccent" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:layout_constraintHorizontal_bias="0.0">
+
+                <EditText
+                    android:id="@+id/input_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter the required date."
+                    android:inputType="text"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/spin_country"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/country_arrays"
+                android:padding="10dp"
+                android:spinnerMode="dialog" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorAccent" />
+
+            <Spinner
+                android:id="@+id/spin_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/state_arrays"
+                android:padding="10dp"
+                android:spinnerMode="dialog" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorAccent" />
+
+            <com.atrio.donateblood.CustomAutoCompleteTextView
+                android:id="@+id/atv_places"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search city"
+                android:maxLines="1"
+                android:padding="10dp" />
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:layout_constraintHorizontal_bias="0.0">
+
+                <EditText
+                    android:id="@+id/input_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Your Email Id"
+                    android:inputType="text" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_phoneno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:layout_constraintHorizontal_bias="0.0">
+
+                <EditText
+                    android:id="@+id/input_phoneno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Your Phone No."
+                    android:inputType="number" />
+
+            </android.support.design.widget.TextInputLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:text="Other Details :" />
+
+                <EditText
+                    android:id="@+id/et_remark"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:hint="Brief detail of recipient...."
+                    android:inputType="textMultiLine"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    android:overScrollMode="always"
+                    android:maxHeight="00dp"
+                    android:padding="5dp"
+                    android:gravity="top"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/edittext_border" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/bt_reg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/ripple_effect"
+                android:text="Send "
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</android.support.constraint.ConstraintLayout>
