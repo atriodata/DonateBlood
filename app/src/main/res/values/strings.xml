@@ -9,22 +9,23 @@
     <string name="hint_weight">weight must be above 45 Kilograms</string>
 
     <string-array name="bloodgroup_arrays">
-        <item>Select Your blood Group </item>
+        <item>Select Your Blood Group </item>
         <item>A+</item>
-        <item>O+</item>
-        <item>B+</item>
-        <item>AB+</item>
         <item>A-</item>
-        <item>O-</item>
+        <item>B+</item>
         <item>B-</item>
+        <item>O+</item>
+        <item>O-</item>
+        <item>AB+</item>
         <item>AB-</item>
+
     </string-array>
 
     <string-array name="country_arrays">
         <item>INDIA </item>
     </string-array>
     <string-array name="state_arrays">
-        <item>Selec Your State</item>
+        <item>Select Your State</item>
         <item>Andhra Pradesh </item>
         <item>Arunachal Pradesh</item>
         <item>Assam</item>
@@ -55,5 +56,12 @@
         <item>Uttarakhand</item>
         <item>West Bengal</item>
     </string-array>
+
+    <string name="radio_male">Male</string>
+    <string name="radio_female">Female</string>
+    <string name="chk_ios">NEVER</string>
+    <string name="chk_never">NEVER</string>
+    <string name="chk_abv">Above 3 months</string>
+    <string name="chk_bel">Below 3 month</string>
 
 </resources>

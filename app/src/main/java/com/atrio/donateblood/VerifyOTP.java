@@ -48,11 +48,8 @@ public class VerifyOTP extends AppCompatActivity {
 
         Intent i = getIntent();
         phn_no = i.getStringExtra("phn_number");
-        Log.i("onVerify", "" + phn_no);
-
         mAuth = FirebaseAuth.getInstance();
         User = mAuth.getCurrentUser();
-//        fireBasePhLogin(phn_no);
 
         dialog.show();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -64,28 +61,14 @@ public class VerifyOTP extends AppCompatActivity {
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                // This callback is invoked in an invalid request for verification is made,
-                // for instance if the the phone number format is not valid.
-//                Log.w(TAG, "onVerificationFailed", e);
-               /* if (progressDialog != null) {
-                    dismissProgressDialog(progressDialog);
-                }*/
+
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    // Invalid request
-                    // ...
                     Log.d("Invalid request", "Invalid request");
                 } else if (e instanceof FirebaseTooManyRequestsException) {
-                    // The SMS quota for the project has been exceeded
-                    // ...
-//                    Log.d("Error", "The SMS quota for the project has been exceeded");
-                    dialog.dismiss();
+                        dialog.dismiss();
                     Toast.makeText(VerifyOTP.this, "sms_qutoa_exceeded_alert", Toast.LENGTH_SHORT).show();
-//                    llPhNumberLayout.setVisibility(View.GONE);
-//                    llOTPNumberLayout.setVisibility(View.VISIBLE);
                 }
 
-                // Show a message and update the UI
-                // ...
             }
 
             @Override
@@ -106,7 +89,6 @@ public class VerifyOTP extends AppCompatActivity {
                                    PhoneAuthProvider.ForceResendingToken token) {
                 dialog.dismiss();
                 mVerificationId = verificationId;
-                final String mResendToken = token.toString();
                 Toast.makeText(VerifyOTP.this, "OTP is send", Toast.LENGTH_SHORT).show();
                 // ...
             }
@@ -137,6 +119,7 @@ public class VerifyOTP extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        dialog.show();
         fireBasePhLogin(phn_no);
 
     }
@@ -160,17 +143,17 @@ public class VerifyOTP extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             User = task.getResult().getUser();
-                            Log.d("", "onComplete: " + User);
                             dialog.dismiss();
                             Toast.makeText(VerifyOTP.this, "Phone number verified", Toast.LENGTH_SHORT).show();
-                            Intent intent=new Intent(VerifyOTP.this,RegistraionActivity.class);
+                            Intent intent=new Intent(VerifyOTP.this,ResigrationActivity.class);
                             startActivity(intent);
+                            finish();
                             // ...
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
                                 dialog.dismiss();
-                                Toast.makeText(VerifyOTP.this, "wrong_verification_code_alert", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(VerifyOTP.this, "Wrong verification code.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
