@@ -62,7 +62,7 @@ public class ResigrationActivity extends AppCompatActivity {
     Button btn_reg,btn_info;
     EditText et_name,et_emailid;
     TextView tv_info;
-    String state_data, blood_data, radio_data, cb_data, name,emailid, age,phoneno, weight, city_data,count;
+    String state_data, blood_data, radio_data, cb_data, name,emailid, age,phoneno, weight, city_data,count,temp;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
@@ -121,6 +121,7 @@ public class ResigrationActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 // TODO Auto-generated method stub
             }
         });
@@ -131,10 +132,11 @@ public class ResigrationActivity extends AppCompatActivity {
                     // on focus off
                     String str = atvPlaces.getText().toString();
 
-                    ListAdapter listAdapter = atvPlaces.getAdapter();
+                    listAdapter = atvPlaces.getAdapter();
                     if (listAdapter!=null) {
                         for (int i = 0; i < listAdapter.getCount(); i++) {
-                            String temp = listAdapter.getItem(i).toString();
+
+                            temp = listAdapter.getItem(i).toString();
                             if (str.compareTo(temp) == 0) {
                                 return;
                             }
@@ -144,6 +146,15 @@ public class ResigrationActivity extends AppCompatActivity {
                     }
 
                 }
+            }
+        });
+        atvPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String selectedItem =parent.getItemAtPosition(position).toString();
+//                int selectedPos = state_data.indexOf((((TextView)view).getText()).toString());
+//                atvPlaces.setText(selectedPos.);
+                // here is your selected item
             }
         });
 
@@ -287,6 +298,14 @@ writequery.addListenerForSingleValueEvent(new ValueEventListener() {
             et_name.setText("");
             et_emailid.setText("");
             atvPlaces.setText("");
+            et_age.setSelection(0);
+            et_weight.setSelection(0);
+            sp_bloodgr.setSelection(0);
+            spin_state.setSelection(0);
+            cb_never.setChecked(false);
+            cb_above.setChecked(false);
+            cb_below.setChecked(false);
+//            rg_group.
             dialog.dismiss();
             Toast.makeText(getApplicationContext(), "SuccessFully Register", Toast.LENGTH_LONG).show();
         }
@@ -299,6 +318,13 @@ writequery.addListenerForSingleValueEvent(new ValueEventListener() {
             et_name.setText("");
             et_emailid.setText("");
             atvPlaces.setText("");
+            et_age.setSelection(0);
+            et_weight.setSelection(0);
+            sp_bloodgr.setSelection(0);
+            spin_state.setSelection(0);
+            cb_never.setChecked(false);
+            cb_above.setChecked(false);
+            cb_below.setChecked(false);
             dialog.dismiss();
             Toast.makeText(getApplicationContext(), "SuccessFully Register", Toast.LENGTH_LONG).show();
         }

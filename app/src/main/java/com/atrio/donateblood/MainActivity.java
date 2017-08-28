@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("phn_number", phn_no);
                 startActivity(intent);
                 finish();
-//                startPhoneNumberVerification(et_phn.getText().toString());
             }
         });
 
