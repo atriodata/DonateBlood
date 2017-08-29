@@ -99,8 +99,8 @@ public class RecipientActivity extends AppCompatActivity {
 //        regId = pref.getString("regId", null);
 
 
-     /*   iget = getIntent();
-       regId= iget.getStringExtra("tokenid");*/
+        iget = getIntent();
+       regId= iget.getStringExtra("tokenid");
 mClient = new OkHttpClient();
 
 //        String refreshedToken = "";//add your user refresh tokens who are logged in with firebase.
@@ -379,6 +379,7 @@ mClient = new OkHttpClient();
 
                     root.put("notification", notification);
                     root.put("data", data);
+                    root.put("priority","high");
 //                    root.put("registration_ids", recipients);
                     root.put("to","/topics/global");
                     Log.i("Mainresult:4 ","" + recipients.toString());
@@ -397,7 +398,7 @@ mClient = new OkHttpClient();
 
                /* try {
                     JSONObject resultJson = new JSONObject(result);
-                    int success=0, failure=0;
+                    int success, failure;
                     success = resultJson.getInt("success");
                     failure = resultJson.getInt("failure");
                     Toast.makeText(RecipientActivity.this, "Message Success: " + success + "Message Failed: " + failure, Toast.LENGTH_LONG).show();

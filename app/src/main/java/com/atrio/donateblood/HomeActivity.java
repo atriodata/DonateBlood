@@ -141,7 +141,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, RecipientActivity.class);
-//                intent.putExtra("tokenid",token);
+                intent.putExtra("tokenid",token);
                 startActivity(intent);
             }
         });
@@ -165,7 +165,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     private void subscribeToPushService() {
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        FirebaseMessaging.getInstance().subscribeToTopic("global");
 
         Log.d("AndroidBash", "Subscribed");
         Toast.makeText(HomeActivity.this, "Subscribed", Toast.LENGTH_SHORT).show();
