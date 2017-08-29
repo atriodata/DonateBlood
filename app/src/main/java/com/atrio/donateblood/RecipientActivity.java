@@ -21,6 +21,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.atrio.donateblood.sendmail.SendMail;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -261,7 +262,7 @@ mClient = new OkHttpClient();
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }*/
-                                    sendNotificationToUser(jsonArray,"Donate Blood","Blood Required","http://srcc.collegekiknowledge.com/index.php/2015/09/24/nss-srcc-blood-donation-camp/","Requirement");
+                                    sendNotificationToUser(jsonArray,"Donate Blood","Blood Required","","Requirement");
                                     Log.i("Mainresult:47","" + jsonArray.toString());
 
 //  sendNotification(regId);
@@ -369,12 +370,20 @@ mClient = new OkHttpClient();
 
                     JSONObject root = new JSONObject();
                     JSONObject notification = new JSONObject();
-                    notification.put("body", body);
+
+                    String message1 =   "There is requirement of blood group " + blood_data + " in "+city_data+ " on "+date_req;
+                    notification.put("body", message1);
                     notification.put("title", title);
                     notification.put("icon", icon);
 
+
                     JSONObject data = new JSONObject();
-                    data.put("message", message);
+                    data.put("Email",emailid);
+                    data.put("phoneNo",phoneno);
+                    data.put("bloodData",blood_data);
+                    data.put("cityData",city_data);
+                    data.put("dateRequired",date_req);
+                    data.put("other_detail",other_detail);
                     data.put("NotifiyActivity","True");
 
                     root.put("notification", notification);
@@ -428,7 +437,7 @@ mClient = new OkHttpClient();
         return response.body().string();
     }
 
-/*
+
     private void sendmail(final View v,final ArrayList<String> store_list) {
 
         Log.i("childrollno", "" + blood_data);
@@ -448,7 +457,7 @@ mClient = new OkHttpClient();
         dialog.dismiss();
 
     }
-*/
+
 
     private boolean validate() {
 // check whether the field is empty or not

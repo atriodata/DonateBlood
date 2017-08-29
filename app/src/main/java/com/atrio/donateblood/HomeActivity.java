@@ -91,6 +91,7 @@ public class HomeActivity extends AppCompatActivity {
             for (String key : getIntent().getExtras().keySet()) {
                 String value = getIntent().getExtras().getString(key);
 
+
                 if (key.equals("NotifiyActivity") && value.equals("True")) {
                     Intent intent = new Intent(HomeActivity.this, NotifiyActivity.class);
                     intent.putExtra("value", value);
