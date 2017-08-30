@@ -25,7 +25,7 @@ public class HomeActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     ImageView img_drop,img_bgdrop;
-    Button btn_donate,btn_recive;
+    Button btn_donate,btn_recive,btn_notify;
     String token;
     String[] permissions;
     @Override
@@ -34,6 +34,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         img_drop = (ImageView) findViewById(R.id.img_animation);
         img_bgdrop = (ImageView) findViewById(R.id.img_bgdrop);
+        btn_notify = (Button) findViewById(R.id.btn_notify);
         btn_donate = (Button) findViewById(R.id.btn_doner);
         btn_recive = (Button) findViewById(R.id.btn_reciver);
         btn_donate.setVisibility(View.GONE);
@@ -85,6 +86,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
+/*
         if (getIntent().getExtras() != null) {
 
             for (String key : getIntent().getExtras().keySet()) {
@@ -101,6 +103,7 @@ public class HomeActivity extends AppCompatActivity {
             }
             
         }
+*/
         subscribeToPushService();
 /*
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
@@ -145,6 +148,15 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btn_notify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, NotificationActivity.class);
+//                intent.putExtra("tokenid",token);
+                startActivity(intent);
+            }
+        });
+
     }
 
 /*
@@ -218,8 +230,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (requestCode == 100) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             }
             return;
         }

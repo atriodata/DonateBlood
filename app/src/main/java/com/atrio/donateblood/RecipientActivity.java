@@ -262,11 +262,10 @@ mClient = new OkHttpClient();
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }*/
+
                                     sendNotificationToUser(jsonArray,"Donate Blood","Blood Required","","Requirement");
                                     Log.i("Mainresult:47","" + jsonArray.toString());
-
 //  sendNotification(regId);
-//                                    sendmail(v,store_list);
 //                                    Log.i("childrollno553", "" + blood_data);
 
 
@@ -374,7 +373,7 @@ mClient = new OkHttpClient();
                     String message1 =   "There is requirement of blood group " + blood_data + " in "+city_data+ " on "+date_req;
                     notification.put("body", message1);
                     notification.put("title", title);
-                    notification.put("icon", icon);
+                    notification.put("icon", "myicon");
 
 
                     JSONObject data = new JSONObject();
@@ -403,7 +402,11 @@ mClient = new OkHttpClient();
 
             @Override
             protected void onPostExecute(String result) {
-                Toast.makeText(RecipientActivity.this, result, Toast.LENGTH_LONG).show();
+                Log.i("Mainresult:45689 ","" + store_list);
+
+                sendmail(store_list);
+
+//                Toast.makeText(RecipientActivity.this, result, Toast.LENGTH_LONG).show();
 
                /* try {
                     JSONObject resultJson = new JSONObject(result);
@@ -419,6 +422,7 @@ mClient = new OkHttpClient();
             }
         }.execute();
     }
+
 
     String postToFCM(String bodyString) throws IOException {
 
@@ -438,15 +442,18 @@ mClient = new OkHttpClient();
     }
 
 
-    private void sendmail(final View v,final ArrayList<String> store_list) {
+    private void sendmail(final ArrayList<String> store_list) {
 
         Log.i("childrollno", "" + blood_data);
         String email = "info@atriodata.com";
         String mail_subject = "Blood Required";
         String message = "There is requirement of blood group " + blood_data + " in "+city_data+ " on "+date_req+
                 ".\n\n\nDetails of Recipient:\n\nEmail-Id:"+emailid+"\nPhone No: "+phoneno+"\nOther Details: "+other_detail;
-        SendMail sm = new SendMail(v.getContext(), email, mail_subject, message, store_list);
+        SendMail sm = new SendMail(this, email, mail_subject, message, store_list);
         sm.execute();
+
+
+
         et_date.setText("");
         et_emailid.setText("");
         atvPlaces.setText("");
@@ -455,6 +462,7 @@ mClient = new OkHttpClient();
         sp_bloodgr.setSelection(0);
         spin_state.setSelection(0);
         dialog.dismiss();
+
 
     }
 

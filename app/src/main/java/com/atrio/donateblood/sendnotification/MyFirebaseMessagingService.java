@@ -8,10 +8,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import com.atrio.donateblood.HomeActivity;
+import com.atrio.donateblood.NotificationActivity;
 import com.atrio.donateblood.NotifiyActivity;
 import com.atrio.donateblood.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -20,6 +21,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Created by Arpita Patel on 22-08-2017.
@@ -210,7 +212,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         bitmap = getBitmapfromUrl(imageUri);
 
         sendNotification(tittle,message, bitmap, TrueOrFlase,EmailId,phoneNo,bloodData,cityData,dateRequired,other_detail);
+        storeNotification(remoteMessage.getData());
+    }
 
+    private void storeNotification(Map<String, String> data) {
+        Log.i("bloodData456",""+data.toString());
+
+        Intent intentnoti = new Intent(this, NotificationActivity.class);
+        intentnoti.putExtra("datamy", data.toString());
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intentnoti);
+/*        intentnoti.putExtra("phoneNo", phoneNo);
+        intentnoti.putExtra("bloodData", bloodData);
+        intentnoti.putExtra("cityData", cityData);
+        intentnoti.putExtra("dateRequired", TrueOrFalse);
+        intentnoti.putExtra("other_detail", other_detail);*/
     }
 
 
@@ -238,12 +253,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(tittle)
                 .setContentText(messageBody)
+//                .setStyle(new NotificationCompat.BigPictureStyle()
+//                        .bigPicture(image))/*Notification with Image*/
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager =  (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0, notificationBuilder.build());
     }
