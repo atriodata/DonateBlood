@@ -4,13 +4,20 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class NotifiyActivity extends AppCompatActivity {
+    TextView rec_tv;
+    Button btn_ok;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifiy);
+        rec_tv=(TextView)findViewById(R.id.tv_detail);
+        btn_ok=(Button) findViewById(R.id.bt_ok);
 
         Intent intent = getIntent();
         String email_Id = intent.getStringExtra("emailId");
@@ -28,8 +35,16 @@ public class NotifiyActivity extends AppCompatActivity {
         Log.i("other_detail",""+other_detail);
 
         String message = "There is requirement of blood group " + bloodData + " in "+cityData+ " on "+dateRequired+
-                ".Details of Recipient:Email-Id:"+email_Id+"Phone No: "+phoneNo+"\nOther Details: "+other_detail;
+                ".\n\n\nDetails of Recipient:\n\nEmail-Id:"+email_Id+"\nPhone No: "+phoneNo+"\nOther Details: "+other_detail;
 
+        rec_tv.setText(message);
+
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 }

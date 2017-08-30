@@ -14,7 +14,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -169,13 +168,13 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("global");
 
         Log.d("AndroidBash", "Subscribed");
-        Toast.makeText(HomeActivity.this, "Subscribed", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(HomeActivity.this, "Subscribed", Toast.LENGTH_SHORT).show();
 
         token = FirebaseInstanceId.getInstance().getToken();
 
         // Log and toast
 //        Log.d("AndroidBash", token);
-        Toast.makeText(HomeActivity.this, token, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(HomeActivity.this, token, Toast.LENGTH_SHORT).show();
     }
 
 /*

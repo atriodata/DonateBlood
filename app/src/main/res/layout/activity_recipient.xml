@@ -25,7 +25,7 @@
                 android:id="@+id/tv_rg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
+                android:layout_marginLeft="2dp"
                 android:padding="10dp"
                 android:text="Find the Donor"
                 android:textColor="@color/colorAccent"
