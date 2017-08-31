@@ -86,8 +86,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-/*
-        if (getIntent().getExtras() != null) {
+        /*if (getIntent().getExtras() != null) {
 
             for (String key : getIntent().getExtras().keySet()) {
                 String value = getIntent().getExtras().getString(key);
@@ -102,9 +101,8 @@ public class HomeActivity extends AppCompatActivity {
 
             }
             
-        }
-*/
-        subscribeToPushService();
+        }*/
+
 /*
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -168,18 +166,7 @@ public class HomeActivity extends AppCompatActivity {
 */
 
 
-    private void subscribeToPushService() {
-        FirebaseMessaging.getInstance().subscribeToTopic("global");
 
-        Log.d("AndroidBash", "Subscribed");
-//        Toast.makeText(HomeActivity.this, "Subscribed", Toast.LENGTH_SHORT).show();
-
-        token = FirebaseInstanceId.getInstance().getToken();
-
-        // Log and toast
-//        Log.d("AndroidBash", token);
-//        Toast.makeText(HomeActivity.this, token, Toast.LENGTH_SHORT).show();
-    }
 
     private boolean checkPermissions() {
         int result;
@@ -199,7 +186,8 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (requestCode == 100) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             }
             return;
         }

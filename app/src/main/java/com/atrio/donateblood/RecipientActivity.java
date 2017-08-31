@@ -71,8 +71,11 @@ public class RecipientActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private SpotsDialog dialog;
     ArrayList<String> store_list;
+    JSONArray jsonArray;
     OkHttpClient mClient;
     Intent iget;
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
 
 
     @Override
@@ -278,13 +281,24 @@ public class RecipientActivity extends AppCompatActivity {
             @Override
             protected String doInBackground(String... params) {
                 try {
+                    String topic = null;
+                    String groupFirst = blood_data.substring(0,blood_data.length()-1);
+                    Log.d("blood_data11", groupFirst);
+                    String grouplast = blood_data.substring(blood_data.length()-1);
 
+                    if (grouplast.equals("+")){
+                        topic = groupFirst+"positive";
+                        Log.d("blood_data56", topic);
+                    }else{
+                        topic = groupFirst+"negative";
+                        Log.d("blood_data56", topic);
+                    }
                     JSONObject root = new JSONObject();
                     JSONObject notification = new JSONObject();
 
                     String message1 = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req;
                     notification.put("body", message1);
-                    notification.put("title", "Donate Blood");
+                    notification.put("title", title);
                     notification.put("icon", "myicon");
 
 
@@ -294,11 +308,13 @@ public class RecipientActivity extends AppCompatActivity {
 
                     root.put("notification", notification);
                     root.put("data", data);
-                    root.put("priority", "high");
-                    root.put("to", "/topics/global");
-                    Log.i("Mainresult:4 ", "" + regId.toString());
+                    root.put("priority","high");
+//                    root.put("registration_ids", recipients);
+                    root.put("to","/topics/"+topic);
+                    Log.i("Mainresult:4 ","" + recipients.toString());
                     String result = postToFCM(root.toString());
-                    Log.i("Mainresult: ", "" + result);
+                    Log.i("Mainresult: ","" + result);
+
                     return result;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -308,6 +324,10 @@ public class RecipientActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String result) {
+                Log.i("Mainresult:45689 ","" + store_list);
+
+                sendmail(store_list);
+
 //                Toast.makeText(RecipientActivity.this, result, Toast.LENGTH_LONG).show();
                 dialog.show();
                 try {
@@ -328,6 +348,7 @@ public class RecipientActivity extends AppCompatActivity {
 
 
     String postToFCM(String bodyString) throws IOException {
+
 
 
 //        String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
@@ -353,6 +374,9 @@ public class RecipientActivity extends AppCompatActivity {
                 ".\n\n\nDetails of Recipient:\n\nEmail-Id:" + emailid + "\nPhone No: " + phoneno + "\nOther Details: " + other_detail;
         SendMail sm = new SendMail(this, email, mail_subject, message, store_list);
         sm.execute();
+
+
+
         et_date.setText("");
         et_emailid.setText("");
         atvPlaces.setText("");

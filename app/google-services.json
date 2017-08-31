@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "689770757908-1mm50gdifh2d282js5jeurfmdemv6vmm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.atrio.donateblood",
+            "certificate_hash": "b675c2634d49d49e7ef19d9d98056098c3aa976b"
+          }
+        },
+        {
           "client_id": "689770757908-gmlfuev0jnfnkn3t25ikrlnmcrl6old4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
