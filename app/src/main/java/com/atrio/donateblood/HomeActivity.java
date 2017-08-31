@@ -159,14 +159,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-/*
-    private void displayFirebaseRegId() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("ah_firebase", 0);
-        String regId = pref.getString("regId", null);
-
-        Log.e(TAG, "Firebase reg id: " + regId);
-
-      */
 /*  if (!TextUtils.isEmpty(regId))
             txtRegId.setText("Firebase Reg Id: " + regId);
         else
