@@ -439,7 +439,6 @@ mClient = new OkHttpClient();
     String postToFCM(String bodyString) throws IOException {
 
 
-
 //        String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
         final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
