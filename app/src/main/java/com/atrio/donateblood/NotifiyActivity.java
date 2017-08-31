@@ -52,7 +52,6 @@ public class NotifiyActivity extends AppCompatActivity {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         RecipientDetail recipientDetail = child.getValue(RecipientDetail.class);
 
-//                      msg_id[0] = child.getKey();
                        date_req= recipientDetail.getReq_date();
                         emailid= recipientDetail.getEmailid();
                         phoneno=  recipientDetail.getPhoneno();
