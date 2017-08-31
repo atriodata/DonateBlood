@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -188,7 +189,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String tittle = remoteMessage.getNotification().getTitle();
         String message = remoteMessage.getNotification().getBody();
         //imageUri will contain URL of the image to be displayed with Notification
-        String imageUri = remoteMessage.getData().get("image");
+        String imageUri = remoteMessage.getNotification().getIcon();
         //If the key AnotherActivity has  value as True then when the user taps on notification, in the app AnotherActivity will be opened.
         //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
         String TrueOrFlase = remoteMessage.getData().get("NotifiyActivity");
@@ -233,14 +234,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setLargeIcon(image)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(tittle)
-                .setContentText(messageBody)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+        NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            notificationBuilder .setLargeIcon(image)
+            .setSmallIcon(R.drawable.noti_img1)
+                    .setContentTitle(tittle)
+                    .setContentText(messageBody)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+
+        } else {
+
+           notificationBuilder .setLargeIcon(image)
+                    .setSmallIcon(R.drawable.noti_img1)
+                    .setContentTitle(tittle)
+                    .setContentText(messageBody)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+        }
+
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

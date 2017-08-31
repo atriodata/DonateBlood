@@ -43,7 +43,7 @@ public class HomeActivity extends AppCompatActivity {
         permissions = new String[]{
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,};
-        checkPermissions();
+        //checkPermissions();
         final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.drop);
 
         TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
@@ -85,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-        if (getIntent().getExtras() != null) {
+        /*if (getIntent().getExtras() != null) {
 
             for (String key : getIntent().getExtras().keySet()) {
                 String value = getIntent().getExtras().getString(key);
@@ -100,8 +100,8 @@ public class HomeActivity extends AppCompatActivity {
 
             }
             
-        }
-        subscribeToPushService();
+        }*/
+
 /*
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -164,18 +164,7 @@ public class HomeActivity extends AppCompatActivity {
 */
 
 
-    private void subscribeToPushService() {
-        FirebaseMessaging.getInstance().subscribeToTopic("global");
 
-        Log.d("AndroidBash", "Subscribed");
-//        Toast.makeText(HomeActivity.this, "Subscribed", Toast.LENGTH_SHORT).show();
-
-        token = FirebaseInstanceId.getInstance().getToken();
-
-        // Log and toast
-//        Log.d("AndroidBash", token);
-//        Toast.makeText(HomeActivity.this, token, Toast.LENGTH_SHORT).show();
-    }
 
 /*
     @Override

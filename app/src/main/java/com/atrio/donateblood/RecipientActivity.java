@@ -262,7 +262,7 @@ mClient = new OkHttpClient();
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }*/
-                                    sendNotificationToUser(jsonArray,"Donate Blood","Blood Required","","Requirement");
+                                    sendNotificationToUser(jsonArray,"Donate Blood","Blood Required","http://res.cloudinary.com/ddky6bjui/image/upload/v1497349950/math_ozwdjr_swhthg.jpg","Requirement");
                                     Log.i("Mainresult:47","" + jsonArray.toString());
 
 //  sendNotification(regId);
@@ -367,7 +367,18 @@ mClient = new OkHttpClient();
             @Override
             protected String doInBackground(String... params) {
                 try {
+                    String topic = null;
+                    String groupFirst = blood_data.substring(0,blood_data.length()-1);
+                    Log.d("blood_data11", groupFirst);
+                    String grouplast = blood_data.substring(blood_data.length()-1);
 
+                    if (grouplast.equals("+")){
+                        topic = groupFirst+"positive";
+                        Log.d("blood_data56", topic);
+                    }else{
+                        topic = groupFirst+"negative";
+                        Log.d("blood_data56", topic);
+                    }
                     JSONObject root = new JSONObject();
                     JSONObject notification = new JSONObject();
 
@@ -390,7 +401,7 @@ mClient = new OkHttpClient();
                     root.put("data", data);
                     root.put("priority","high");
 //                    root.put("registration_ids", recipients);
-                    root.put("to","/topics/global");
+                    root.put("to","/topics/"+topic);
                     Log.i("Mainresult:4 ","" + recipients.toString());
                     String result = postToFCM(root.toString());
                     Log.i("Mainresult: ","" + result);

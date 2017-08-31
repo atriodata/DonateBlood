@@ -33,6 +33,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONObject;
 
@@ -54,30 +56,29 @@ public class ResigrationActivity extends AppCompatActivity {
     AutoCompleteTextView atvPlaces;
     PlacesTask placesTask;
     ParserTask parserTask;
-    Spinner spin_state, sp_bloodgr,et_age,et_weight;
+    Spinner spin_state, sp_bloodgr, et_age, et_weight;
     //    RadioButton rb_male,rb_female;
     RadioButton radioSexButton;
     RadioGroup rg_group;
     CheckBox cb_never, cb_above, cb_below;
-    Button btn_reg,btn_info;
-    EditText et_name,et_emailid;
+    Button btn_reg, btn_info;
+    EditText et_name, et_emailid;
     TextView tv_info;
-    String state_data, blood_data, radio_data, cb_data, name,emailid, age,phoneno, weight, city_data,count,temp;
+    String state_data, blood_data, radio_data, cb_data, name, emailid, age, phoneno, weight, city_data, count, temp, token;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
-    List age_data,weight_data;
+    List age_data, weight_data;
     ListAdapter listAdapter;
     private SpotsDialog dialog;
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resigration);
-        mAuth=FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         dialog = new SpotsDialog(ResigrationActivity.this, R.style.Custom);
 
@@ -106,7 +107,7 @@ public class ResigrationActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (state_data.equals("Select Your State")) {
                     Toast.makeText(getApplicationContext(), "Select Your state", Toast.LENGTH_LONG).show();
-                }else {
+                } else {
                     placesTask = new PlacesTask();
                     placesTask.execute(s.toString());
                 }
@@ -128,12 +129,12 @@ public class ResigrationActivity extends AppCompatActivity {
         atvPlaces.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b) {
+                if (!b) {
                     // on focus off
                     String str = atvPlaces.getText().toString();
 
                     listAdapter = atvPlaces.getAdapter();
-                    if (listAdapter!=null) {
+                    if (listAdapter != null) {
                         for (int i = 0; i < listAdapter.getCount(); i++) {
 
                             temp = listAdapter.getItem(i).toString();
@@ -189,7 +190,7 @@ public class ResigrationActivity extends AppCompatActivity {
             age_data.add(Integer.toString(i));
         }
         ArrayAdapter<Integer> spinnerArrayAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, age_data);
-        spinnerArrayAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         et_age.setAdapter(spinnerArrayAdapter);
         et_age.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -209,7 +210,7 @@ public class ResigrationActivity extends AppCompatActivity {
             weight_data.add(Integer.toString(i));
         }
         ArrayAdapter<Integer> weightAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, weight_data);
-        spinnerArrayAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         et_weight.setAdapter(weightAdapter);
         et_weight.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -238,7 +239,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 cb_never.setChecked(true);
                 cb_below.setChecked(false);
                 cb_above.setChecked(false);
-                cb_data=cb_never.getText().toString();
+                cb_data = cb_never.getText().toString();
             }
         });
         cb_below.setOnClickListener(new View.OnClickListener() {
@@ -247,7 +248,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 cb_never.setChecked(false);
                 cb_below.setChecked(true);
                 cb_above.setChecked(false);
-                cb_data=cb_below.getText().toString();
+                cb_data = cb_below.getText().toString();
 
             }
         });
@@ -257,7 +258,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 cb_never.setChecked(false);
                 cb_below.setChecked(false);
                 cb_above.setChecked(true);
-                cb_data=cb_never.getText().toString();
+                cb_data = cb_never.getText().toString();
 
             }
         });
@@ -268,76 +269,95 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.show();
-                ConnectivityManager connMgr = (ConnectivityManager)getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
+                ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo == null) {
                     dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
-                }else {
+                } else {
                     dialog.dismiss();
                     if (validate()) {
 
                         db_ref = db_instance.getReference();
 
                         int selectedId = rg_group.getCheckedRadioButtonId();
-                        radioSexButton = (RadioButton)findViewById(selectedId);
+                        radioSexButton = (RadioButton) findViewById(selectedId);
                         name = et_name.getText().toString();
                         emailid = et_emailid.getText().toString();
                         city_data = atvPlaces.getText().toString();
                         radio_data = radioSexButton.getText().toString();
-                        phoneno=user.getPhoneNumber();
+                        phoneno = user.getPhoneNumber();
                         dialog.show();
 
-                        Query writequery = db_ref.child(state_data).child(city_data).orderByKey();
-writequery.addListenerForSingleValueEvent(new ValueEventListener() {
-    @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
-        if(dataSnapshot.getChildrenCount()==0){
-            count="001";
-            createUser(name,emailid, age, weight, blood_data,state_data, city_data, radio_data, cb_data,phoneno,count);
-            et_name.setText("");
-            et_emailid.setText("");
-            atvPlaces.setText("");
-            et_age.setSelection(0);
-            et_weight.setSelection(0);
-            sp_bloodgr.setSelection(0);
-            spin_state.setSelection(0);
-            cb_never.setChecked(false);
-            cb_above.setChecked(false);
-            cb_below.setChecked(false);
+                        Query writequery = db_ref.child("Donor").orderByKey();
+                        writequery.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getChildrenCount() != 0) {
+                                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                                        for (DataSnapshot dataSnapshot1 : data.getChildren()){
+                                            for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()){
+                                                String phn_no = dataSnapshot2.getKey();
+                                                Log.i("phn11",""+phn_no);
+                                                if (! phn_no.equals(phoneno)){
+                                                    createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, cb_data, phoneno, count);
+                                                    et_name.setText("");
+                                                    et_emailid.setText("");
+                                                    atvPlaces.setText("");
+                                                    et_age.setSelection(0);
+                                                    et_weight.setSelection(0);
+                                                    sp_bloodgr.setSelection(0);
+                                                    spin_state.setSelection(0);
+                                                    cb_never.setChecked(false);
+                                                    cb_above.setChecked(false);
+                                                    cb_below.setChecked(false);
 //            rg_group.
-            dialog.dismiss();
-            Toast.makeText(getApplicationContext(), "SuccessFully Register", Toast.LENGTH_LONG).show();
-        }
-        else {
-            long countchild = dataSnapshot.getChildrenCount();
-            countchild++;
-            count=String.format("%03d",countchild);
-            dialog.show();
-            createUser(name,emailid, age, weight, blood_data,state_data, city_data, radio_data, cb_data,phoneno,count);
-            et_name.setText("");
-            et_emailid.setText("");
-            atvPlaces.setText("");
-            et_age.setSelection(0);
-            et_weight.setSelection(0);
-            sp_bloodgr.setSelection(0);
-            spin_state.setSelection(0);
-            cb_never.setChecked(false);
-            cb_above.setChecked(false);
-            cb_below.setChecked(false);
-            dialog.dismiss();
-            Toast.makeText(getApplicationContext(), "SuccessFully Register", Toast.LENGTH_LONG).show();
-        }
+                                                    dialog.dismiss();
+                                                    // Toast.makeText(getApplicationContext(), ""+dataSnapshot.getChildrenCount(), Toast.LENGTH_LONG).show();
+                                                    //Toast.makeText(getApplicationContext(), "SuccessFully 2nd Times", Toast.LENGTH_LONG).show();
+                                                    subscribeToPushService(blood_data);
+                                                }else {
 
-    }
+                                                    dialog.dismiss();
+                                                    Toast.makeText(getApplicationContext(), "This Number is already Registered", Toast.LENGTH_LONG).show();
 
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
+                                                }
 
-    }
-});
+                                            }
 
 
+                                        }
+                                    }
+
+
+                                } else{
+                                    createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, cb_data, phoneno, count);
+                                    et_name.setText("");
+                                    et_emailid.setText("");
+                                    atvPlaces.setText("");
+                                    et_age.setSelection(0);
+                                    et_weight.setSelection(0);
+                                    sp_bloodgr.setSelection(0);
+                                    spin_state.setSelection(0);
+                                    cb_never.setChecked(false);
+                                    cb_above.setChecked(false);
+                                    cb_below.setChecked(false);
+//            rg_group.
+                                    dialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), ""+dataSnapshot.getChildrenCount(), Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(getApplicationContext(), "SuccessFully FirstTime", Toast.LENGTH_LONG).show();
+                                    subscribeToPushService(blood_data);
+                                    Toast.makeText(getApplicationContext(), "NoData", Toast.LENGTH_LONG).show();
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
 
                     }
@@ -349,21 +369,41 @@ writequery.addListenerForSingleValueEvent(new ValueEventListener() {
         btn_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(ResigrationActivity.this,InfoActivity.class);
+                Intent intent = new Intent(ResigrationActivity.this, InfoActivity.class);
                 startActivity(intent);
             }
         });
         tv_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(ResigrationActivity.this,InfoActivity.class);
+                Intent intent = new Intent(ResigrationActivity.this, InfoActivity.class);
                 startActivity(intent);
             }
         });
     }
 
+    private void subscribeToPushService(String blood_data) {
+
+
+        String topic = null;
+        String groupFirst = blood_data.substring(0,blood_data.length()-1);
+        Log.d("blood_data11", groupFirst);
+        String grouplast = blood_data.substring(blood_data.length()-1);
+
+        if (grouplast.equals("+")){
+          topic = groupFirst+"positive";
+            Log.d("blood_data13", topic);
+        }else{
+            topic = groupFirst+"negative";
+            Log.d("blood_data13", topic);
+        }
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        token = FirebaseInstanceId.getInstance().getToken();
+        Log.d("token11", token);
+    }
+
     private void createUser(String name, String emailid, String age, String weight, String blood_data, String state_data, String city_data, String radio_data, String cb_data, String phoneno, String count) {
-        UserDetail userDetail=new UserDetail();
+        UserDetail userDetail = new UserDetail();
 
         userDetail.setName(name);
         userDetail.setEmailid(emailid);
@@ -377,7 +417,7 @@ writequery.addListenerForSingleValueEvent(new ValueEventListener() {
         userDetail.setTimeperiod(cb_data);
         userDetail.setCount(count);
 
-        db_ref.child(state_data).child(city_data).child(count).setValue(userDetail);
+        db_ref.child("Donor").child(state_data).child(city_data).child(phoneno).setValue(userDetail);
 
     }
 
@@ -393,38 +433,36 @@ writequery.addListenerForSingleValueEvent(new ValueEventListener() {
             et_emailid.requestFocus();
             return false;
 
-        } else  if (age.equals("Select Your Age")) {
+        } else if (age.equals("Select Your Age")) {
             Toast.makeText(getApplicationContext(), "Select Your Age", Toast.LENGTH_LONG).show();
             return false;
 
-        } else   if (weight.equals("Select Your Weight")) {
+        } else if (weight.equals("Select Your Weight")) {
             Toast.makeText(getApplicationContext(), "Select Your weight", Toast.LENGTH_LONG).show();
             return false;
-        }
-
-        else if (blood_data.equals("Select Your Blood Group")) {
+        } else if (blood_data.equals("Select Your Blood Group")) {
             Toast.makeText(getApplicationContext(), "Select Your Blood Group", Toast.LENGTH_LONG).show();
             return false;
 
 
-        }else if (state_data.equals("Select Your State")){
+        } else if (state_data.equals("Select Your State")) {
             Toast.makeText(getApplicationContext(), "Select Your state", Toast.LENGTH_LONG).show();
             return false;
 
-        }
-      else if (atvPlaces.getText().toString().trim().length() < 1) {
+        } else if (atvPlaces.getText().toString().trim().length() < 1) {
             atvPlaces.setError("Please Fill This Field");
             atvPlaces.requestFocus();
             return false;
 
-        }  else  if (cb_data.equals("")) {
+        } else if (cb_data.equals("")) {
             Toast.makeText(getApplicationContext(), "Select Donation Period", Toast.LENGTH_LONG).show();
             return false;
 
-        }  else
+        } else
             return true;
 
     }
+
     boolean isEmailValid(CharSequence email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email)
                 .matches();
@@ -546,7 +584,7 @@ writequery.addListenerForSingleValueEvent(new ValueEventListener() {
 
             SimpleAdapter adapter = new SimpleAdapter(getBaseContext(), result, android.R.layout.simple_list_item_1, from, to);
             atvPlaces.setAdapter(adapter);
-            synchronized (adapter){
+            synchronized (adapter) {
                 adapter.notifyDataSetChanged();
             }
         }
