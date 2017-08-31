@@ -278,6 +278,7 @@ public class ResigrationActivity extends AppCompatActivity {
                     dialog.dismiss();
                     if (validate()) {
 
+
                         db_ref = db_instance.getReference();
 
                         int selectedId = rg_group.getCheckedRadioButtonId();
