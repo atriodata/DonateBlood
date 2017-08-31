@@ -181,7 +181,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
-
         //The message which i send will have keys named [message, image, AnotherActivity] and corresponding values.
         //You can change as per the requirement.
 
