@@ -191,19 +191,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String message = remoteMessage.getNotification().getBody();
         //imageUri will contain URL of the image to be displayed with Notification
         String imageUri = remoteMessage.getData().get("image");
-        //If the key AnotherActivity has  value as True then when the user taps on notification, in the app AnotherActivity will be opened.
-        //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
-        String TrueOrFlase = remoteMessage.getData().get("NotifiyActivity");
-        String EmailId = remoteMessage.getData().get("Email");
-        String phoneNo = remoteMessage.getData().get("phoneNo");
-        String bloodData = remoteMessage.getData().get("bloodData");
-        String cityData = remoteMessage.getData().get("cityData");
-        String dateRequired = remoteMessage.getData().get("dateRequired");
-        String other_detail = remoteMessage.getData().get("other_detail");
-        Log.i("EmailId44",""+EmailId);
-        Log.i("phoneNo",""+phoneNo);
-        Log.i("bloodData",""+bloodData);
-        Log.i("cityData",""+cityData);
+        String token_id = remoteMessage.getData().get("token_id");
+        String msg_id = remoteMessage.getData().get("msg_id");
+
+        Log.i("EmailId44",""+token_id);
+        Log.i("phoneNo",""+msg_id);
         Log.i("tittle44",""+tittle);
         Log.i("message44",""+message);
         //Log.i("EmailId44",""+EmailId);
@@ -211,7 +203,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //To get a Bitmap image from the URL received
         bitmap = getBitmapfromUrl(imageUri);
 
-        sendNotification(tittle,message, bitmap, TrueOrFlase,EmailId,phoneNo,bloodData,cityData,dateRequired,other_detail);
+        sendNotification(tittle,message, bitmap ,token_id,msg_id);
         storeNotification(remoteMessage.getData());
     }
 
@@ -221,11 +213,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Intent intentnoti = new Intent(this, NotificationActivity.class);
         intentnoti.putExtra("datamy", data.toString());
         LocalBroadcastManager.getInstance(this).sendBroadcast(intentnoti);
-/*        intentnoti.putExtra("phoneNo", phoneNo);
-        intentnoti.putExtra("bloodData", bloodData);
-        intentnoti.putExtra("cityData", cityData);
-        intentnoti.putExtra("dateRequired", TrueOrFalse);
-        intentnoti.putExtra("other_detail", other_detail);*/
     }
 
 
@@ -233,19 +220,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Create and show a simple notification containing the received FCM message.
      */
 
-    private void sendNotification(String tittle, String messageBody, Bitmap image, String trueOrFlase, String emailId, String phoneNo, String bloodData, String cityData, String TrueOrFalse, String other_detail) {
+    private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id) {
         Intent intent = new Intent(this, NotifiyActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("NotifiyActivity", trueOrFlase);
-        intent.putExtra("emailId", emailId);
-        intent.putExtra("phoneNo", phoneNo);
-        intent.putExtra("bloodData", bloodData);
-        intent.putExtra("cityData", cityData);
-        intent.putExtra("dateRequired", TrueOrFalse);
-        intent.putExtra("other_detail", other_detail);
+        intent.putExtra("token_id", token_id);
+        intent.putExtra("msg_id", msg_id);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)

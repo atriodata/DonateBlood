@@ -1,4 +1,4 @@
-package com.atrio.donateblood;
+package com.atrio.donateblood.model;
 
 /**
  * Created by Arpita Patel on 16-08-2017.

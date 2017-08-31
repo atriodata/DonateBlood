@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.atrio.donateblood.model.UserDetail;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -288,7 +289,7 @@ public class ResigrationActivity extends AppCompatActivity {
                         phoneno=user.getPhoneNumber();
                         dialog.show();
 
-                        Query writequery = db_ref.child(state_data).child(city_data).orderByKey();
+                        Query writequery = db_ref.child("Donor").child(state_data).child(city_data).orderByKey();
 writequery.addListenerForSingleValueEvent(new ValueEventListener() {
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -377,7 +378,7 @@ writequery.addListenerForSingleValueEvent(new ValueEventListener() {
         userDetail.setTimeperiod(cb_data);
         userDetail.setCount(count);
 
-        db_ref.child(state_data).child(city_data).child(count).setValue(userDetail);
+        db_ref.child("Donor").child(state_data).child(city_data).child(count).setValue(userDetail);
 
     }
 

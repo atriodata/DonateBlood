@@ -53,7 +53,7 @@ public class HomeActivity extends AppCompatActivity {
 //                TranslateAnimation(0, 0,0, Animation.RELATIVE_TO_PARENT);          //  new TranslateAnimation(xFrom,xTo, yFrom,yTo)
         animation.setDuration(3000);  // animation duration
         animation.setFillAfter(true);
-//        animation.setRepeatCount(2);  // animation repeat count
+//        animation.setRepeatCount(2);  // animation repeat msg_id
 //        animation.setRepeatMode(1);   // repeat animation (left to right, right to left )
 //      animation.setFillAfter(true);
 

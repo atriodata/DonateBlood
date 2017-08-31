@@ -7,21 +7,23 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 
 public class NotificationActivity extends AppCompatActivity {
-
-    ListAdapter adapter;
+    RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
-        ListView listView = (ListView) findViewById(R.id.notification_list);
-//        adapter = new ListViewAdapter(this, list);
-//        listView.setAdapter(adapter);
+        recyclerView = (RecyclerView) findViewById(R.id.rc_notify);
+        LinearLayoutManager lLayout = new LinearLayoutManager(NotificationActivity.this);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(lLayout);
+
 
         IntentFilter intentFilter= new IntentFilter("datamy");
         LocalBroadcastManager.getInstance(this).registerReceiver(onNotice, intentFilter);

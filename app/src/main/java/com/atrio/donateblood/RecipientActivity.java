@@ -21,6 +21,8 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.atrio.donateblood.model.RecipientDetail;
+import com.atrio.donateblood.model.UserDetail;
 import com.atrio.donateblood.sendmail.SendMail;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,7 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -62,18 +64,15 @@ public class RecipientActivity extends AppCompatActivity {
     Spinner spin_state, sp_bloodgr;
     Button btn_send;
     EditText et_phoneno, et_emailid, et_date, et_remark;
-    String state_data, blood_data, emailid, phoneno, date_req, city_data, count, other_detail, send_mail,regId;
+    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, send_mail, regId,msg_id;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     private SpotsDialog dialog;
     ArrayList<String> store_list;
-    JSONArray jsonArray;
     OkHttpClient mClient;
     Intent iget;
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
 
 
     @Override
@@ -95,19 +94,9 @@ public class RecipientActivity extends AppCompatActivity {
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         atvPlaces.setThreshold(1);
         store_list = new ArrayList<>();
-        count = "001";
-//        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
-//        regId = pref.getString("regId", null);
-
-
         iget = getIntent();
-       regId= iget.getStringExtra("tokenid");
-mClient = new OkHttpClient();
-
-//        String refreshedToken = "";//add your user refresh tokens who are logged in with firebase.
-
-        jsonArray = new JSONArray();
-        jsonArray.put(regId);
+        regId = iget.getStringExtra("tokenid");
+        mClient = new OkHttpClient();
         sp_bloodgr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -221,21 +210,14 @@ mClient = new OkHttpClient();
                 } else {
                     dialog.dismiss();
                     if (validate()) {
-
-
-
-                        Log.i("childrollno1", "" + blood_data);
-
                         phoneno = et_phoneno.getText().toString();
                         emailid = et_emailid.getText().toString();
                         city_data = atvPlaces.getText().toString();
                         date_req = et_date.getText().toString();
                         other_detail = et_remark.getText().toString();
-//                        phoneno = user.getPhoneNumber();
-
                         dialog.show();
 
-                        Query readqery = db_ref.child(state_data).child(city_data).orderByChild("bloodgroup").equalTo(blood_data);
+                        Query readqery = db_ref.child("Donor").child(state_data).child(city_data).orderByChild("bloodgroup").equalTo(blood_data);
 
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -244,37 +226,18 @@ mClient = new OkHttpClient();
                                     dialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "No Donor Available", Toast.LENGTH_LONG).show();
                                 } else {
-//                                    Log.i("maildata55555", "" + dataSnapshot.toString());
                                     Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
 
                                     while (item.hasNext()) {
-
                                         DataSnapshot items = item.next();
                                         UserDetail user_info = items.getValue(UserDetail.class);
-
                                         send_mail = user_info.getEmailid();
                                         store_list.add(send_mail);
-//                                        Log.i("maildata", "" + send_mail);
-
                                     }
-                                  /*  try {
-                                        pushFCMNotification(regId);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }*/
-
-                                    sendNotificationToUser(jsonArray,"Donate Blood","Blood Required","","Requirement");
-                                    Log.i("Mainresult:47","" + jsonArray.toString());
-//  sendNotification(regId);
-//                                    Log.i("childrollno553", "" + blood_data);
-
-
-//                                    sendNotificationToUser("Alert", "Hi there puf!");
-//                                    Log.i("datalist1", "" + store_list);
-
-                                    dialog.dismiss();
+                                  dialog.dismiss();
+                                    Log.i("Mainresult:47", "" + regId);
+                                    sendNotificationToUser(regId);
                                     Toast.makeText(RecipientActivity.this, "Request Send", Toast.LENGTH_SHORT).show();
-
                                 }
                             }
 
@@ -284,9 +247,6 @@ mClient = new OkHttpClient();
                             }
                         });
                         dialog.dismiss();
-//                        Toast.makeText(getApplicationContext(), "Send Your Request", Toast.LENGTH_LONG).show();
-
-
                     }
                 }
 
@@ -294,73 +254,25 @@ mClient = new OkHttpClient();
             }
         });
     }
-/*
-    public static void pushFCMNotification(String userDeviceIdKey) throws Exception{
 
-//        String authKey = AUTH_KEY_FCM; // You FCM AUTH key
-//        String FMCurl = API_URL_FCM;
+    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id) {
+        RecipientDetail recipientDetail=new RecipientDetail();
 
-        URL url = new URL("https://fcm.googleapis.com/fcm/send");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        recipientDetail.setReq_date(date_req);
+        recipientDetail.setEmailid(emailid);
+        recipientDetail.setPhoneno(phoneno);
+        recipientDetail.setMsg_id(msg_id);
+        recipientDetail.setOther_detail(other_detail);
+        recipientDetail.setBloodgroup(blood_data);
+        recipientDetail.setState(state_data);
+        recipientDetail.setCity(city_data);
 
-        conn.setUseCaches(false);
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
-
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Authorization","key=AIzaSyB0xP6z55MHoQJkx2uK6rgbXcuYouBNPXM");
-        conn.setRequestProperty("Content-Type","application/json");
-
-        JSONObject json = new JSONObject();
-        json.put("to",userDeviceIdKey.trim());
-        JSONObject info = new JSONObject();
-        info.put("title", "Notificatoin Title"); // Notification title
-        info.put("body", "Hello Test notification"); // Notification body
-        json.put("notification", info);
-
-        Log.i("datares",""+json.toString());
-        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-        wr.write(json.toString());
-        wr.flush();
-        conn.getInputStream();
-    }
-*/
-/*
-    private void sendNotification(final String regId) {
-        new AsyncTask<Void,Void,Void>(){
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    OkHttpClient client = new OkHttpClient();
-                    JSONObject json=new JSONObject();
-                    JSONObject dataJson=new JSONObject();
-                    dataJson.put("body","Hi this is sent from device to device");
-                    dataJson.put("title","dummy title");
-                    dataJson.put("NotifiyActivity","true");
-                    json.put("notification",dataJson);
-                    json.put("to",regId);
-                    RequestBody body = RequestBody.create(JSON, json.toString());
-                    Request request = new Request.Builder()
-                            .header("Authorization","key=AIzaSyB0xP6z55MHoQJkx2uK6rgbXcuYouBNPXM")
-                            .url("https://fcm.googleapis.com/fcm/send")
-                            .post(body)
-                            .build();
-                    Response response = client.newCall(request).execute();
-                    String finalResponse = response.body().string();
-                }catch (Exception e){
-                    //Log.d(TAG,e+"");
-                }
-                return null;
-            }
-        }.execute();
+        db_ref.child("Notification").child("Recipient").child(msg_id).setValue(recipientDetail);
+        Log.i("Mainresult:45689 ", "" + store_list);
+        sendmail(store_list);
 
     }
-*/
-
-
-
-
-    public  void sendNotificationToUser(final JSONArray recipients, final String title, final String body, final String icon, final String message) {
+    public void sendNotificationToUser(final String regId) {
 
         new AsyncTask<String, String, String>() {
             @Override
@@ -370,29 +282,23 @@ mClient = new OkHttpClient();
                     JSONObject root = new JSONObject();
                     JSONObject notification = new JSONObject();
 
-                    String message1 =   "There is requirement of blood group " + blood_data + " in "+city_data+ " on "+date_req;
+                    String message1 = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req;
                     notification.put("body", message1);
-                    notification.put("title", title);
+                    notification.put("title", "Donate Blood");
                     notification.put("icon", "myicon");
 
 
                     JSONObject data = new JSONObject();
-                    data.put("Email",emailid);
-                    data.put("phoneNo",phoneno);
-                    data.put("bloodData",blood_data);
-                    data.put("cityData",city_data);
-                    data.put("dateRequired",date_req);
-                    data.put("other_detail",other_detail);
-                    data.put("NotifiyActivity","True");
+                    data.put("token_id", regId);
+                    data.put("msg_id", msg_id);
 
                     root.put("notification", notification);
                     root.put("data", data);
-                    root.put("priority","high");
-//                    root.put("registration_ids", recipients);
-                    root.put("to","/topics/global");
-                    Log.i("Mainresult:4 ","" + recipients.toString());
+                    root.put("priority", "high");
+                    root.put("to", "/topics/global");
+                    Log.i("Mainresult:4 ", "" + regId.toString());
                     String result = postToFCM(root.toString());
-                    Log.i("Mainresult: ","" + result);
+                    Log.i("Mainresult: ", "" + result);
                     return result;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -402,30 +308,26 @@ mClient = new OkHttpClient();
 
             @Override
             protected void onPostExecute(String result) {
-                Log.i("Mainresult:45689 ","" + store_list);
-
-                sendmail(store_list);
-
 //                Toast.makeText(RecipientActivity.this, result, Toast.LENGTH_LONG).show();
-
-               /* try {
+                dialog.show();
+                try {
                     JSONObject resultJson = new JSONObject(result);
-                    int success, failure;
-                    success = resultJson.getInt("success");
-                    failure = resultJson.getInt("failure");
-                    Toast.makeText(RecipientActivity.this, "Message Success: " + success + "Message Failed: " + failure, Toast.LENGTH_LONG).show();
+                    msg_id = resultJson.getString("message_id");
+                    createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail,msg_id);
+                    dialog.dismiss();
+                    Toast.makeText(RecipientActivity.this, "Message Success: " + msg_id, Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.i("error56",""+e);
+                    dialog.dismiss();
                     Toast.makeText(RecipientActivity.this, "Message Failed, Unknown error occurred.", Toast.LENGTH_LONG).show();
-                }*/
+                }
             }
         }.execute();
     }
 
 
     String postToFCM(String bodyString) throws IOException {
-
 
 
 //        String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
@@ -447,13 +349,10 @@ mClient = new OkHttpClient();
         Log.i("childrollno", "" + blood_data);
         String email = "info@atriodata.com";
         String mail_subject = "Blood Required";
-        String message = "There is requirement of blood group " + blood_data + " in "+city_data+ " on "+date_req+
-                ".\n\n\nDetails of Recipient:\n\nEmail-Id:"+emailid+"\nPhone No: "+phoneno+"\nOther Details: "+other_detail;
+        String message = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req +
+                ".\n\n\nDetails of Recipient:\n\nEmail-Id:" + emailid + "\nPhone No: " + phoneno + "\nOther Details: " + other_detail;
         SendMail sm = new SendMail(this, email, mail_subject, message, store_list);
         sm.execute();
-
-
-
         et_date.setText("");
         et_emailid.setText("");
         atvPlaces.setText("");
