@@ -71,7 +71,6 @@ public class RecipientActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private SpotsDialog dialog;
     ArrayList<String> store_list;
-    JSONArray jsonArray;
     OkHttpClient mClient;
     Intent iget;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -298,7 +297,7 @@ public class RecipientActivity extends AppCompatActivity {
 
                     String message1 = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req;
                     notification.put("body", message1);
-                    notification.put("title", title);
+                    notification.put("title", "Donate Blood");
                     notification.put("icon", "myicon");
 
 
@@ -311,7 +310,7 @@ public class RecipientActivity extends AppCompatActivity {
                     root.put("priority","high");
 //                    root.put("registration_ids", recipients);
                     root.put("to","/topics/"+topic);
-                    Log.i("Mainresult:4 ","" + recipients.toString());
+                    Log.i("Mainresult:4 ","" + regId);
                     String result = postToFCM(root.toString());
                     Log.i("Mainresult: ","" + result);
 

@@ -12,7 +12,6 @@ import android.os.Build;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import com.atrio.donateblood.NotificationActivity;
 import com.atrio.donateblood.NotifiyActivity;
 import com.atrio.donateblood.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -202,9 +201,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         bitmap = getBitmapfromUrl(imageUri);
 
         sendNotification(tittle,message, bitmap ,token_id,msg_id);
-        storeNotification(remoteMessage.getData());
+//        storeNotification(remoteMessage.getData());
     }
 
+/*
     private void storeNotification(Map<String, String> data) {
         Log.i("bloodData456",""+data.toString());
 
@@ -212,6 +212,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intentnoti.putExtra("datamy", data.toString());
         LocalBroadcastManager.getInstance(this).sendBroadcast(intentnoti);
     }
+*/
 
 
     /**

@@ -42,10 +42,10 @@ public class NotifiyActivity extends AppCompatActivity {
 
 
 
-        Query getquestion=db_ref.child("Notification").child("Recipient").orderByChild("msg_id").equalTo(imsg_id);
+        Query getnotifi=db_ref.child("Notification").child("Recipient").orderByChild("msg_id").equalTo(imsg_id);
 
 
-        getquestion.addListenerForSingleValueEvent(new ValueEventListener() {
+        getnotifi.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getChildrenCount() !=0) {
