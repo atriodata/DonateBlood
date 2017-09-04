@@ -256,9 +256,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(0, notificationBuilder.build());
     }
 
-    /*
-    *To get a Bitmap image from the URL received
-    * */
     public Bitmap getBitmapfromUrl(String imageUrl) {
         try {
             URL url = new URL(imageUrl);
