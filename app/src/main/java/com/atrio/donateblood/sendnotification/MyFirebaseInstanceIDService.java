@@ -61,7 +61,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        Log.i("Checklog45",""+token);
+//        Log.i("Checklog45",""+token);
 
         // TODO: Implement this method to send token to your app server.
     }

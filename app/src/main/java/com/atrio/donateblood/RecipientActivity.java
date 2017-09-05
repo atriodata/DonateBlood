@@ -16,7 +16,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -261,6 +260,7 @@ public class RecipientActivity extends AppCompatActivity {
                     notification.put("body", message1);
                     notification.put("title", "Donate Blood");
                     notification.put("icon", "myicon");
+                    notification.put("click_action","Notifiy_Activity");
 
 
 //                    JSONObject message_id=new JSONObject();

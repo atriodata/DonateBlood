@@ -12,7 +12,6 @@ import android.os.Build;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import com.atrio.donateblood.NotifiyActivity;
 import com.atrio.donateblood.R;
 import com.atrio.donateblood.model.RecipientDetail;
 import com.google.firebase.database.DatabaseReference;
@@ -191,7 +190,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String tittle = remoteMessage.getNotification().getTitle();
         String body = remoteMessage.getNotification().getBody();
 
-//        String message_id = remoteMessage.getMessageId();
+        String click_action = remoteMessage.getNotification().getClickAction();
 //        Log.i("message_id",""+message_id);
         //imageUri will contain URL of the image to be displayed with Notification
         String imageUri = remoteMessage.getData().get("image");
@@ -215,7 +214,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         bitmap = getBitmapfromUrl(imageUri);
         createRecipientDetail(stateData, bloodData, EmailId, phoneNo, dateRequired, cityData, other_detail,msg_id,body);
 
-        sendNotification(tittle,body, bitmap ,token_id,msg_id);
+        sendNotification(tittle,body, bitmap ,token_id,msg_id,click_action);
 //        storeNotification(remoteMessage.getData());
     }
 
@@ -234,11 +233,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Create and show a simple notification containing the received FCM message.
      */
 
-    private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id) {
-        Intent intent = new Intent(this, NotifiyActivity.class);
+    private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id,String click_action) {
+        Intent intent = new Intent(click_action);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("token_id", token_id);
         intent.putExtra("msg_id", msg_id);
+//        intent.putExtra("click_action",click_action);
         Log.i("msg_45",""+msg_id);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,PendingIntent.FLAG_ONE_SHOT);

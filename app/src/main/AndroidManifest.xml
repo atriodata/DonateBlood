@@ -53,12 +53,18 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".InfoActivity" />
-        <activity android:name=".NotificationActivity" />
+        <activity android:name=".NotificationActivity" >
+
+        </activity>
         <activity
             android:name=".RecipientActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".NotifiyActivity"/>
-        <activity android:name=".NotificationActivity"/>
+        <activity android:name=".NotifiyActivity">
+            <intent-filter>
+                <action android:name="Notifiy_Activity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

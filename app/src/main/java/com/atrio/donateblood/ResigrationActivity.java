@@ -132,6 +132,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
             }
         });
+/*
         atvPlaces.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -155,6 +156,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 }
             }
         });
+*/
         atvPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -354,6 +356,8 @@ public class ResigrationActivity extends AppCompatActivity {
 
 
 
+                    }else {
+                        dialog.dismiss();
                     }
                 }
 

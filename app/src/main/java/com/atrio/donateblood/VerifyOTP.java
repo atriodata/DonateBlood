@@ -45,17 +45,17 @@ public class VerifyOTP extends AppCompatActivity {
         btn_Verify = (Button) findViewById(R.id.btn_verify);
 
         dialog = new SpotsDialog(VerifyOTP.this, R.style.Custom);
+        dialog.show();
 
         Intent i = getIntent();
         phn_no = i.getStringExtra("phn_number");
         mAuth = FirebaseAuth.getInstance();
         User = mAuth.getCurrentUser();
 
-        dialog.show();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
-                dialog.dismiss();
+//                dialog.dismiss();
                 signInWithPhoneAuthCredential(credential);
             }
 
@@ -74,9 +74,10 @@ public class VerifyOTP extends AppCompatActivity {
             @Override
             public void onCodeAutoRetrievalTimeOut(String s) {
                 super.onCodeAutoRetrievalTimeOut(s);
-                dialog.dismiss();
                 otp = et_verify.getText().toString().trim();
                 if (TextUtils.isEmpty(otp)) {
+                    dialog.dismiss();
+
                     Toast.makeText(VerifyOTP.this, "Enter OTP", Toast.LENGTH_SHORT).show();
                 } else {
                     PhoneAuthCredential credential = PhoneAuthProvider.getCredential(s, otp);
@@ -87,8 +88,9 @@ public class VerifyOTP extends AppCompatActivity {
             @Override
             public void onCodeSent(String verificationId,
                                    PhoneAuthProvider.ForceResendingToken token) {
-                dialog.dismiss();
                 mVerificationId = verificationId;
+                dialog.dismiss();
+
                 Toast.makeText(VerifyOTP.this, "OTP is send", Toast.LENGTH_SHORT).show();
                 // ...
             }
@@ -110,7 +112,7 @@ public class VerifyOTP extends AppCompatActivity {
         btn_resend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                dialog.show();
+                dialog.show();
                 fireBasePhLogin(phn_no);
             }
         });
