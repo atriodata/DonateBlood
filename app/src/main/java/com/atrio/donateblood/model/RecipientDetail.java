@@ -14,11 +14,13 @@ public class RecipientDetail {
     public String emailid;
     public String phoneno;
     public String msg_id;
+    public String body;
+
 
     public RecipientDetail() {
     }
 
-    public RecipientDetail(String bloodgroup, String req_date, String state, String country, String city, String other_detail, String emailid, String phoneno, String msg_id) {
+    public RecipientDetail(String bloodgroup, String req_date, String state, String country, String city, String other_detail, String emailid, String phoneno, String msg_id,String body) {
         this.bloodgroup = bloodgroup;
         this.req_date = req_date;
         this.state = state;
@@ -28,6 +30,7 @@ public class RecipientDetail {
         this.emailid = emailid;
         this.phoneno = phoneno;
         this.msg_id = msg_id;
+        this.body=body;
     }
 
     public String getBloodgroup() {
@@ -102,5 +105,12 @@ public class RecipientDetail {
         this.msg_id = msg_id;
     }
 
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 
 }

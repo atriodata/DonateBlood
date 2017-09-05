@@ -21,7 +21,6 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.atrio.donateblood.model.RecipientDetail;
 import com.atrio.donateblood.model.UserDetail;
 import com.atrio.donateblood.sendmail.SendMail;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +32,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -73,6 +71,7 @@ public class RecipientActivity extends AppCompatActivity {
     ArrayList<String> store_list;
     OkHttpClient mClient;
     Intent iget;
+    int msg_count=1;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
 
@@ -236,24 +235,8 @@ public class RecipientActivity extends AppCompatActivity {
         });
     }
 
-    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id) {
-        RecipientDetail recipientDetail=new RecipientDetail();
-
-        recipientDetail.setReq_date(date_req);
-        recipientDetail.setEmailid(emailid);
-        recipientDetail.setPhoneno(phoneno);
-        recipientDetail.setMsg_id(msg_id);
-        recipientDetail.setOther_detail(other_detail);
-        recipientDetail.setBloodgroup(blood_data);
-        recipientDetail.setState(state_data);
-        recipientDetail.setCity(city_data);
-
-        db_ref.child("Notification").child("Recipient").child(msg_id).setValue(recipientDetail);
-        Log.i("Mainresult:45689 ", "" + store_list);
-        sendmail(store_list);
-
-    }
     public void sendNotificationToUser(final String regId) {
+
 
         new AsyncTask<String, String, String>() {
             @Override
@@ -280,16 +263,26 @@ public class RecipientActivity extends AppCompatActivity {
                     notification.put("icon", "myicon");
 
 
+//                    JSONObject message_id=new JSONObject();
+
                     JSONObject data = new JSONObject();
                     data.put("token_id", regId);
-                    data.put("msg_id", msg_id);
-
+//                    data.put("msg_id", msg_id);
+//                    data.put("msg_count",msg_count);
+                    data.put("Email",emailid);
+                    data.put("token_id", regId);
+                    data.put("phoneNo",phoneno);
+                     data.put("stateData", state_data);
+                                        data.put("bloodData",blood_data);
+                                        data.put("cityData",city_data);
+                                        data.put("dateRequired",date_req);
+                                        data.put("other_detail",other_detail);
                     root.put("notification", notification);
                     root.put("data", data);
                     root.put("priority","high");
-//                    root.put("registration_ids", recipients);
                     root.put("to","/topics/"+topic);
-                    Log.i("Mainresult:4 ","" + regId);
+                    Log.i("Messageid","" + root.toString());
+
                     String result = postToFCM(root.toString());
                     Log.i("Mainresult: ","" + result);
 
@@ -302,16 +295,15 @@ public class RecipientActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String result) {
-                Log.i("Mainresult:45689 ","" + store_list);
+                Log.i("Mainresult:45689 ","" + result);
 
-                sendmail(store_list);
+                        sendmail(store_list);
 
 //                Toast.makeText(RecipientActivity.this, result, Toast.LENGTH_LONG).show();
-                dialog.show();
-                try {
+//                dialog.show();
+             /*   try {
                     JSONObject resultJson = new JSONObject(result);
                     msg_id = resultJson.getString("message_id");
-                    createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail,msg_id);
                     dialog.dismiss();
                     Toast.makeText(RecipientActivity.this, "Message Success: " + msg_id, Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
@@ -319,17 +311,13 @@ public class RecipientActivity extends AppCompatActivity {
                     Log.i("error56",""+e);
                     dialog.dismiss();
                     Toast.makeText(RecipientActivity.this, "Message Failed, Unknown error occurred.", Toast.LENGTH_LONG).show();
-                }
+                }*/
             }
         }.execute();
     }
 
 
     String postToFCM(String bodyString) throws IOException {
-
-
-
-//        String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
         final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
         RequestBody body = RequestBody.create(JSON, bodyString);
@@ -342,6 +330,27 @@ public class RecipientActivity extends AppCompatActivity {
         return response.body().string();
     }
 
+/*
+    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id) {
+//        msg_count++;
+
+        RecipientDetail recipientDetail=new RecipientDetail();
+
+        recipientDetail.setReq_date(date_req);
+        recipientDetail.setEmailid(emailid);
+        recipientDetail.setPhoneno(phoneno);
+        recipientDetail.setMsg_id(msg_id);
+        recipientDetail.setOther_detail(other_detail);
+        recipientDetail.setBloodgroup(blood_data);
+        recipientDetail.setState(state_data);
+        recipientDetail.setCity(city_data);
+
+        db_ref.child("Notification").child("Recipient").child(msg_id).setValue(recipientDetail);
+//        Log.i("Mainresult:45689 ", "" + store_list);
+        sendmail(store_list);
+
+    }
+*/
 
     private void sendmail(final ArrayList<String> store_list) {
 

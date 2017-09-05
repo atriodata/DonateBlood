@@ -50,6 +50,7 @@ public class NotifiyActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getChildrenCount() !=0) {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        Log.i("datak",child.toString());
                         RecipientDetail recipientDetail = child.getValue(RecipientDetail.class);
 
                        date_req= recipientDetail.getReq_date();
@@ -61,6 +62,10 @@ public class NotifiyActivity extends AppCompatActivity {
                         state_data=   recipientDetail.getState();
                         city_data=  recipientDetail.getCity();
 
+                        String message = "There is requirement of blood group " + blood_data + " in "+city_data+ " on "+date_req+
+                                ".\n\n\nDetails of Recipient:\n\nEmail-Id:"+emailid+"\nPhone No: "+phoneno+"\nOther Details: "+other_detail;
+
+                        rec_tv.setText(message);
 //                        dialog.dismiss();
                     }
                 }
@@ -73,10 +78,7 @@ public class NotifiyActivity extends AppCompatActivity {
         });
         Log.i("other_detail",""+other_detail);
 
-        String message = "There is requirement of blood group " + blood_data + " in "+city_data+ " on "+date_req+
-                ".\n\n\nDetails of Recipient:\n\nEmail-Id:"+emailid+"\nPhone No: "+phoneno+"\nOther Details: "+other_detail;
 
-        rec_tv.setText(message);
 
         btn_no.setOnClickListener(new View.OnClickListener() {
             @Override

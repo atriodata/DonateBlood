@@ -14,6 +14,9 @@ import android.util.Log;
 
 import com.atrio.donateblood.NotifiyActivity;
 import com.atrio.donateblood.R;
+import com.atrio.donateblood.model.RecipientDetail;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -26,7 +29,8 @@ import java.net.URL;
  */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-
+    private DatabaseReference db_ref;
+    private FirebaseDatabase db_instance;
    /* private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
 
     private NotificationUtils notificationUtils;
@@ -185,22 +189,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         //message will contain the Push Message
         String tittle = remoteMessage.getNotification().getTitle();
-        String message = remoteMessage.getNotification().getBody();
+        String body = remoteMessage.getNotification().getBody();
+
+//        String message_id = remoteMessage.getMessageId();
+//        Log.i("message_id",""+message_id);
         //imageUri will contain URL of the image to be displayed with Notification
         String imageUri = remoteMessage.getData().get("image");
         String token_id = remoteMessage.getData().get("token_id");
-        String msg_id = remoteMessage.getData().get("msg_id");
-
+//        String msg_id = remoteMessage.getData().get("msg_id");
+        String EmailId = remoteMessage.getData().get("Email");
+                String phoneNo = remoteMessage.getData().get("phoneNo");
+        String bloodData = remoteMessage.getData().get("bloodData");
+                String cityData = remoteMessage.getData().get("cityData");
+        String stateData = remoteMessage.getData().get("stateData");
+                String dateRequired = remoteMessage.getData().get("dateRequired");
+                String other_detail = remoteMessage.getData().get("other_detail");
+        String msg_id=remoteMessage.getMessageId();
         Log.i("EmailId44",""+token_id);
         Log.i("phoneNo",""+msg_id);
         Log.i("tittle44",""+tittle);
-        Log.i("message44",""+message);
+        Log.i("message44",""+body);
         //Log.i("EmailId44",""+EmailId);
 
         //To get a Bitmap image from the URL received
         bitmap = getBitmapfromUrl(imageUri);
+        createRecipientDetail(stateData, bloodData, EmailId, phoneNo, dateRequired, cityData, other_detail,msg_id,body);
 
-        sendNotification(tittle,message, bitmap ,token_id,msg_id);
+        sendNotification(tittle,body, bitmap ,token_id,msg_id);
 //        storeNotification(remoteMessage.getData());
     }
 
@@ -224,6 +239,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("token_id", token_id);
         intent.putExtra("msg_id", msg_id);
+        Log.i("msg_45",""+msg_id);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,PendingIntent.FLAG_ONE_SHOT);
 
@@ -250,8 +266,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager =(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0, notificationBuilder.build());
     }
@@ -273,4 +288,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         }
     }
+    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id,String body) {
+//        msg_count++;
+        db_instance = FirebaseDatabase.getInstance();
+        db_ref = db_instance.getReference();
+        RecipientDetail recipientDetail=new RecipientDetail();
+
+        recipientDetail.setReq_date(date_req);
+        recipientDetail.setEmailid(emailid);
+        recipientDetail.setPhoneno(phoneno);
+        recipientDetail.setMsg_id(msg_id);
+        recipientDetail.setOther_detail(other_detail);
+        recipientDetail.setBloodgroup(blood_data);
+        recipientDetail.setState(state_data);
+        recipientDetail.setCity(city_data);
+        recipientDetail.setBody(body);
+
+        db_ref.child("Notification").child("Recipient").child(msg_id).setValue(recipientDetail);
+//        Log.i("Mainresult:45689 ", "" + store_list);
+
+    }
+
 }
