@@ -57,6 +57,7 @@
             android:name=".RecipientActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".NotifiyActivity"/>
+        <activity android:name=".NotificationActivity"/>
     </application>
 
 </manifest>

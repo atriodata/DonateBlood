@@ -44,7 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         permissions = new String[]{
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,};
-        checkPermissions();
+       // checkPermissions();
         final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.drop);
 
         TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,

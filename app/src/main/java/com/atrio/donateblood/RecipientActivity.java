@@ -175,28 +175,7 @@ public class RecipientActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
             }
         });
-        atvPlaces.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    // on focus off
-                    String str = atvPlaces.getText().toString();
 
-                    ListAdapter listAdapter = atvPlaces.getAdapter();
-                    if (listAdapter != null) {
-                        for (int i = 0; i < listAdapter.getCount(); i++) {
-                            String temp = listAdapter.getItem(i).toString();
-                            if (str.compareTo(temp) == 0) {
-                                return;
-                            }
-                        }
-
-                        atvPlaces.setText("");
-                    }
-
-                }
-            }
-        });
 
         db_instance = FirebaseDatabase.getInstance();
         db_ref = db_instance.getReference();
@@ -214,7 +193,7 @@ public class RecipientActivity extends AppCompatActivity {
                     if (validate()) {
                         phoneno = et_phoneno.getText().toString();
                         emailid = et_emailid.getText().toString();
-                        city_data = atvPlaces.getText().toString();
+                        city_data = atvPlaces.getText().toString().toLowerCase();
                         date_req = et_date.getText().toString();
                         other_detail = et_remark.getText().toString();
                         dialog.show();

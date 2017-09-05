@@ -73,6 +73,7 @@ public class ResigrationActivity extends AppCompatActivity {
     List age_data, weight_data;
     ListAdapter listAdapter;
     private SpotsDialog dialog;
+    ArrayList<String> phn_nolist,present_list;
 
 
     @Override
@@ -97,6 +98,10 @@ public class ResigrationActivity extends AppCompatActivity {
         et_age = (Spinner) findViewById(R.id.input_age);
         et_weight = (Spinner) findViewById(R.id.input_weight);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+
+        phn_nolist = new ArrayList<>();
+        present_list = new ArrayList<>();
 
 
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
@@ -264,7 +269,7 @@ public class ResigrationActivity extends AppCompatActivity {
             }
         });
 
-        db_instance = FirebaseDatabase.getInstance();
+
 
         btn_reg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -276,20 +281,24 @@ public class ResigrationActivity extends AppCompatActivity {
                     dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
                 } else {
-                    dialog.dismiss();
-                    if (validate()) {
+                    String data = null;
+                    int selectedId = rg_group.getCheckedRadioButtonId();
+                    radioSexButton = (RadioButton) findViewById(selectedId);
+                    name = et_name.getText().toString();
+                    emailid = et_emailid.getText().toString();
+                    city_data = atvPlaces.getText().toString().toLowerCase();
+                    radio_data = radioSexButton.getText().toString();
+                    phoneno = user.getPhoneNumber();
 
+
+                    if (validate()) {
+                        dialog.dismiss();
+                       // phn_nolist.clear();
+                        phn_nolist.clear();
+
+                        db_instance = FirebaseDatabase.getInstance();
 
                         db_ref = db_instance.getReference();
-
-                        int selectedId = rg_group.getCheckedRadioButtonId();
-                        radioSexButton = (RadioButton) findViewById(selectedId);
-                        name = et_name.getText().toString();
-                        emailid = et_emailid.getText().toString();
-                        city_data = atvPlaces.getText().toString();
-                        radio_data = radioSexButton.getText().toString();
-                        phoneno = user.getPhoneNumber();
-                        dialog.show();
 
                         Query writequery = db_ref.child("Donor").orderByKey();
                         writequery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -301,38 +310,22 @@ public class ResigrationActivity extends AppCompatActivity {
                                             for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()){
                                                 String phn_no = dataSnapshot2.getKey();
                                                 Log.i("phn11",""+phn_no);
-                                                if (! phn_no.equals(phoneno)){
-                                                    createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, cb_data, phoneno, count);
-                                                    et_name.setText("");
-                                                    et_emailid.setText("");
-                                                    atvPlaces.setText("");
-                                                    et_age.setSelection(0);
-                                                    et_weight.setSelection(0);
-                                                    sp_bloodgr.setSelection(0);
-                                                    spin_state.setSelection(0);
-                                                    cb_never.setChecked(false);
-                                                    cb_above.setChecked(false);
-                                                    cb_below.setChecked(false);
-//            rg_group.
-                                                    dialog.dismiss();
-                                                    // Toast.makeText(getApplicationContext(), ""+dataSnapshot.getChildrenCount(), Toast.LENGTH_LONG).show();
-                                                    //Toast.makeText(getApplicationContext(), "SuccessFully 2nd Times", Toast.LENGTH_LONG).show();
-                                                    subscribeToPushService(blood_data);
-                                                }else {
+                                                phn_nolist.add(phn_no);
 
-                                                    dialog.dismiss();
-                                                    Toast.makeText(getApplicationContext(), "This Number is already Registered", Toast.LENGTH_LONG).show();
-
-                                                }
 
                                             }
+
+
 
 
                                         }
                                     }
 
+                                    Log.i("phn13",""+phn_nolist.size());
+                                    sendPhonelist(phn_nolist);
 
                                 } else{
+                                    dialog.dismiss();
                                     createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, cb_data, phoneno, count);
                                     et_name.setText("");
                                     et_emailid.setText("");
@@ -344,12 +337,8 @@ public class ResigrationActivity extends AppCompatActivity {
                                     cb_never.setChecked(false);
                                     cb_above.setChecked(false);
                                     cb_below.setChecked(false);
-//            rg_group.
-                                    dialog.dismiss();
-                                    Toast.makeText(getApplicationContext(), ""+dataSnapshot.getChildrenCount(), Toast.LENGTH_LONG).show();
-                                    //Toast.makeText(getApplicationContext(), "SuccessFully FirstTime", Toast.LENGTH_LONG).show();
                                     subscribeToPushService(blood_data);
-                                    Toast.makeText(getApplicationContext(), "NoData", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ResigrationActivity.this,"Successsully Registred",Toast.LENGTH_SHORT).show();
 
                                 }
 
@@ -360,6 +349,9 @@ public class ResigrationActivity extends AppCompatActivity {
 
                             }
                         });
+
+
+
 
 
                     }
@@ -382,6 +374,71 @@ public class ResigrationActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void sendPhonelist(ArrayList<String> phn_nolist) {
+
+
+        if (phn_nolist.size()!=0){
+            for (int i=0;i<phn_nolist.size();i++){
+                Log.i("phone77",phn_nolist.get(i));
+                Log.i("phone78",phoneno);
+                String data = null;
+                if (phn_nolist.get(i).equals(phoneno)){
+                    data = "present";
+                    present_list.add(data);
+
+                }else{
+
+                    Log.i("data67",""+data);
+                    // Toast.makeText(ResigrationActivity.this,""+data,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+        }
+
+        Log.i("phone79",""+phn_nolist.size());
+        if (phn_nolist.size()!=0){
+
+            if (present_list.size()!=0) {
+                Log.i("arryif33",""+present_list.size());
+                Toast.makeText(ResigrationActivity.this, "This Number is already  Registred", Toast.LENGTH_SHORT).show();
+                et_name.setText("");
+                et_emailid.setText("");
+                atvPlaces.setText("");
+                et_age.setSelection(0);
+                et_weight.setSelection(0);
+                sp_bloodgr.setSelection(0);
+                spin_state.setSelection(0);
+                cb_never.setChecked(false);
+                cb_above.setChecked(false);
+                cb_below.setChecked(false);
+
+
+            }else {
+                dialog.dismiss();
+                createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, cb_data, phoneno, count);
+                et_name.setText("");
+                et_emailid.setText("");
+                atvPlaces.setText("");
+                et_age.setSelection(0);
+                et_weight.setSelection(0);
+                sp_bloodgr.setSelection(0);
+                spin_state.setSelection(0);
+                cb_never.setChecked(false);
+                cb_above.setChecked(false);
+                cb_below.setChecked(false);
+                subscribeToPushService(blood_data);
+                Toast.makeText(ResigrationActivity.this, "Successsully Registred ", Toast.LENGTH_SHORT).show();
+            }
+
+        }else{
+
+
+        }
+
+
     }
 
     private void subscribeToPushService(String blood_data) {

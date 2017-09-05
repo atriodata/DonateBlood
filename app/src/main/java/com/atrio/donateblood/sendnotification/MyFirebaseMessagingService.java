@@ -231,7 +231,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             notificationBuilder .setLargeIcon(image)
-            .setSmallIcon(R.drawable.noti_img1)
+            .setSmallIcon(R.drawable.ic_explore_black_24dp)
                     .setContentTitle(tittle)
                     .setContentText(messageBody)
                     .setAutoCancel(true)
@@ -241,7 +241,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         } else {
 
            notificationBuilder .setLargeIcon(image)
-                    .setSmallIcon(R.drawable.noti_img1)
+                    .setSmallIcon(R.drawable.ic_explore_black_24dp)
                     .setContentTitle(tittle)
                     .setContentText(messageBody)
                     .setAutoCancel(true)
