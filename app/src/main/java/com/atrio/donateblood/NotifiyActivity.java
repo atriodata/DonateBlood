@@ -1,6 +1,5 @@
 package com.atrio.donateblood;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,62 +20,121 @@ public class NotifiyActivity extends AppCompatActivity {
     Button btn_yes,btn_no;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
-    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, token_id,msg_id,imsg_id;
+    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, token_id,msg_id,imsg_id=null,imsg_id2=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifiy);
         rec_tv=(TextView)findViewById(R.id.tv_detail);
-        btn_yes=(Button) findViewById(R.id.btn_yes);
-        btn_no=(Button) findViewById(R.id.btn_no);
+        btn_yes=(Button) findViewById(R.id.btn_no);
+        btn_no=(Button) findViewById(R.id.btn_yes);
+
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                String value = getIntent().getExtras().getString(key);
+                Log.i("data88", "Key: " + key + " Value: " + value);
+
+            }
+            imsg_id= getIntent().getExtras().getString("google.message_id");
+                    Log.i("other_detail2",""+imsg_id);
+
+            imsg_id2= getIntent().getExtras().getString("msg_id");
+            Log.i("other_detail26",""+imsg_id2);
+
+        }
+//        Intent intent = getIntent();
+//        imsg_id = intent.getStringExtra("msg_id");
+//        token_id = intent.getStringExtra("token_id");
+//        Log.i("other_detail2",""+imsg_id);
+//        Log.i("other_detail24",""+imsg_id);
+
+        if (imsg_id!=null){
+            Log.i("other_detail24","if:"+imsg_id);
+
+            db_instance = FirebaseDatabase.getInstance();
+            db_ref = db_instance.getReference();
 
 
-        db_instance = FirebaseDatabase.getInstance();
-        db_ref = db_instance.getReference();
-
-        Intent intent = getIntent();
-        imsg_id = intent.getStringExtra("msg_id");
-        token_id = intent.getStringExtra("token_id");
-        Log.i("other_detail2",""+imsg_id);
+            Query getnotifi=db_ref.child("Notification").child("Recipient").orderByChild("msg_id").equalTo(imsg_id);
+            Log.i("other_query",""+getnotifi);
 
 
+            getnotifi.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getChildrenCount() !=0) {
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            Log.i("dataif",child.toString());
+                            RecipientDetail recipientDetail = child.getValue(RecipientDetail.class);
 
-        Query getnotifi=db_ref.child("Notification").child("Recipient").orderByChild("msg_id").equalTo(imsg_id);
+                            date_req= recipientDetail.getReq_date();
+                            emailid= recipientDetail.getEmailid();
+                            phoneno=  recipientDetail.getPhoneno();
+                            msg_id=  recipientDetail.getMsg_id();
+                            other_detail=  recipientDetail.getOther_detail();
+                            blood_data=   recipientDetail.getBloodgroup();
+                            state_data=   recipientDetail.getState();
+                            city_data=  recipientDetail.getCity();
 
+                            String message = "There is requirement of blood group " + blood_data + " in "+city_data+ " on "+date_req+
+                                    ".\n\n\nDetails of Recipient:\n\nEmail-Id:"+emailid+"\nPhone No: "+phoneno+"\nOther Details: "+other_detail;
 
-        getnotifi.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getChildrenCount() !=0) {
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        Log.i("datak",child.toString());
-                        RecipientDetail recipientDetail = child.getValue(RecipientDetail.class);
-
-                       date_req= recipientDetail.getReq_date();
-                        emailid= recipientDetail.getEmailid();
-                        phoneno=  recipientDetail.getPhoneno();
-                        msg_id=  recipientDetail.getMsg_id();
-                        other_detail=  recipientDetail.getOther_detail();
-                        blood_data=   recipientDetail.getBloodgroup();
-                        state_data=   recipientDetail.getState();
-                        city_data=  recipientDetail.getCity();
-
-                        String message = "There is requirement of blood group " + blood_data + " in "+city_data+ " on "+date_req+
-                                ".\n\n\nDetails of Recipient:\n\nEmail-Id:"+emailid+"\nPhone No: "+phoneno+"\nOther Details: "+other_detail;
-
-                        rec_tv.setText(message);
+                            rec_tv.setText(message);
 //                        dialog.dismiss();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
-        Log.i("other_detail",""+other_detail);
+                }
+            });
+        }else {
+            Log.i("other_detail24","else:"+imsg_id);
+
+            db_instance = FirebaseDatabase.getInstance();
+            db_ref = db_instance.getReference();
+
+
+            Query getnotifi=db_ref.child("Notification").child("Recipient").orderByChild("msg_id").equalTo(imsg_id2);
+
+
+            getnotifi.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getChildrenCount() !=0) {
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            Log.i("datak",child.toString());
+                            RecipientDetail recipientDetail = child.getValue(RecipientDetail.class);
+
+                            date_req= recipientDetail.getReq_date();
+                            emailid= recipientDetail.getEmailid();
+                            phoneno=  recipientDetail.getPhoneno();
+                            msg_id=  recipientDetail.getMsg_id();
+                            other_detail=  recipientDetail.getOther_detail();
+                            blood_data=   recipientDetail.getBloodgroup();
+                            state_data=   recipientDetail.getState();
+                            city_data=  recipientDetail.getCity();
+
+                            String message = "There is requirement of blood group " + blood_data + " in "+city_data+ " on "+date_req+
+                                    ".\n\n\nDetails of Recipient:\n\nEmail-Id:"+emailid+"\nPhone No: "+phoneno+"\nOther Details: "+other_detail;
+
+                            rec_tv.setText(message);
+//                        dialog.dismiss();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+//        Log.i("other_detail",""+other_detail);
 
 
 
