@@ -235,9 +235,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id,String click_action) {
         Intent intent = new Intent(click_action);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("token_id", token_id);
-        intent.putExtra("msg_id", msg_id);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        intent.putExtra("token_id", token_id);
+//        intent.putExtra("msg_id", msg_id);
 //        intent.putExtra("click_action",click_action);
         Log.i("msg_45",""+msg_id);
         Log.i("msg_45",""+intent);

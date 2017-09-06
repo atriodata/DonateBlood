@@ -37,7 +37,7 @@ public class NotificationActivity extends AppCompatActivity {
 
         rootRef = FirebaseDatabase.getInstance().getReference();
 
-        Query query_catlist = rootRef.child("Notification").child("Recipient").orderByKey();
+        Query query_catlist = rootRef.child("Notification").child("Recipient").orderByKey().limitToLast(10);
 
         query_catlist.addListenerForSingleValueEvent(new ValueEventListener() {
 
