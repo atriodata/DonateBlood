@@ -240,7 +240,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("msg_id", msg_id);
 //        intent.putExtra("click_action",click_action);
         Log.i("msg_45",""+msg_id);
-
+        Log.i("msg_45",""+intent);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
