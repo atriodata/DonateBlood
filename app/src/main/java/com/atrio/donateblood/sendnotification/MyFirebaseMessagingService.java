@@ -13,9 +13,6 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.atrio.donateblood.R;
-import com.atrio.donateblood.model.RecipientDetail;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -28,8 +25,8 @@ import java.net.URL;
  */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-    private DatabaseReference db_ref;
-    private FirebaseDatabase db_instance;
+//    private DatabaseReference db_ref;
+//    private FirebaseDatabase db_instance;
    /* private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
 
     private NotificationUtils notificationUtils;
@@ -189,13 +186,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //message will contain the Push Message
         String tittle = remoteMessage.getNotification().getTitle();
         String body = remoteMessage.getNotification().getBody();
-
+        String imageUri = remoteMessage.getData().get("image");
+        String msg_id = remoteMessage.getData().get("msg_id");
+        String token_id = remoteMessage.getData().get("token_id");
         String click_action = remoteMessage.getNotification().getClickAction();
+        /*
 //        Log.i("message_id",""+message_id);
         //imageUri will contain URL of the image to be displayed with Notification
-        String imageUri = remoteMessage.getData().get("image");
-        String token_id = remoteMessage.getData().get("token_id");
-//        String msg_id = remoteMessage.getData().get("msg_id");
+
+//
         String EmailId = remoteMessage.getData().get("Email");
                 String phoneNo = remoteMessage.getData().get("phoneNo");
         String bloodData = remoteMessage.getData().get("bloodData");
@@ -203,16 +202,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String stateData = remoteMessage.getData().get("stateData");
                 String dateRequired = remoteMessage.getData().get("dateRequired");
                 String other_detail = remoteMessage.getData().get("other_detail");
-        String msg_id=remoteMessage.getMessageId();
-        Log.i("EmailId44",""+token_id);
-        Log.i("phoneNo",""+msg_id);
-        Log.i("tittle44",""+tittle);
+        String msg_id=remoteMessage.getMessageId();*/
+//        Log.i("EmailId44",""+token_id);
+//        Log.i("phoneNo",""+msg_id);
+//        Log.i("tittle44",""+msg_id2);
         Log.i("message44",""+body);
         //Log.i("EmailId44",""+EmailId);
 
         //To get a Bitmap image from the URL received
         bitmap = getBitmapfromUrl(imageUri);
-        createRecipientDetail(stateData, bloodData, EmailId, phoneNo, dateRequired, cityData, other_detail,msg_id,body);
+//        createRecipientDetail(stateData, bloodData, EmailId, phoneNo, dateRequired, cityData, other_detail,msg_id,body);
 
         sendNotification(tittle,body, bitmap ,token_id,msg_id,click_action);
 //        storeNotification(remoteMessage.getData());
@@ -236,12 +235,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id,String click_action) {
         Intent intent = new Intent(click_action);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        intent.putExtra("token_id", token_id);
-//        intent.putExtra("msg_id", msg_id);
+        intent.putExtra("token_id", token_id);
+        intent.putExtra("msg_id", msg_id);
 //        intent.putExtra("click_action",click_action);
         Log.i("msg_45",""+msg_id);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this);
@@ -288,6 +287,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         }
     }
+/*
     private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id,String body) {
 //        msg_count++;
         db_instance = FirebaseDatabase.getInstance();
@@ -308,5 +308,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //        Log.i("Mainresult:45689 ", "" + store_list);
 
     }
+*/
 
 }
