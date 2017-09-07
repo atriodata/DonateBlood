@@ -190,6 +190,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String imageUri = remoteMessage.getData().get("image");
         String msg_id = remoteMessage.getData().get("msg_id");
         String token_id = remoteMessage.getData().get("token_id");
+        String body_donor =remoteMessage.getData().get("body");
         String click_action = remoteMessage.getNotification().getClickAction();
         String current_token = FirebaseInstanceId.getInstance().getToken();
 
@@ -209,16 +210,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //        Log.i("EmailId44",""+token_id);
 //        Log.i("phoneNo",""+msg_id);
 //        Log.i("tittle44",""+msg_id2);
-        Log.i("message44",""+body);
+        Log.i("message44",""+body_donor);
         //Log.i("EmailId44",""+EmailId);
 
         //To get a Bitmap image from the URL received
         bitmap = getBitmapfromUrl(imageUri);
 //        createRecipientDetail(stateData, bloodData, EmailId, phoneNo, dateRequired, cityData, other_detail,msg_id,body);
 
-        if (!token_id.equals(current_token)){
-            sendNotification(tittle,body, bitmap ,token_id,msg_id,click_action);
+        if (token_id!=null) {
+            if (!token_id.equals(current_token)) {
+                sendNotification(tittle, body, bitmap, token_id, msg_id, click_action);
 
+            }
+        }else{
+            sendNotification(tittle, body_donor, bitmap, token_id, msg_id, click_action);
         }
 //        storeNotification(remoteMessage.getData());
     }
@@ -243,6 +248,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("token_id", token_id);
         intent.putExtra("msg_id", msg_id);
+        intent.putExtra("body", messageBody);
+
+
 //        intent.putExtra("click_action",click_action);
         Log.i("msg_45",""+msg_id);
 

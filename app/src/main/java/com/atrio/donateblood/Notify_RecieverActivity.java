@@ -17,11 +17,11 @@ public class Notify_RecieverActivity extends AppCompatActivity {
         tv_body = (TextView)findViewById(R.id.tv_confm);
 
         if (getIntent().getExtras() != null) {
-           /* for (String key : getIntent().getExtras().keySet()) {
+            for (String key : getIntent().getExtras().keySet()) {
                 String value = getIntent().getExtras().getString(key);
-                Log.i("data88", "Key: " + key + " Value: " + value);
+                Log.i("data89", "Key: " + key + " Value: " + value);
 
-            }*/
+            }
             body= getIntent().getExtras().getString("body");
             Log.i("other_detail2",""+body);
             tv_body.setText(body);

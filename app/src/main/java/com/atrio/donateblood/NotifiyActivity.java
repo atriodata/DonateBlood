@@ -37,7 +37,7 @@ public class NotifiyActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     OkHttpClient mClient;
-    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, token_id,msg_id,imsg_id=null,message1;
+    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, token_id,msg_id,imsg_id=null,message1,donor_phn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,9 @@ public class NotifiyActivity extends AppCompatActivity {
         mClient = new OkHttpClient();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        phoneno = user.getPhoneNumber();
+        donor_phn = user.getPhoneNumber();
+
+        Log.i("phoneno2",""+imsg_id);
 
         if (getIntent().getExtras() != null) {
            /* for (String key : getIntent().getExtras().keySet()) {
@@ -134,7 +136,7 @@ public class NotifiyActivity extends AppCompatActivity {
                         try {
                             JSONObject root = new JSONObject();
                             JSONObject notification = new JSONObject();
-              message1 = " I am willing to donate blood."+"\n"+" contact me"+"\n"+phoneno;
+              message1 = " I am willing to donate blood."+"\n"+" contact me"+"\n"+donor_phn;
                             notification.put("body", message1);
                             notification.put("title", "Response");
                             notification.put("icon", "myicon");
@@ -148,6 +150,7 @@ public class NotifiyActivity extends AppCompatActivity {
                             root.put("data", data);
                             root.put("priority","high");
                             root.put("to",token_id);
+                            root.put("body",message1);
                             Log.i("Messageid","" + root.toString());
 
                             String result = postToFCM(root.toString());
@@ -198,10 +201,10 @@ public class NotifiyActivity extends AppCompatActivity {
 
         RecipientDetail recipientDetail=new RecipientDetail();
 
-        recipientDetail.setPhoneno(phoneno);
+        recipientDetail.setPhoneno(donor_phn);
         recipientDetail.setBody(message1);
 
-        db_ref.child("Notification").child("Recipient").child(phoneno).setValue(recipientDetail);
+        db_ref.child("Notification").child("Donor").child(donor_phn).setValue(recipientDetail);
 
     }
 
