@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -82,7 +83,6 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-/*
         if (getIntent().getExtras() != null) {
 
             for (String key : getIntent().getExtras().keySet()) {
@@ -90,17 +90,17 @@ public class HomeActivity extends AppCompatActivity {
                 imsg_id= getIntent().getExtras().getString("msg_id");
                 Log.i("other_detail26",""+imsg_id);
 
-                if (key.equals("click_action") && value.equals("Notifiy_Activity")) {
+               /* if (key.equals("click_action") && value.equals("Notifiy_Activity")) {
                     Intent intent = new Intent(HomeActivity.this, NotifiyActivity.class);
                     intent.putExtra("msg_id", imsg_id);
                     startActivity(intent);
                     finish();
-                }
+                }*/
 
             }
             
         }
-*/
+
 
 /*
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {

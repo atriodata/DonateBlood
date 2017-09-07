@@ -13,6 +13,7 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.atrio.donateblood.R;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -190,6 +191,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String msg_id = remoteMessage.getData().get("msg_id");
         String token_id = remoteMessage.getData().get("token_id");
         String click_action = remoteMessage.getNotification().getClickAction();
+        String current_token = FirebaseInstanceId.getInstance().getToken();
+
         /*
 //        Log.i("message_id",""+message_id);
         //imageUri will contain URL of the image to be displayed with Notification
@@ -213,7 +216,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         bitmap = getBitmapfromUrl(imageUri);
 //        createRecipientDetail(stateData, bloodData, EmailId, phoneNo, dateRequired, cityData, other_detail,msg_id,body);
 
-        sendNotification(tittle,body, bitmap ,token_id,msg_id,click_action);
+        if (!token_id.equals(current_token)){
+            sendNotification(tittle,body, bitmap ,token_id,msg_id,click_action);
+
+        }
 //        storeNotification(remoteMessage.getData());
     }
 

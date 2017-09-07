@@ -15,6 +15,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class NotificationActivity extends AppCompatActivity {
@@ -51,9 +52,11 @@ public class NotificationActivity extends AppCompatActivity {
 //                        Log.i("array7712555",""+r_detail);
                         arrayList.add(r_detail);
 
+
                     }
 //                    Log.i("array7712555",""+arrayList);
 
+                    Collections.reverse(arrayList);
                     RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, arrayList);
                     recyclerView.setAdapter(rcAdapter);
                 }

@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONObject;
 
@@ -93,8 +94,7 @@ public class RecipientActivity extends AppCompatActivity {
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         atvPlaces.setThreshold(1);
         store_list = new ArrayList<>();
-        iget = getIntent();
-        regId = iget.getStringExtra("tokenid");
+        regId = FirebaseInstanceId.getInstance().getToken();
         mClient = new OkHttpClient();
         sp_bloodgr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -281,7 +281,7 @@ public class RecipientActivity extends AppCompatActivity {
                     notification.put("body", message1);
                     notification.put("title", "Donate Blood");
                     notification.put("icon", "myicon");
-//                    notification.put("click_action","Notifiy_Activity");
+                    notification.put("click_action","Notifiy_Activity");
 
 
 //                    JSONObject message_id=new JSONObject();
