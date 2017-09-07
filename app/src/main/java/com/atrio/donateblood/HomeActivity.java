@@ -7,16 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
-
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +22,7 @@ public class HomeActivity extends AppCompatActivity {
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     ImageView img_drop,img_bgdrop;
     Button btn_donate,btn_recive,btn_notify;
-    String token;
+    String token,imsg_id;
     String[] permissions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,22 +82,25 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-        /*if (getIntent().getExtras() != null) {
+/*
+        if (getIntent().getExtras() != null) {
 
             for (String key : getIntent().getExtras().keySet()) {
                 String value = getIntent().getExtras().getString(key);
+                imsg_id= getIntent().getExtras().getString("msg_id");
+                Log.i("other_detail26",""+imsg_id);
 
-
-                if (key.equals("NotifiyActivity") && value.equals("True")) {
+                if (key.equals("click_action") && value.equals("Notifiy_Activity")) {
                     Intent intent = new Intent(HomeActivity.this, NotifiyActivity.class);
-                    intent.putExtra("value", value);
+                    intent.putExtra("msg_id", imsg_id);
                     startActivity(intent);
                     finish();
                 }
 
             }
             
-        }*/
+        }
+*/
 
 /*
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {

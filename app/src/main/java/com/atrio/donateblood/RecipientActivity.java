@@ -20,6 +20,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.atrio.donateblood.model.RecipientDetail;
 import com.atrio.donateblood.model.UserDetail;
 import com.atrio.donateblood.sendmail.SendMail;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,7 +62,7 @@ public class RecipientActivity extends AppCompatActivity {
     Spinner spin_state, sp_bloodgr;
     Button btn_send;
     EditText et_phoneno, et_emailid, et_date, et_remark;
-    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, send_mail, regId,msg_id;
+    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, send_mail, regId,msg_id,message1;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
@@ -70,9 +71,7 @@ public class RecipientActivity extends AppCompatActivity {
     ArrayList<String> store_list;
     OkHttpClient mClient;
     Intent iget;
-    int msg_count=1;
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
+//    int msg_count=001;
 
 
     @Override
@@ -195,6 +194,7 @@ public class RecipientActivity extends AppCompatActivity {
                         date_req = et_date.getText().toString();
                         other_detail = et_remark.getText().toString();
                         dialog.show();
+                        message1 = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req;
 
                         Query readqery = db_ref.child("Donor").child(state_data).child(city_data).orderByChild("bloodgroup").equalTo(blood_data);
 
@@ -215,7 +215,29 @@ public class RecipientActivity extends AppCompatActivity {
                                     }
                                   dialog.dismiss();
                                     Log.i("Mainresult:47", "" + regId);
-                                    sendNotificationToUser(regId);
+
+                                    Query readqery = db_ref.child("Notification").child("Recipient").orderByKey();
+                                    readqery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if(dataSnapshot.getChildrenCount()==0) {
+                                                msg_id = "001";
+                                                createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1);
+                                            }else {
+                                                long countchild = dataSnapshot.getChildrenCount();
+                                                countchild++;
+                                                msg_id=String.format("%03d",countchild);
+                                                createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1);
+
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
                                     Toast.makeText(RecipientActivity.this, "Request Send", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -256,27 +278,28 @@ public class RecipientActivity extends AppCompatActivity {
                     JSONObject root = new JSONObject();
                     JSONObject notification = new JSONObject();
 
-                    String message1 = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req;
                     notification.put("body", message1);
                     notification.put("title", "Donate Blood");
                     notification.put("icon", "myicon");
-                    notification.put("click_action","Notifiy_Activity");
+//                    notification.put("click_action","Notifiy_Activity");
 
 
 //                    JSONObject message_id=new JSONObject();
 
                     JSONObject data = new JSONObject();
                     data.put("token_id", regId);
-//                    data.put("msg_id", msg_id);
+                    data.put("msg_id", msg_id);
 //                    data.put("msg_count",msg_count);
-                    data.put("Email",emailid);
-                    data.put("token_id", regId);
-                    data.put("phoneNo",phoneno);
-                     data.put("stateData", state_data);
-                                        data.put("bloodData",blood_data);
-                                        data.put("cityData",city_data);
-                                        data.put("dateRequired",date_req);
-                                        data.put("other_detail",other_detail);
+//                    data.put("click_action","Notifiy_Activity");
+
+//                    data.put("Email",emailid);
+//                    data.put("token_id", regId);
+//                    data.put("phoneNo",phoneno);
+//                     data.put("stateData", state_data);
+//                                        data.put("bloodData",blood_data);
+//                                        data.put("cityData",city_data);
+//                                        data.put("dateRequired",date_req);
+//                                        data.put("other_detail",other_detail);
                     root.put("notification", notification);
                     root.put("data", data);
                     root.put("priority","high");
@@ -298,6 +321,7 @@ public class RecipientActivity extends AppCompatActivity {
                 Log.i("Mainresult:45689 ","" + result);
 
                         sendmail(store_list);
+
 
 //                Toast.makeText(RecipientActivity.this, result, Toast.LENGTH_LONG).show();
 //                dialog.show();
@@ -330,8 +354,7 @@ public class RecipientActivity extends AppCompatActivity {
         return response.body().string();
     }
 
-/*
-    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id) {
+    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id,String body) {
 //        msg_count++;
 
         RecipientDetail recipientDetail=new RecipientDetail();
@@ -344,13 +367,15 @@ public class RecipientActivity extends AppCompatActivity {
         recipientDetail.setBloodgroup(blood_data);
         recipientDetail.setState(state_data);
         recipientDetail.setCity(city_data);
+        recipientDetail.setBody(body);
 
         db_ref.child("Notification").child("Recipient").child(msg_id).setValue(recipientDetail);
 //        Log.i("Mainresult:45689 ", "" + store_list);
-        sendmail(store_list);
+//        sendmail(store_list);
+        sendNotificationToUser(regId);
+
 
     }
-*/
 
     private void sendmail(final ArrayList<String> store_list) {
 
