@@ -212,8 +212,6 @@ public class NotificationActivity extends AppCompatActivity {
 
                     }
 
-
-
                 }else{
 
                 }
