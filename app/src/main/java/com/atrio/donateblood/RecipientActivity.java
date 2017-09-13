@@ -91,6 +91,8 @@ public class RecipientActivity extends AppCompatActivity {
         et_date = (EditText) findViewById(R.id.input_date);
         et_remark = (EditText) findViewById(R.id.et_remark);
 
+        et_phoneno.setEnabled(false);
+        et_phoneno.setText(user.getPhoneNumber());
         atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         atvPlaces.setThreshold(1);
         store_list = new ArrayList<>();
@@ -201,7 +203,10 @@ public class RecipientActivity extends AppCompatActivity {
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+//                                Log.i("Mainresult588585", "" + dataSnapshot.getChildrenCount());
+
                                 if (dataSnapshot.getChildrenCount() == 0) {
+
                                     dialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "No Donor Available", Toast.LENGTH_LONG).show();
                                 } else {
@@ -214,19 +219,19 @@ public class RecipientActivity extends AppCompatActivity {
                                         store_list.add(send_mail);
                                     }
                                   dialog.dismiss();
-                                    Log.i("Mainresult:47", "" + regId);
+//                                    Log.i("Mainresult:47", "" + regId);
 
                                     Query readqery = db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(phoneno).orderByKey();
                                     readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             if(dataSnapshot.getChildrenCount()==0) {
-                                                msg_id = "001";
+                                                msg_id = "R-001";
                                                 createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1);
                                             }else {
                                                 long countchild = dataSnapshot.getChildrenCount();
                                                 countchild++;
-                                                msg_id=String.format("%03d",countchild);
+                                                msg_id="R-"+String.format("%03d",countchild);
                                                 createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1);
 
                                             }
@@ -238,7 +243,7 @@ public class RecipientActivity extends AppCompatActivity {
 
                                         }
                                     });
-                                    Toast.makeText(RecipientActivity.this, "Request Send", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RecipientActivity.this, "Request Sent", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -304,7 +309,7 @@ public class RecipientActivity extends AppCompatActivity {
                     root.put("notification", notification);
                     root.put("data", data);
                     root.put("priority","high");
-                    root.put("to","/topics/"+topic);
+                    root.put("to","/topics/"+city_data+topic);
                     Log.i("Messageid","" + root.toString());
 
                     String result = postToFCM(root.toString());

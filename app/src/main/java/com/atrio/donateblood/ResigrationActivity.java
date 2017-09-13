@@ -489,7 +489,7 @@ public class ResigrationActivity extends AppCompatActivity {
             topic = groupFirst+"negative";
             Log.d("blood_data13", topic);
         }
-        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        FirebaseMessaging.getInstance().subscribeToTopic(city_data+topic);
         token = FirebaseInstanceId.getInstance().getToken();
       //  Log.d("token11", token);
     }

@@ -123,8 +123,8 @@
                     android:id="@+id/input_phoneno"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Enter Your Phone No."
                     android:inputType="number"
+                    android:editable="false"
                     android:maxLength="12"/>
 
             </android.support.design.widget.TextInputLayout>
