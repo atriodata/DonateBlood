@@ -1,7 +1,6 @@
 package com.atrio.donateblood;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -71,9 +70,6 @@ public class RecipientActivity extends AppCompatActivity {
     private SpotsDialog dialog;
     ArrayList<String> store_list;
     OkHttpClient mClient;
-    Intent iget;
-//    int msg_count=001;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +78,6 @@ public class RecipientActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         dialog = new SpotsDialog(RecipientActivity.this, R.style.Custom);
-
         spin_state = (Spinner) findViewById(R.id.spin_state);
         sp_bloodgr = (Spinner) findViewById(R.id.spin_bloodGrp);
         btn_send = (Button) findViewById(R.id.bt_reg);
@@ -102,7 +97,6 @@ public class RecipientActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 blood_data = parent.getItemAtPosition(position).toString();
-
             }
 
             @Override
@@ -132,20 +126,16 @@ public class RecipientActivity extends AppCompatActivity {
                         }, mYear, mMonth, mDay);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 datePickerDialog.show();
-//                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
             }
         });
         spin_state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 state_data = parent.getItemAtPosition(position).toString();
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -160,7 +150,6 @@ public class RecipientActivity extends AppCompatActivity {
                     placesTask = new PlacesTask();
                     placesTask.execute(s.toString());
                 }
-
             }
 
             @Override
@@ -203,15 +192,11 @@ public class RecipientActivity extends AppCompatActivity {
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-//                                Log.i("Mainresult588585", "" + dataSnapshot.getChildrenCount());
-
                                 if (dataSnapshot.getChildrenCount() == 0) {
-
                                     dialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "No Donor Available", Toast.LENGTH_LONG).show();
                                 } else {
                                     Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
-
                                     while (item.hasNext()) {
                                         DataSnapshot items = item.next();
                                         UserDetail user_info = items.getValue(UserDetail.class);
@@ -219,8 +204,6 @@ public class RecipientActivity extends AppCompatActivity {
                                         store_list.add(send_mail);
                                     }
                                   dialog.dismiss();
-//                                    Log.i("Mainresult:47", "" + regId);
-
                                     Query readqery = db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(phoneno).orderByKey();
                                     readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
@@ -233,11 +216,8 @@ public class RecipientActivity extends AppCompatActivity {
                                                 countchild++;
                                                 msg_id="R-"+String.format("%03d",countchild);
                                                 createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1);
-
                                             }
-
                                         }
-
                                         @Override
                                         public void onCancelled(DatabaseError databaseError) {
 
@@ -246,7 +226,6 @@ public class RecipientActivity extends AppCompatActivity {
                                     Toast.makeText(RecipientActivity.this, "Request Sent", Toast.LENGTH_SHORT).show();
                                 }
                             }
-
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
 
@@ -255,30 +234,22 @@ public class RecipientActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 }
-
-
             }
         });
     }
 
     public void sendNotificationToUser(final String regId) {
-
-
         new AsyncTask<String, String, String>() {
             @Override
             protected String doInBackground(String... params) {
                 try {
                     String topic = null;
                     String groupFirst = blood_data.substring(0,blood_data.length()-1);
-                    Log.d("blood_data11", groupFirst);
                     String grouplast = blood_data.substring(blood_data.length()-1);
-
                     if (grouplast.equals("+")){
                         topic = groupFirst+"positive";
-                        Log.d("blood_data56", topic);
                     }else{
                         topic = groupFirst+"negative";
-                        Log.d("blood_data56", topic);
                     }
                     JSONObject root = new JSONObject();
                     JSONObject notification = new JSONObject();
@@ -288,33 +259,15 @@ public class RecipientActivity extends AppCompatActivity {
                     notification.put("icon", "myicon");
                     notification.put("click_action","Notifiy_Activity");
 
-
-//                    JSONObject message_id=new JSONObject();
-
                     JSONObject data = new JSONObject();
                     data.put("token_id", regId);
                     data.put("msg_id", msg_id);
                     data.put("pho_no",phoneno);
-//                    data.put("msg_count",msg_count);
-//                    data.put("click_action","Notifiy_Activity");
-
-//                    data.put("Email",emailid);
-//                    data.put("token_id", regId);
-//                    data.put("phoneNo",phoneno);
-//                     data.put("stateData", state_data);
-//                                        data.put("bloodData",blood_data);
-//                                        data.put("cityData",city_data);
-//                                        data.put("dateRequired",date_req);
-//                                        data.put("other_detail",other_detail);
                     root.put("notification", notification);
                     root.put("data", data);
                     root.put("priority","high");
                     root.put("to","/topics/"+city_data+topic);
-                    Log.i("Messageid","" + root.toString());
-
                     String result = postToFCM(root.toString());
-                    Log.i("Mainresult: ","" + result);
-
                     return result;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -324,24 +277,7 @@ public class RecipientActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String result) {
-                Log.i("Mainresult:45689 ","" + result);
-
                         sendmail(store_list);
-
-
-//                Toast.makeText(RecipientActivity.this, result, Toast.LENGTH_LONG).show();
-//                dialog.show();
-             /*   try {
-                    JSONObject resultJson = new JSONObject(result);
-                    msg_id = resultJson.getString("message_id");
-                    dialog.dismiss();
-                    Toast.makeText(RecipientActivity.this, "Message Success: " + msg_id, Toast.LENGTH_LONG).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.i("error56",""+e);
-                    dialog.dismiss();
-                    Toast.makeText(RecipientActivity.this, "Message Failed, Unknown error occurred.", Toast.LENGTH_LONG).show();
-                }*/
             }
         }.execute();
     }
@@ -361,8 +297,6 @@ public class RecipientActivity extends AppCompatActivity {
     }
 
     private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id,String body) {
-//        msg_count++;
-
         RecipientDetail recipientDetail=new RecipientDetail();
 
         recipientDetail.setReq_date(date_req);
@@ -376,26 +310,18 @@ public class RecipientActivity extends AppCompatActivity {
         recipientDetail.setBody(body);
 
         db_ref.child("RecipientNotification").child("Recipient").child(city_data).child(blood_data).child(phoneno).child(msg_id).setValue(recipientDetail);
-        //db_ref.child("Notification").child("Recipient").child(msg_id).setValue(recipientDetail);
         db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(msg_id).setValue(recipientDetail);
-//        Log.i("Mainresult:45689 ", "" + store_list);
-//        sendmail(store_list);
         sendNotificationToUser(regId);
-
-
     }
 
     private void sendmail(final ArrayList<String> store_list) {
 
-        Log.i("childrollno", "" + blood_data);
         String email = "info@atriodata.com";
         String mail_subject = "Blood Required";
         String message = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req +
                 ".\n\n\nDetails of Recipient:\n\nEmail-Id:" + emailid + "\nPhone No: " + phoneno + "\nOther Details: " + other_detail;
         SendMail sm = new SendMail(this, email, mail_subject, message, store_list);
         sm.execute();
-
-
 
         et_date.setText("");
         et_emailid.setText("");
@@ -405,17 +331,13 @@ public class RecipientActivity extends AppCompatActivity {
         sp_bloodgr.setSelection(0);
         spin_state.setSelection(0);
         dialog.dismiss();
-
-
     }
 
 
     private boolean validate() {
-// check whether the field is empty or not
         if (blood_data.equals("Select Your Blood Group")) {
             Toast.makeText(getApplicationContext(), "Select Your Blood Group", Toast.LENGTH_LONG).show();
             return false;
-
 
         } else if (et_date.getText().toString().trim().length() < 1) {
             et_date.setError("Please Fill This Field");
@@ -445,7 +367,6 @@ public class RecipientActivity extends AppCompatActivity {
             et_remark.requestFocus();
             return false;
 
-
         } else
             return true;
 
@@ -460,39 +381,21 @@ public class RecipientActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... place) {
-            // For storing data from web service
             String data = "";
-
-            // Obtain browser key from https://code.google.com/apis/console
             String key = "key=AIzaSyAG-AdjAgToyXceK6-ghWS38ho8cALPaUw";
-
             String input = "";
-
             try {
                 input = "input=" + URLEncoder.encode(place[0], "utf-8");
             } catch (UnsupportedEncodingException e1) {
                 e1.printStackTrace();
             }
-
-            // place type to be searched
             String types = "types=(cities)";
-
-            // Sensor enabled
             String sensor = "sensor=false";
-
-            // Building the parameters to the web service
             String parameters = input + "&" + types + "&" + sensor + "&" + key;
-
-            // Output format
             String output = "json";
-
-            // Building the url to the web service
             String url =
-//                    "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=India&sensor=false&types=(regions)&key=AIzaSyAG-AdjAgToyXceK6-ghWS38ho8cALPaUw";
                     "https://maps.googleapis.com/maps/api/place/autocomplete/" + output + "?" + parameters + "&components=country:IN";
-
             try {
-                // Fetching the data from we service
                 data = downloadUrl(url);
             } catch (Exception e) {
                 Log.d("Background Task", e.toString());
@@ -503,11 +406,7 @@ public class RecipientActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
-            // Creating ParserTask
             parserTask = new ParserTask();
-
-            // Starting Parsing the JSON string returned by Web Service
             parserTask.execute(result);
         }
     }
@@ -518,30 +417,18 @@ public class RecipientActivity extends AppCompatActivity {
         HttpURLConnection urlConnection = null;
         try {
             URL url = new URL(strUrl);
-
-            // Creating an http connection to communicate with url
             urlConnection = (HttpURLConnection) url.openConnection();
-
-            // Connecting to url
             urlConnection.connect();
-
-            // Reading data from url
             iStream = urlConnection.getInputStream();
-
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
             StringBuffer sb = new StringBuffer();
-
             String line = "";
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-
             data = sb.toString();
             br.close();
-
         } catch (Exception e) {
-            Log.i("url45", "" + e.toString());
         } finally {
             iStream.close();
             urlConnection.disconnect();
@@ -557,15 +444,10 @@ public class RecipientActivity extends AppCompatActivity {
         protected List<HashMap<String, String>> doInBackground(String... jsonData) {
 
             List<HashMap<String, String>> places = null;
-
             PlaceJSONParser placeJsonParser = new PlaceJSONParser(state_data);
-
             try {
                 jObject = new JSONObject(jsonData[0]);
-
-                // Getting the parsed data as a List construct
                 places = placeJsonParser.parse(jObject);
-
             } catch (Exception e) {
                 Log.d("Exception", e.toString());
             }

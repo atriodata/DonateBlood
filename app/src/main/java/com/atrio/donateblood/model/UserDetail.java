@@ -5,7 +5,7 @@ package com.atrio.donateblood.model;
  */
 
 public class UserDetail {
-    public  String name;
+    public String name;
     public String age;
     public String weight;
     public String gender;
@@ -27,10 +27,11 @@ public class UserDetail {
     }
 
     public String address;
+
     public UserDetail() {
     }
 
-    public UserDetail(String name, String age, String weight, String gender, String state, String bloodgroup, String country, String city, String timeperiod,String emailid,String phoneno,String count) {
+    public UserDetail(String name, String age, String weight, String gender, String state, String bloodgroup, String country, String city, String timeperiod, String emailid, String phoneno, String count) {
         this.name = name;
         this.age = age;
         this.weight = weight;
@@ -40,9 +41,9 @@ public class UserDetail {
         this.country = country;
         this.city = city;
         this.timeperiod = timeperiod;
-        this.emailid=emailid;
-        this.phoneno=phoneno;
-        this.count=count;
+        this.emailid = emailid;
+        this.phoneno = phoneno;
+        this.count = count;
     }
 
     public String getEmailid() {
@@ -60,8 +61,6 @@ public class UserDetail {
     public void setPhoneno(String phoneno) {
         this.phoneno = phoneno;
     }
-
-
 
 
     public String getName() {
@@ -143,7 +142,6 @@ public class UserDetail {
     public void setCount(String count) {
         this.count = count;
     }
-
 
 
 }

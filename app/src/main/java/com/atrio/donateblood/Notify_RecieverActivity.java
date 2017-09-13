@@ -1,33 +1,27 @@
 package com.atrio.donateblood;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+
+import dmax.dialog.SpotsDialog;
 
 public class Notify_RecieverActivity extends AppCompatActivity {
     String body;
     TextView tv_body;
-
+    private SpotsDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify__reciever);
         tv_body = (TextView)findViewById(R.id.tv_confm);
-
+        dialog = new SpotsDialog(Notify_RecieverActivity.this, R.style.Custom);
+        dialog.show();
         if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                String value = getIntent().getExtras().getString(key);
-                Log.i("data89", "Key: " + key + " Value: " + value);
-
-            }
             body= getIntent().getExtras().getString("body");
-            Log.i("other_detail2",""+body);
+            dialog.dismiss();
             tv_body.setText(body);
-
-
-
         }
     }
 }

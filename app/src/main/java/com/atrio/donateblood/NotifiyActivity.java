@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -25,6 +24,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import dmax.dialog.SpotsDialog;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -38,6 +38,8 @@ public class NotifiyActivity extends AppCompatActivity {
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
+    private SpotsDialog dialog;
+
     OkHttpClient mClient;
     String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail,
             token_id,msg_id,imsg_id=null,message1,donor_phn,recipient_phn,city_donor,blood_group_donor;
@@ -55,57 +57,31 @@ public class NotifiyActivity extends AppCompatActivity {
         rec_tv=(TextView)findViewById(R.id.tv_detail);
         btn_yes=(Button) findViewById(R.id.btn_no);
         btn_no=(Button) findViewById(R.id.btn_yes);
+        dialog = new SpotsDialog(NotifiyActivity.this, R.style.Custom);
 
+        dialog.show();
         mClient = new OkHttpClient();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         donor_phn = user.getPhoneNumber();
 
-        sharedpreferences = getSharedPreferences(MyPREFERENCES,
-                Context.MODE_PRIVATE);
+        sharedpreferences = getSharedPreferences(MyPREFERENCES,Context.MODE_PRIVATE);
         city_donor = sharedpreferences.getString(city,"");
         blood_group_donor = sharedpreferences.getString(blood_group,"");
-        /*Log.i("city_donor44",""+city_donor);
-        Log.i("blood_group_donor44",""+blood_group_donor);*/
-
-
-        Log.i("phoneno2",""+imsg_id);
-
         if (getIntent().getExtras() != null) {
-           /* for (String key : getIntent().getExtras().keySet()) {
-                String value = getIntent().getExtras().getString(key);
-                Log.i("data88", "Key: " + key + " Value: " + value);
-
-            }*/
             imsg_id= getIntent().getExtras().getString("msg_id");
-                    Log.i("other_detail2",""+imsg_id);
-
             token_id= getIntent().getExtras().getString("token_id");
-            blood_data = getIntent().getExtras().getString("token_id");
             recipient_phn = getIntent().getExtras().getString("phon_no");
-            Log.i("recipient_phn26",""+recipient_phn);
-
         }
-   /*     Intent intent = getIntent();
-        imsg_id = intent.getStringExtra("msg_id");
-        token_id = intent.getStringExtra("token_id");*/
-
-
-
             db_instance = FirebaseDatabase.getInstance();
             db_ref = db_instance.getReference();
 
-
             Query getnotifi=db_ref.child("Notifications").child("Recipient").child(city_donor).child(blood_group_donor).orderByChild("msg_id").equalTo(imsg_id);
-            Log.i("other_query",""+getnotifi);
-
-
             getnotifi.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.getChildrenCount() !=0) {
                         for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            Log.i("dataif",child.toString());
                             RecipientDetail recipientDetail = child.getValue(RecipientDetail.class);
 
                             date_req= recipientDetail.getReq_date();
@@ -119,9 +95,8 @@ public class NotifiyActivity extends AppCompatActivity {
 
                             String message = "There is requirement of blood group " + blood_data + " in "+city_data+ " on "+date_req+
                                     ".\n\n\nDetails of Recipient:\n\nEmail-Id:"+emailid+"\nPhone No: "+phoneno+"\nOther Details: "+other_detail;
-
+                           dialog.dismiss();
                             rec_tv.setText(message);
-//                        dialog.dismiss();
                         }
                     }
                 }
@@ -131,11 +106,6 @@ public class NotifiyActivity extends AppCompatActivity {
 
                 }
             });
-
-//        Log.i("other_detail",""+other_detail);
-
-
-
         btn_no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,7 +116,7 @@ public class NotifiyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(NotifiyActivity.this, "sent", Toast.LENGTH_SHORT).show();
+                dialog.show();
 
                 new AsyncTask<String, String, String>() {
                     @Override
@@ -159,7 +129,6 @@ public class NotifiyActivity extends AppCompatActivity {
                             notification.put("title", "Response");
                             notification.put("icon", "myicon");
                             notification.put("click_action","Notifiy_Reciever");
-//                    JSONObject message_id=new JSONObject();
 
                             JSONObject data = new JSONObject();
                             data.put("body",message1);
@@ -168,11 +137,7 @@ public class NotifiyActivity extends AppCompatActivity {
                             root.put("data", data);
                             root.put("priority","high");
                             root.put("to",token_id);
-
-                            Log.i("Messageid","" + root.toString());
-
                             String result = postToFCM(root.toString());
-                            Log.i("Mainresult: ","" + result);
 
                             return result;
                         } catch (Exception ex) {
@@ -183,8 +148,6 @@ public class NotifiyActivity extends AppCompatActivity {
 
                     @Override
                     protected void onPostExecute(String result) {
-                        Log.i("Mainresult:45689 ","" + result);
-
 
                         Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).child(imsg_id).orderByKey();
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -192,24 +155,21 @@ public class NotifiyActivity extends AppCompatActivity {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if(dataSnapshot.getChildrenCount()==0) {
                                     sendDataToDatabase();
-
                                 }else {
-
                                     sendDataToDatabase();
-
                                 }
-
                             }
-
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
                         });
-
-
                     }
                 }.execute();
+
+                dialog.dismiss();
+                Toast.makeText(NotifiyActivity.this, "sent", Toast.LENGTH_SHORT).show();
+
             }
         });
 

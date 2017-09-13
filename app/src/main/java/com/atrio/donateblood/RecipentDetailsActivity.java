@@ -1,9 +1,8 @@
 package com.atrio.donateblood;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,21 +41,13 @@ public class RecipentDetailsActivity extends AppCompatActivity {
         bt_send = (Button)findViewById(R.id.bt_reg);
 
         dialog = new SpotsDialog(RecipentDetailsActivity.this, R.style.Custom);
-
-
         et_rcPhn.setEnabled(false);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         phno_no = user.getPhoneNumber();
-        Log.i("printUser11",""+phno_no);
         et_rcPhn.setText(phno_no);
-
         db_instance = FirebaseDatabase.getInstance();
-
         db_ref = db_instance.getReference();
-
-
-
         bt_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,12 +58,8 @@ public class RecipentDetailsActivity extends AppCompatActivity {
                     address = et_rcaddress.getText().toString().trim();
                     createRecipient(name,phn_no,address);
                 }
-
             }
         });
-
-
-
     }
 
     private void createRecipient(String name, final String phn_no, String address) {
@@ -85,10 +72,6 @@ public class RecipentDetailsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getChildrenCount()!=0){
-/*
-                    db_ref.child("Recipient").child(phn_no).setValue(userDetail);
-                    Toast.makeText(RecipentDetailsActivity.this,"successfully submitted",Toast.LENGTH_SHORT).show();
-                    */
                     dialog.dismiss();
 
                 }else{
@@ -97,10 +80,8 @@ public class RecipentDetailsActivity extends AppCompatActivity {
                     db_ref.child("Recipient").child(phn_no).setValue(userDetail);
                     Intent intent = new Intent(RecipentDetailsActivity.this, RecipientActivity.class);
                     startActivity(intent);
-
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 

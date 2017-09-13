@@ -31,21 +31,13 @@ public class MainActivity extends AppCompatActivity {
         et_phn = (EditText) findViewById(R.id.et_phone);
         btn_nxt = (Button) findViewById(R.id.btn_next);
         isd_code = ccp.getSelectedCountryCodeWithPlus();
-
-
         mAuth=FirebaseAuth.getInstance();
         user= mAuth.getCurrentUser();
         if (user != null) {
-            // User is signed in
             startActivity(new Intent(MainActivity.this,HomeActivity.class));
             finish();
-//                    Log.i("signed_in:","" + user.getUid());
         } else {
-            // User is signed out
-//                    Log.i("signed_out",""+user);
         }
-
-
         ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
             @Override
 
@@ -67,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
 
     private boolean validatePhoneNumber() {

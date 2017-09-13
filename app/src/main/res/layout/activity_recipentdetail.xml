@@ -88,18 +88,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:paddingBottom="10dp"
                 android:background="@drawable/ripple_effect"
-                android:text="Send "
+                android:text="Next"
                 android:textColor="@color/white" />
-
-
         </LinearLayout>
-
-
-
-
     </ScrollView>
-
-
 </android.support.constraint.ConstraintLayout>

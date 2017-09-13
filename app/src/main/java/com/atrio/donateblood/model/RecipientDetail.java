@@ -13,15 +13,6 @@ public class RecipientDetail {
     public String other_detail;
     public String emailid;
     public String phoneno;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String msg_id;
     public String body;
     public String type;
@@ -31,7 +22,7 @@ public class RecipientDetail {
 
     }
 
-    public RecipientDetail(String bloodgroup, String req_date, String state, String country, String city, String other_detail, String emailid, String phoneno, String msg_id,String body) {
+    public RecipientDetail(String bloodgroup, String req_date, String state, String country, String city, String other_detail, String emailid, String phoneno, String msg_id, String body) {
         this.bloodgroup = bloodgroup;
         this.req_date = req_date;
         this.state = state;
@@ -41,7 +32,7 @@ public class RecipientDetail {
         this.emailid = emailid;
         this.phoneno = phoneno;
         this.msg_id = msg_id;
-        this.body=body;
+        this.body = body;
     }
 
     public String getBloodgroup() {
@@ -123,5 +114,13 @@ public class RecipientDetail {
     public void setBody(String body) {
         this.body = body;
     }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 
 }
