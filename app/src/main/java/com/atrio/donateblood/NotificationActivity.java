@@ -34,6 +34,7 @@ public class NotificationActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     SharedPreferences sharedpreferences;
+    String rec_phn,msg_id;
 
 
     public static final String MyPREFERENCES = "BloodDonate" ;
@@ -65,6 +66,51 @@ public class NotificationActivity extends AppCompatActivity {
         Log.i("city_donor44",""+city_donor);
         Log.i("blood_group_donor44",""+blood_group_donor);
 
+        Query query_donoractivity= rootRef.child("Notifications").child("Donor").orderByKey();
+        query_donoractivity.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount()!=0){
+                    /*for ( DataSnapshot data : dataSnapshot.getChildren()){
+                        if (data.getKey().equals(donor_phn)){
+                            Toast.makeText(NotificationActivity.this, ""+data.getKey(), Toast.LENGTH_SHORT).show();
+                            for (DataSnapshot data_info :data.getChildren()){
+                                RecipientDetail recipientDetail = data_info.getValue(RecipientDetail.class);
+                                 rec_phn = recipientDetail.getRec_phn();
+                                 msg_id = recipientDetail.getMsg_id();
+                                Log.i("re_phn77",""+rec_phn);
+                                Log.i("Msg_id77",""+msg_id);
+
+                                getDonorActivity(rec_phn,msg_id);
+
+                                //Log.i("re_phn77",""+recipientDetail.getRec_phn());
+
+                            }
+                        }
+                    }*/
+                    //Log.i("donateblood11", "" + dataSnapshot.getKey());
+                    for (DataSnapshot data_info :dataSnapshot.getChildren()) {
+
+                        if (data_info.getKey().equals(donor_phn)) {
+                            Log.i("donateblood11", "" + data_info.getKey());
+                            RecipientDetail recipientDetail = data_info.getValue(RecipientDetail.class);
+                            rec_phn = recipientDetail.getRec_phn();
+                            msg_id = recipientDetail.getMsg_id();
+                            Log.i("re_phn77", "" + rec_phn);
+                            Log.i("Msg_id77", "" + msg_id);
+
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         Query query_catlist = rootRef.child("Notifications").child("Recipient").child(city_donor).child(blood_group_donor).orderByKey().limitToLast(10);
 
@@ -73,7 +119,7 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getChildrenCount() !=0) {
-                    Toast.makeText(NotificationActivity.this,""+dataSnapshot.getChildrenCount(),Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(NotificationActivity.this,""+dataSnapshot.getChildrenCount(),Toast.LENGTH_SHORT).show();
 //                    arr = new ArrayList<String>();
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
                         RecipientDetail r_detail=dataSnapshot1.getValue(RecipientDetail.class);
@@ -134,6 +180,45 @@ public class NotificationActivity extends AppCompatActivity {
         });*/
 
 
+
+    }
+
+    private void getDonorActivity(String rec_phn, final String msg_id) {
+
+        Query query_recipient= rootRef.child("RecipientNotification").child("Recipient").child("cuttack").child("B+").orderByKey().equalTo(rec_phn);
+        query_recipient.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.getChildrenCount()!=0){
+                    for (DataSnapshot data1 : dataSnapshot.getChildren()){
+                        for (DataSnapshot data2 :data1.getChildren()){
+
+
+                            if (data2.getKey().equals(msg_id)){
+                                Log.i("key987",data2.getKey());
+                                Log.i("key987",""+data2.getValue());
+
+
+                            }
+
+                        }
+
+
+                    }
+
+
+
+                }else{
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 

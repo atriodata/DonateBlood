@@ -40,7 +40,7 @@ public class NotifiyActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     OkHttpClient mClient;
     String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail,
-            token_id,msg_id,imsg_id=null,message1,donor_phn,recipient_phn,city_donor,blood_group_donor;
+            token_id,msg_id,imsg_id=null,message1,donor_phn,recipient_phn,city_donor,blood_group_donor,donor_msgid;
 
     public static final String MyPREFERENCES = "BloodDonate" ;
     public static final String city = "cityKey";
@@ -69,7 +69,7 @@ public class NotifiyActivity extends AppCompatActivity {
         Log.i("blood_group_donor44",""+blood_group_donor);*/
 
 
-        Log.i("phoneno2",""+imsg_id);
+        Log.i("phoneno2",""+donor_phn);
 
         if (getIntent().getExtras() != null) {
            /* for (String key : getIntent().getExtras().keySet()) {
@@ -82,7 +82,7 @@ public class NotifiyActivity extends AppCompatActivity {
 
             token_id= getIntent().getExtras().getString("token_id");
             blood_data = getIntent().getExtras().getString("token_id");
-            recipient_phn = getIntent().getExtras().getString("phon_no");
+            recipient_phn = getIntent().getExtras().getString("pho_no");
             Log.i("recipient_phn26",""+recipient_phn);
 
         }
@@ -186,16 +186,22 @@ public class NotifiyActivity extends AppCompatActivity {
                         Log.i("Mainresult:45689 ","" + result);
 
 
-                        Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).child(imsg_id).orderByKey();
+                        Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).orderByKey();
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if(dataSnapshot.getChildrenCount()==0) {
-                                    sendDataToDatabase();
+                                    donor_msgid = "D001";
+                                    sendDataToDatabase(donor_msgid);
+
 
                                 }else {
 
-                                    sendDataToDatabase();
+                                    long countchild = dataSnapshot.getChildrenCount();
+                                    countchild++;
+                                    donor_msgid="D"+String.format("%03d",countchild);
+
+                                    sendDataToDatabase(donor_msgid);
 
                                 }
 
@@ -215,14 +221,17 @@ public class NotifiyActivity extends AppCompatActivity {
 
     }
 
-    private void sendDataToDatabase() {
+    private void sendDataToDatabase(String donor_msgid) {
 
         RecipientDetail recipientDetail=new RecipientDetail();
 
         recipientDetail.setPhoneno(donor_phn);
         recipientDetail.setBody(message1);
+        recipientDetail.setMsg_id(imsg_id);
+        recipientDetail.setRec_phn(recipient_phn);
+        recipientDetail.setBloodgroup(blood_group_donor);
 
-        db_ref.child("Notifications").child("Donor").child(recipient_phn).child(imsg_id).setValue(recipientDetail);
+        db_ref.child("Notifications").child("Donor").child(recipient_phn).child(donor_msgid).setValue(recipientDetail);
 
     }
 

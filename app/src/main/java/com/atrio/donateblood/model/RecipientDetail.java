@@ -14,6 +14,16 @@ public class RecipientDetail {
     public String emailid;
     public String phoneno;
 
+    public String getRec_phn() {
+        return rec_phn;
+    }
+
+    public void setRec_phn(String rec_phn) {
+        this.rec_phn = rec_phn;
+    }
+
+    public String rec_phn;
+
     public String getType() {
         return type;
     }
@@ -31,7 +41,8 @@ public class RecipientDetail {
 
     }
 
-    public RecipientDetail(String bloodgroup, String req_date, String state, String country, String city, String other_detail, String emailid, String phoneno, String msg_id,String body) {
+    public RecipientDetail(String bloodgroup, String req_date, String state, String country, String city, String other_detail,
+                           String emailid, String phoneno, String msg_id,String body,String type,String rec_phn) {
         this.bloodgroup = bloodgroup;
         this.req_date = req_date;
         this.state = state;
@@ -42,6 +53,8 @@ public class RecipientDetail {
         this.phoneno = phoneno;
         this.msg_id = msg_id;
         this.body=body;
+        this.rec_phn =rec_phn;
+        this.type = type;
     }
 
     public String getBloodgroup() {

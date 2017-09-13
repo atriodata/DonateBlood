@@ -216,7 +216,7 @@ public class RecipientActivity extends AppCompatActivity {
                                   dialog.dismiss();
                                     Log.i("Mainresult:47", "" + regId);
 
-                                    Query readqery = db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(phoneno).orderByKey();
+                                    Query readqery = db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).orderByKey();
                                     readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
