@@ -147,7 +147,7 @@ public class VerifyOTP extends AppCompatActivity {
                             User = task.getResult().getUser();
                             dialog.dismiss();
                             Toast.makeText(VerifyOTP.this, "Phone number verified", Toast.LENGTH_SHORT).show();
-                            Intent intent=new Intent(VerifyOTP.this,ResigrationActivity.class);
+                            Intent intent=new Intent(VerifyOTP.this,HomeActivity.class);
                             startActivity(intent);
                             finish();
                             // ...

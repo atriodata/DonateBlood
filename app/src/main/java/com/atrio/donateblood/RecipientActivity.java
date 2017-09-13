@@ -216,7 +216,7 @@ public class RecipientActivity extends AppCompatActivity {
                                   dialog.dismiss();
                                     Log.i("Mainresult:47", "" + regId);
 
-                                    Query readqery = db_ref.child("Notification").child("Recipient").orderByKey();
+                                    Query readqery = db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(phoneno).orderByKey();
                                     readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -289,6 +289,7 @@ public class RecipientActivity extends AppCompatActivity {
                     JSONObject data = new JSONObject();
                     data.put("token_id", regId);
                     data.put("msg_id", msg_id);
+                    data.put("pho_no",phoneno);
 //                    data.put("msg_count",msg_count);
 //                    data.put("click_action","Notifiy_Activity");
 
@@ -369,7 +370,9 @@ public class RecipientActivity extends AppCompatActivity {
         recipientDetail.setCity(city_data);
         recipientDetail.setBody(body);
 
-        db_ref.child("Notification").child("Recipient").child(msg_id).setValue(recipientDetail);
+        db_ref.child("RecipientNotification").child("Recipient").child(city_data).child(blood_data).child(phoneno).child(msg_id).setValue(recipientDetail);
+        //db_ref.child("Notification").child("Recipient").child(msg_id).setValue(recipientDetail);
+        db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(msg_id).setValue(recipientDetail);
 //        Log.i("Mainresult:45689 ", "" + store_list);
 //        sendmail(store_list);
         sendNotificationToUser(regId);

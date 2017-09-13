@@ -3,6 +3,8 @@ package com.atrio.donateblood;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -14,9 +16,22 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.atrio.donateblood.model.RecipientDetail;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import dmax.dialog.SpotsDialog;
 
 public class HomeActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -25,6 +40,12 @@ public class HomeActivity extends AppCompatActivity {
     Button btn_donate,btn_recive,btn_notify;
     String token,imsg_id;
     String[] permissions;
+    private FirebaseUser user;
+    private FirebaseAuth mAuth;
+    private DatabaseReference db_ref;
+    private FirebaseDatabase db_instance;
+    private SpotsDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +58,11 @@ public class HomeActivity extends AppCompatActivity {
         btn_donate.setVisibility(View.GONE);
         btn_recive.setVisibility(View.GONE);
         img_bgdrop.setVisibility(View.GONE);
+
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        Log.i("printUser11",""+user);   dialog = new SpotsDialog(HomeActivity.this, R.style.Custom);
+
 
         permissions = new String[]{
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -132,7 +158,7 @@ public class HomeActivity extends AppCompatActivity {
         btn_donate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                Intent intent = new Intent(HomeActivity.this, ResigrationActivity.class);
                 startActivity(intent);
             }
         });
@@ -140,11 +166,52 @@ public class HomeActivity extends AppCompatActivity {
         btn_recive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, RecipientActivity.class);
-                intent.putExtra("tokenid",token);
-                startActivity(intent);
+                dialog.show();
+                ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                if (networkInfo == null) {
+                    dialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+                } else {
+                    dialog.dismiss();
+                    db_instance = FirebaseDatabase.getInstance();
+
+                    db_ref = db_instance.getReference();
+
+                    Query query_id = db_ref.child("Recipient").orderByKey().equalTo(user.getPhoneNumber());
+                    query_id.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getChildrenCount() != 0) {
+
+
+                                Intent intent = new Intent(HomeActivity.this, RecipientActivity.class);
+                                // intent.putExtra("tokenid",token);
+                                startActivity(intent);
+
+
+                            } else {
+
+                                Intent intent = new Intent(HomeActivity.this, RecipentDetailsActivity.class);
+                                // intent.putExtra("tokenid",token);
+                                startActivity(intent);
+                                finish();
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+
             }
         });
+
+
         btn_notify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

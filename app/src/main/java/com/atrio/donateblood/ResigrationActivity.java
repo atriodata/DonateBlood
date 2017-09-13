@@ -1,6 +1,8 @@
 package com.atrio.donateblood;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -74,6 +76,13 @@ public class ResigrationActivity extends AppCompatActivity {
     ListAdapter listAdapter;
     private SpotsDialog dialog;
     ArrayList<String> phn_nolist,present_list;
+    SharedPreferences sharedpreferences;
+
+
+    public static final String MyPREFERENCES = "BloodDonate" ;
+    public static final String city = "cityKey";
+    public static final String state = "stateKey";
+    public static final String blood_group = "blood_groupKey";
 
 
     @Override
@@ -82,6 +91,7 @@ public class ResigrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_resigration);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+        Log.i("printUser12",""+user);
         dialog = new SpotsDialog(ResigrationActivity.this, R.style.Custom);
 
         spin_state = (Spinner) findViewById(R.id.spin_state);
@@ -99,6 +109,7 @@ public class ResigrationActivity extends AppCompatActivity {
         et_weight = (Spinner) findViewById(R.id.input_weight);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         phn_nolist = new ArrayList<>();
         present_list = new ArrayList<>();
@@ -311,7 +322,7 @@ public class ResigrationActivity extends AppCompatActivity {
                                         for (DataSnapshot dataSnapshot1 : data.getChildren()){
                                             for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()){
                                                 String phn_no = dataSnapshot2.getKey();
-                                                Log.i("phn11",""+phn_no);
+                                                //Log.i("phn11",""+phn_no);
                                                 phn_nolist.add(phn_no);
 
 
@@ -323,7 +334,7 @@ public class ResigrationActivity extends AppCompatActivity {
                                         }
                                     }
 
-                                    Log.i("phn13",""+phn_nolist.size());
+                                    //Log.i("phn13",""+phn_nolist.size());
                                     sendPhonelist(phn_nolist);
 
                                 } else{
@@ -339,9 +350,17 @@ public class ResigrationActivity extends AppCompatActivity {
                                     cb_never.setChecked(false);
                                     cb_above.setChecked(false);
                                     cb_below.setChecked(false);
+                                    Log.i("Key666",""+city_data);
+
                                     subscribeToPushService(blood_data);
                                     Toast.makeText(ResigrationActivity.this,"Successsully Registred",Toast.LENGTH_SHORT).show();
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
 
+                                    editor.putString(city, city_data);
+                                    editor.putString(state, state_data);
+                                    editor.putString(blood_group, blood_data);
+                                    Log.i("Key66",""+editor.toString());
+                                    editor.commit();
                                 }
 
                             }
@@ -385,8 +404,8 @@ public class ResigrationActivity extends AppCompatActivity {
 
         if (phn_nolist.size()!=0){
             for (int i=0;i<phn_nolist.size();i++){
-                Log.i("phone77",phn_nolist.get(i));
-                Log.i("phone78",phoneno);
+                /*Log.i("phone77",phn_nolist.get(i));
+                Log.i("phone78",phoneno);*/
                 String data = null;
                 if (phn_nolist.get(i).equals(phoneno)){
                     data = "present";
@@ -394,7 +413,7 @@ public class ResigrationActivity extends AppCompatActivity {
 
                 }else{
 
-                    Log.i("data67",""+data);
+                  //  Log.i("data67",""+data);
                     // Toast.makeText(ResigrationActivity.this,""+data,Toast.LENGTH_SHORT).show();
                 }
             }
@@ -402,11 +421,11 @@ public class ResigrationActivity extends AppCompatActivity {
 
         }
 
-        Log.i("phone79",""+phn_nolist.size());
+       // Log.i("phone79",""+phn_nolist.size());
         if (phn_nolist.size()!=0){
 
             if (present_list.size()!=0) {
-                Log.i("arryif33",""+present_list.size());
+               // Log.i("arryif33",""+present_list.size());
                 Toast.makeText(ResigrationActivity.this, "This Number is already  Registred", Toast.LENGTH_SHORT).show();
                 et_name.setText("");
                 et_emailid.setText("");
@@ -433,8 +452,18 @@ public class ResigrationActivity extends AppCompatActivity {
                 cb_never.setChecked(false);
                 cb_above.setChecked(false);
                 cb_below.setChecked(false);
+                Log.i("Key6566",""+city_data);
+
                 subscribeToPushService(blood_data);
                 Toast.makeText(ResigrationActivity.this, "Successsully Registred ", Toast.LENGTH_SHORT).show();
+
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+
+                editor.putString(city, city_data);
+                editor.putString(state, state_data);
+                editor.putString(blood_group, blood_data);
+                Log.i("Key66",""+editor.toString());
+                editor.commit();
             }
 
         }else{
@@ -462,7 +491,7 @@ public class ResigrationActivity extends AppCompatActivity {
         }
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
         token = FirebaseInstanceId.getInstance().getToken();
-        Log.d("token11", token);
+      //  Log.d("token11", token);
     }
 
     private void createUser(String name, String emailid, String age, String weight, String blood_data, String state_data, String city_data, String radio_data, String cb_data, String phoneno, String count) {

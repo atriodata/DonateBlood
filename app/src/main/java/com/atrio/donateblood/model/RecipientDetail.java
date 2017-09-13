@@ -13,11 +13,22 @@ public class RecipientDetail {
     public String other_detail;
     public String emailid;
     public String phoneno;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String msg_id;
     public String body;
+    public String type;
 
 
     public RecipientDetail() {
+
     }
 
     public RecipientDetail(String bloodgroup, String req_date, String state, String country, String city, String other_detail, String emailid, String phoneno, String msg_id,String body) {

@@ -191,6 +191,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String msg_id = remoteMessage.getData().get("msg_id");
         String token_id = remoteMessage.getData().get("token_id");
         String body_donor =remoteMessage.getData().get("body");
+        String phon_no = remoteMessage.getData().get("pho_no");
         String click_action = remoteMessage.getNotification().getClickAction();
         String current_token = FirebaseInstanceId.getInstance().getToken();
 
@@ -219,11 +220,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (token_id!=null) {
             if (!token_id.equals(current_token)) {
-                sendNotification(tittle, body, bitmap, token_id, msg_id, click_action);
+                sendNotification(tittle, body, bitmap, token_id, msg_id, click_action,body_donor,phon_no);
 
             }
         }else{
-            sendNotification(tittle, body_donor, bitmap, token_id, msg_id, click_action);
+            sendNotification(tittle, body_donor, bitmap, token_id, msg_id, click_action,body_donor,phon_no);
         }
 //        storeNotification(remoteMessage.getData());
     }
@@ -243,12 +244,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Create and show a simple notification containing the received FCM message.
      */
 
-    private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id,String click_action) {
+    private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id,String click_action,String body_donor,String phon_no) {
         Intent intent = new Intent(click_action);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("token_id", token_id);
         intent.putExtra("msg_id", msg_id);
-        intent.putExtra("body", messageBody);
+        intent.putExtra("body", body_donor);
+        intent.putExtra("phon_no",phon_no);
 
 
 //        intent.putExtra("click_action",click_action);

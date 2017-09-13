@@ -1,5 +1,7 @@
 package com.atrio.donateblood;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +39,14 @@ public class NotifiyActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     OkHttpClient mClient;
-    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, token_id,msg_id,imsg_id=null,message1,donor_phn;
+    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail,
+            token_id,msg_id,imsg_id=null,message1,donor_phn,recipient_phn,city_donor,blood_group_donor;
+
+    public static final String MyPREFERENCES = "BloodDonate" ;
+    public static final String city = "cityKey";
+    public static final String state = "stateKey";
+    public static final String blood_group = "blood_groupKey";
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,14 @@ public class NotifiyActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
         donor_phn = user.getPhoneNumber();
 
+        sharedpreferences = getSharedPreferences(MyPREFERENCES,
+                Context.MODE_PRIVATE);
+        city_donor = sharedpreferences.getString(city,"");
+        blood_group_donor = sharedpreferences.getString(blood_group,"");
+        /*Log.i("city_donor44",""+city_donor);
+        Log.i("blood_group_donor44",""+blood_group_donor);*/
+
+
         Log.i("phoneno2",""+imsg_id);
 
         if (getIntent().getExtras() != null) {
@@ -65,7 +82,8 @@ public class NotifiyActivity extends AppCompatActivity {
 
             token_id= getIntent().getExtras().getString("token_id");
             blood_data = getIntent().getExtras().getString("token_id");
-            Log.i("other_detail26",""+token_id);
+            recipient_phn = getIntent().getExtras().getString("phon_no");
+            Log.i("recipient_phn26",""+recipient_phn);
 
         }
    /*     Intent intent = getIntent();
@@ -78,7 +96,7 @@ public class NotifiyActivity extends AppCompatActivity {
             db_ref = db_instance.getReference();
 
 
-            Query getnotifi=db_ref.child("Notification").child("Recipient").orderByChild("msg_id").equalTo(imsg_id);
+            Query getnotifi=db_ref.child("Notifications").child("Recipient").child(city_donor).child(blood_group_donor).orderByChild("msg_id").equalTo(imsg_id);
             Log.i("other_query",""+getnotifi);
 
 
@@ -144,13 +162,13 @@ public class NotifiyActivity extends AppCompatActivity {
 //                    JSONObject message_id=new JSONObject();
 
                             JSONObject data = new JSONObject();
-                           // data.put("msg_id", msg_id);
+                            data.put("body",message1);
 //
                             root.put("notification", notification);
                             root.put("data", data);
                             root.put("priority","high");
                             root.put("to",token_id);
-                            root.put("body",message1);
+
                             Log.i("Messageid","" + root.toString());
 
                             String result = postToFCM(root.toString());
@@ -168,7 +186,7 @@ public class NotifiyActivity extends AppCompatActivity {
                         Log.i("Mainresult:45689 ","" + result);
 
 
-                        Query readqery = db_ref.child("Notification").child("Donor").orderByKey();
+                        Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).child(imsg_id).orderByKey();
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -204,7 +222,7 @@ public class NotifiyActivity extends AppCompatActivity {
         recipientDetail.setPhoneno(donor_phn);
         recipientDetail.setBody(message1);
 
-        db_ref.child("Notification").child("Donor").child(donor_phn).setValue(recipientDetail);
+        db_ref.child("Notifications").child("Donor").child(recipient_phn).child(imsg_id).setValue(recipientDetail);
 
     }
 

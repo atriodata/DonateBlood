@@ -17,6 +17,16 @@ public class UserDetail {
     public String emailid;
     public String phoneno;
     public String count;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String address;
     public UserDetail() {
     }
 

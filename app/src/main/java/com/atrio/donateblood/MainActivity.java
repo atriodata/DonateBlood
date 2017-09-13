@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         user= mAuth.getCurrentUser();
         if (user != null) {
             // User is signed in
-            startActivity(new Intent(MainActivity.this,ResigrationActivity.class));
+            startActivity(new Intent(MainActivity.this,HomeActivity.class));
             finish();
 //                    Log.i("signed_in:","" + user.getUid());
         } else {
