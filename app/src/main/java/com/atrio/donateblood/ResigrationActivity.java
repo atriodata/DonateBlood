@@ -19,7 +19,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
@@ -60,7 +59,6 @@ public class ResigrationActivity extends AppCompatActivity {
     PlacesTask placesTask;
     ParserTask parserTask;
     Spinner spin_state, sp_bloodgr, et_age, et_weight;
-    //    RadioButton rb_male,rb_female;
     RadioButton radioSexButton;
     RadioGroup rg_group;
     CheckBox cb_never, cb_above, cb_below;
@@ -73,7 +71,6 @@ public class ResigrationActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     List age_data, weight_data;
-    ListAdapter listAdapter;
     private SpotsDialog dialog;
     ArrayList<String> phn_nolist,present_list;
     SharedPreferences sharedpreferences;
@@ -91,7 +88,6 @@ public class ResigrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_resigration);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        Log.i("printUser12",""+user);
         dialog = new SpotsDialog(ResigrationActivity.this, R.style.Custom);
 
         spin_state = (Spinner) findViewById(R.id.spin_state);
@@ -143,40 +139,6 @@ public class ResigrationActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
             }
         });
-/*
-        atvPlaces.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (!b) {
-                    // on focus off
-                    String str = atvPlaces.getText().toString();
-
-                    listAdapter = atvPlaces.getAdapter();
-                    if (listAdapter != null) {
-                        for (int i = 0; i < listAdapter.getCount(); i++) {
-
-                            temp = listAdapter.getItem(i).toString();
-                            if (str.compareTo(temp) == 0) {
-                                return;
-                            }
-                        }
-
-                        atvPlaces.setText("");
-                    }
-
-                }
-            }
-        });
-*/
-        atvPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                String selectedItem =parent.getItemAtPosition(position).toString();
-//                int selectedPos = state_data.indexOf((((TextView)view).getText()).toString());
-//                atvPlaces.setText(selectedPos.);
-                // here is your selected item
-            }
-        });
 
         sp_bloodgr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -195,7 +157,6 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 state_data = parent.getItemAtPosition(position).toString();
-
             }
 
             @Override
@@ -235,7 +196,6 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 weight = parent.getItemAtPosition(position).toString();
-
             }
 
             @Override
@@ -282,8 +242,6 @@ public class ResigrationActivity extends AppCompatActivity {
             }
         });
 
-
-
         btn_reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -303,16 +261,11 @@ public class ResigrationActivity extends AppCompatActivity {
                     radio_data = radioSexButton.getText().toString();
                     phoneno = user.getPhoneNumber();
 
-
                     if (validate()) {
                         dialog.dismiss();
-                       // phn_nolist.clear();
                         phn_nolist.clear();
-
                         db_instance = FirebaseDatabase.getInstance();
-
                         db_ref = db_instance.getReference();
-
                         Query writequery = db_ref.child("Donor").orderByKey();
                         writequery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -322,19 +275,10 @@ public class ResigrationActivity extends AppCompatActivity {
                                         for (DataSnapshot dataSnapshot1 : data.getChildren()){
                                             for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()){
                                                 String phn_no = dataSnapshot2.getKey();
-                                                //Log.i("phn11",""+phn_no);
                                                 phn_nolist.add(phn_no);
-
-
                                             }
-
-
-
-
                                         }
                                     }
-
-                                    //Log.i("phn13",""+phn_nolist.size());
                                     sendPhonelist(phn_nolist);
 
                                 } else{
@@ -350,16 +294,12 @@ public class ResigrationActivity extends AppCompatActivity {
                                     cb_never.setChecked(false);
                                     cb_above.setChecked(false);
                                     cb_below.setChecked(false);
-                                    Log.i("Key666",""+city_data);
-
                                     subscribeToPushService(blood_data);
                                     Toast.makeText(ResigrationActivity.this,"Successsully Registred",Toast.LENGTH_SHORT).show();
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
-
                                     editor.putString(city, city_data);
                                     editor.putString(state, state_data);
                                     editor.putString(blood_group, blood_data);
-                                    Log.i("Key66",""+editor.toString());
                                     editor.commit();
                                 }
 
@@ -370,11 +310,6 @@ public class ResigrationActivity extends AppCompatActivity {
 
                             }
                         });
-
-
-
-
-
                     }else {
                         dialog.dismiss();
                     }
@@ -400,32 +335,19 @@ public class ResigrationActivity extends AppCompatActivity {
     }
 
     private void sendPhonelist(ArrayList<String> phn_nolist) {
-
-
         if (phn_nolist.size()!=0){
             for (int i=0;i<phn_nolist.size();i++){
-                /*Log.i("phone77",phn_nolist.get(i));
-                Log.i("phone78",phoneno);*/
                 String data = null;
                 if (phn_nolist.get(i).equals(phoneno)){
                     data = "present";
                     present_list.add(data);
 
                 }else{
-
-                  //  Log.i("data67",""+data);
-                    // Toast.makeText(ResigrationActivity.this,""+data,Toast.LENGTH_SHORT).show();
                 }
             }
-
-
         }
-
-       // Log.i("phone79",""+phn_nolist.size());
         if (phn_nolist.size()!=0){
-
             if (present_list.size()!=0) {
-               // Log.i("arryif33",""+present_list.size());
                 Toast.makeText(ResigrationActivity.this, "This Number is already  Registred", Toast.LENGTH_SHORT).show();
                 et_name.setText("");
                 et_emailid.setText("");
@@ -437,8 +359,6 @@ public class ResigrationActivity extends AppCompatActivity {
                 cb_never.setChecked(false);
                 cb_above.setChecked(false);
                 cb_below.setChecked(false);
-
-
             }else {
                 dialog.dismiss();
                 createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, cb_data, phoneno, count);
@@ -452,46 +372,31 @@ public class ResigrationActivity extends AppCompatActivity {
                 cb_never.setChecked(false);
                 cb_above.setChecked(false);
                 cb_below.setChecked(false);
-                Log.i("Key6566",""+city_data);
-
                 subscribeToPushService(blood_data);
                 Toast.makeText(ResigrationActivity.this, "Successsully Registred ", Toast.LENGTH_SHORT).show();
-
                 SharedPreferences.Editor editor = sharedpreferences.edit();
-
                 editor.putString(city, city_data);
                 editor.putString(state, state_data);
                 editor.putString(blood_group, blood_data);
-                Log.i("Key66",""+editor.toString());
                 editor.commit();
             }
 
         }else{
-
-
         }
-
-
     }
 
     private void subscribeToPushService(String blood_data) {
-
-
         String topic = null;
         String groupFirst = blood_data.substring(0,blood_data.length()-1);
-        Log.d("blood_data11", groupFirst);
         String grouplast = blood_data.substring(blood_data.length()-1);
 
         if (grouplast.equals("+")){
           topic = groupFirst+"positive";
-            Log.d("blood_data13", topic);
         }else{
             topic = groupFirst+"negative";
-            Log.d("blood_data13", topic);
         }
-        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        FirebaseMessaging.getInstance().subscribeToTopic(city_data+topic);
         token = FirebaseInstanceId.getInstance().getToken();
-      //  Log.d("token11", token);
     }
 
     private void createUser(String name, String emailid, String age, String weight, String blood_data, String state_data, String city_data, String radio_data, String cb_data, String phoneno, String count) {
@@ -514,7 +419,6 @@ public class ResigrationActivity extends AppCompatActivity {
     }
 
     private boolean validate() {
-// check whether the field is empty or not
         if (et_name.getText().toString().trim().length() < 1) {
             et_name.setError("Please Fill This Field");
             et_name.requestFocus();
@@ -549,7 +453,6 @@ public class ResigrationActivity extends AppCompatActivity {
         } else if (cb_data.equals("")) {
             Toast.makeText(getApplicationContext(), "Select Donation Period", Toast.LENGTH_LONG).show();
             return false;
-
         } else
             return true;
 
@@ -564,12 +467,8 @@ public class ResigrationActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... place) {
-            // For storing data from web service
             String data = "";
-
-            // Obtain browser key from https://code.google.com/apis/console
             String key = "key=AIzaSyAG-AdjAgToyXceK6-ghWS38ho8cALPaUw";
-
             String input = "";
 
             try {
@@ -577,26 +476,13 @@ public class ResigrationActivity extends AppCompatActivity {
             } catch (UnsupportedEncodingException e1) {
                 e1.printStackTrace();
             }
-
-            // place type to be searched
             String types = "types=(cities)";
-
-            // Sensor enabled
             String sensor = "sensor=false";
-
-            // Building the parameters to the web service
             String parameters = input + "&" + types + "&" + sensor + "&" + key;
-
-            // Output format
             String output = "json";
-
-            // Building the url to the web service
-            String url =
-//                    "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=India&sensor=false&types=(regions)&key=AIzaSyAG-AdjAgToyXceK6-ghWS38ho8cALPaUw";
-                    "https://maps.googleapis.com/maps/api/place/autocomplete/" + output + "?" + parameters + "&components=country:IN";
+            String url ="https://maps.googleapis.com/maps/api/place/autocomplete/" + output + "?" + parameters + "&components=country:IN";
 
             try {
-                // Fetching the data from we service
                 data = downloadUrl(url);
             } catch (Exception e) {
                 Log.d("Background Task", e.toString());
@@ -639,7 +525,6 @@ public class ResigrationActivity extends AppCompatActivity {
             br.close();
 
         } catch (Exception e) {
-            Log.i("url45", "" + e.toString());
         } finally {
             iStream.close();
             urlConnection.disconnect();

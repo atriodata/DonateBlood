@@ -127,7 +127,6 @@ public class VerifyOTP extends AppCompatActivity {
     }
 
     private void fireBasePhLogin(String phoneNumber) {
-        Log.i("onCodeSent422:", "" + phoneNumber);
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,        // Phone number to verify

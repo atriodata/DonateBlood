@@ -23,9 +23,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import dmax.dialog.SpotsDialog;
+
 
 public class NotificationActivity extends AppCompatActivity {
-    RecyclerView recyclerView;
+    RecyclerView rc_donor,rc_recipient;
     ArrayList<RecipientDetail> arrayList;
     DatabaseReference rootRef;
     ArrayList<String> arr;
@@ -34,6 +36,7 @@ public class NotificationActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     SharedPreferences sharedpreferences;
+    private SpotsDialog dialog;
     String rec_phn,msg_id;
 
 
@@ -49,18 +52,24 @@ public class NotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
         arrayList = new ArrayList<>();
-        recyclerView = (RecyclerView) findViewById(R.id.rc_notify);
-        LinearLayoutManager lLayout = new LinearLayoutManager(NotificationActivity.this);
+        rc_donor = (RecyclerView) findViewById(R.id.rc_donor);
+        rc_recipient = (RecyclerView) findViewById(R.id.rc_donor);
+        dialog = new SpotsDialog(NotificationActivity.this, R.style.Custom);
+        dialog.show();
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(lLayout);
+        LinearLayoutManager lLayoutd = new LinearLayoutManager(NotificationActivity.this);
+        LinearLayoutManager lLayoutr = new LinearLayoutManager(NotificationActivity.this);
+
+        rc_donor.setHasFixedSize(true);
+        rc_donor.setLayoutManager(lLayoutd);
+        rc_recipient.setHasFixedSize(true);
+        rc_recipient.setLayoutManager(lLayoutr);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         donor_phn = user.getPhoneNumber();
 
         rootRef = FirebaseDatabase.getInstance().getReference();
-        sharedpreferences = getSharedPreferences(MyPREFERENCES,
-                Context.MODE_PRIVATE);
+        sharedpreferences = getSharedPreferences(MyPREFERENCES,Context.MODE_PRIVATE);
         city_donor = sharedpreferences.getString(city,"");
         blood_group_donor = sharedpreferences.getString(blood_group,"");
         Log.i("city_donor44",""+city_donor);
@@ -119,22 +128,18 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getChildrenCount() !=0) {
+                    Toast.makeText(NotificationActivity.this,""+dataSnapshot.getChildrenCount(),Toast.LENGTH_SHORT).show();
                    // Toast.makeText(NotificationActivity.this,""+dataSnapshot.getChildrenCount(),Toast.LENGTH_SHORT).show();
 //                    arr = new ArrayList<String>();
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
                         RecipientDetail r_detail=dataSnapshot1.getValue(RecipientDetail.class);
-                       r_detail.setBody(r_detail.body);
-                       // r_detail.setType("Recipient");
-//                        Log.i("array7712555",""+r_detail);
+                        r_detail.setBody(r_detail.body);
                         arrayList.add(r_detail);
-
-
                     }
-//                    Log.i("array7712555",""+arrayList);
-
+                    dialog.dismiss();
                     Collections.reverse(arrayList);
                     RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, arrayList);
-                    recyclerView.setAdapter(rcAdapter);
+                    rc_donor.setAdapter(rcAdapter);
                 }
 
             }

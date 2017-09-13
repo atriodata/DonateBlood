@@ -24,7 +24,6 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
     public RecycleviewAdapter(Context context, ArrayList<RecipientDetail> arrayList) {
         this.c = context;
         this.list_data = arrayList;
-
     }
 
 
@@ -37,14 +36,8 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-
         holder.tv_text.setText(list_data.get(position).getBody());
-//        holder.img_sub
-//        Log.i("tittle414",""+holder.tv_text);
-
         holder.msg_id = list_data.get(position).getMsg_id();
-
-
     }
 
 
@@ -67,8 +60,6 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
             img_noti = (ImageView) itemView.findViewById(R.id.im_noti);
             tv_text = (TextView) itemView.findViewById(R.id.tv_noti);
             itemView.setOnClickListener(this);
-
-
         }
 
         @Override
