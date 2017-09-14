@@ -57,11 +57,21 @@ public class PlaceJSONParser {
             description = jPlace.getString("description");
             id = jPlace.getString("id");
             reference = jPlace.getString("reference");
+//            Log.i("datacity",""+jPlace.toString());
+//            Log.i("statedata",""+state_data);
+
             desdata = description.contains(state_data);//.substring(description.indexOf(state_data));
             if (desdata==true){
                 place.put("description", description.substring(0,description.indexOf(",")));
                 place.put("_id", id);
                 place.put("reference", reference);
+            }
+            else {
+                if (!description.contains("India")){
+                    place.put("description", description);
+                    place.put("_id", id);
+                    place.put("reference", reference);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
