@@ -53,6 +53,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String phon_no = remoteMessage.getData().get("pho_no");
         String click_action = remoteMessage.getNotification().getClickAction();
         String current_token = FirebaseInstanceId.getInstance().getToken();
+        Log.i("phon_no44",""+phon_no);
 
         bitmap = getBitmapfromUrl(imageUri);
         if (token_id!=null) {

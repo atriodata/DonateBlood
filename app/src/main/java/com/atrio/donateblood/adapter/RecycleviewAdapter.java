@@ -36,8 +36,6 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        holder.tv_text.setText(list_data.get(position).getBody());
-        holder.msg_id = list_data.get(position).getMsg_id();
         Log.i("type44",""+list_data.get(position).getType());
         if (list_data.get(position).getType().equals("donorwilling")){
             holder.tv_text.setText("Donor is willing to donate Blood for "+list_data.get(position).getBloodgroup()
@@ -68,6 +66,7 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
 
         public MyViewHolder(View itemView) {
             super(itemView);
+
             img_noti = (ImageView) itemView.findViewById(R.id.im_noti);
             tv_text = (TextView) itemView.findViewById(R.id.tv_noti);
             itemView.setOnClickListener(this);
@@ -75,6 +74,8 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
 
         @Override
         public void onClick(View view) {
+
+
             Intent intent = new Intent(view.getContext(), NotifiyActivity.class);
             Log.i("tittle44",""+msg_id);
             intent.putExtra("msg_id",msg_id);

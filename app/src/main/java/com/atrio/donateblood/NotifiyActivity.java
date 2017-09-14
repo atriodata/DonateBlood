@@ -72,8 +72,11 @@ public class NotifiyActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             imsg_id= getIntent().getExtras().getString("msg_id");
             token_id= getIntent().getExtras().getString("token_id");
-            recipient_phn = getIntent().getExtras().getString("pho_no");
+            recipient_phn = getIntent().getExtras().getString("phon_no");
             Log.i("recipientPhn66",""+recipient_phn);
+            Log.i("imsg_id66",""+imsg_id);
+            Log.i("token_id66",""+token_id);
+
         }
             db_instance = FirebaseDatabase.getInstance();
             db_ref = db_instance.getReference();
@@ -134,14 +137,15 @@ public class NotifiyActivity extends AppCompatActivity {
 
                             JSONObject data = new JSONObject();
                             data.put("body",message1);
+                            //data.put("pho_no",recipient_phn);
 //
                             root.put("notification", notification);
                             root.put("data", data);
                             root.put("priority","high");
                             root.put("to",token_id);
                             String result = postToFCM(root.toString());
-
-                            return result;
+                         //  Log.i("result66",""+root.toString());
+                      return result;
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
@@ -151,31 +155,35 @@ public class NotifiyActivity extends AppCompatActivity {
                     @Override
                     protected void onPostExecute(String result) {
 
+                       // Log.i("result64",""+result);
+                        //Log.i("recipient_phn64",""+recipient_phn);
+                        if (recipient_phn!=null) {
+                            Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).orderByKey();
+                            readqery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.getChildrenCount() == 0) {
+                                        donor_msgid = "D001";
+                                        sendDataToDatabase(donor_msgid);
 
-                        Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).orderByKey();
-                        readqery.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.getChildrenCount()==0) {
-                                    donor_msgid = "D001";
-                                    sendDataToDatabase(donor_msgid);
 
+                                    } else {
 
-                                }else {
+                                        long countchild = dataSnapshot.getChildrenCount();
+                                        countchild++;
+                                        donor_msgid = "D" + String.format("%03d", countchild);
 
-                                    long countchild = dataSnapshot.getChildrenCount();
-                                    countchild++;
-                                    donor_msgid="D"+String.format("%03d",countchild);
+                                        sendDataToDatabase(donor_msgid);
 
-                                    sendDataToDatabase(donor_msgid);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
 
                                 }
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+                            });
+                        }
                     }
                 }.execute();
 
@@ -185,7 +193,9 @@ public class NotifiyActivity extends AppCompatActivity {
             }
         });
 
+
     }
+
 
     private void sendDataToDatabase(String donor_msgid) {
 
