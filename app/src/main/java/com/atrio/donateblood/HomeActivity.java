@@ -111,6 +111,7 @@ public class HomeActivity extends AppCompatActivity {
                                 dialog.dismiss();
                                 Intent intent = new Intent(HomeActivity.this, RecipentDetailsActivity.class);
                                 startActivity(intent);
+                                finish();
                             }
                         }
                         @Override

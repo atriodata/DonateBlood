@@ -72,7 +72,7 @@ public class NotifiyActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             imsg_id= getIntent().getExtras().getString("msg_id");
             token_id= getIntent().getExtras().getString("token_id");
-            recipient_phn = getIntent().getExtras().getString("pho_no");
+            recipient_phn = getIntent().getExtras().getString("phon_no");
             Log.i("recipientPhn66",""+recipient_phn);
         }
             db_instance = FirebaseDatabase.getInstance();
@@ -134,6 +134,7 @@ public class NotifiyActivity extends AppCompatActivity {
 
                             JSONObject data = new JSONObject();
                             data.put("body",message1);
+//                            data.put("pho_no",recipient_phn);
 //
                             root.put("notification", notification);
                             root.put("data", data);
@@ -151,7 +152,6 @@ public class NotifiyActivity extends AppCompatActivity {
                     @Override
                     protected void onPostExecute(String result) {
 
-
                         Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).orderByKey();
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -159,14 +159,10 @@ public class NotifiyActivity extends AppCompatActivity {
                                 if(dataSnapshot.getChildrenCount()==0) {
                                     donor_msgid = "D001";
                                     sendDataToDatabase(donor_msgid);
-
-
                                 }else {
-
                                     long countchild = dataSnapshot.getChildrenCount();
                                     countchild++;
                                     donor_msgid="D"+String.format("%03d",countchild);
-
                                     sendDataToDatabase(donor_msgid);
 
                                 }
