@@ -69,7 +69,7 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
         try {
             MimeMessage mm = new MimeMessage(session);
             mm.setFrom(new InternetAddress(Config.EMAIL));
-            mm.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+//            mm.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
             for (int i = 0; i < my2mail.size(); i++) {
                 mm.addRecipient(Message.RecipientType.BCC, new InternetAddress(my2mail.get(i)));
             }

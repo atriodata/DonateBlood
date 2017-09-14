@@ -137,15 +137,14 @@ public class NotifiyActivity extends AppCompatActivity {
 
                             JSONObject data = new JSONObject();
                             data.put("body",message1);
-                            //data.put("pho_no",recipient_phn);
 //
                             root.put("notification", notification);
                             root.put("data", data);
                             root.put("priority","high");
                             root.put("to",token_id);
                             String result = postToFCM(root.toString());
-                         //  Log.i("result66",""+root.toString());
-                      return result;
+
+                            return result;
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
@@ -155,25 +154,23 @@ public class NotifiyActivity extends AppCompatActivity {
                     @Override
                     protected void onPostExecute(String result) {
 
-                       // Log.i("result64",""+result);
-                        //Log.i("recipient_phn64",""+recipient_phn);
-                        if (recipient_phn!=null) {
-                            Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).orderByKey();
-                            readqery.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.getChildrenCount() == 0) {
-                                        donor_msgid = "D001";
-                                        sendDataToDatabase(donor_msgid);
+
+                        Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).orderByKey();
+                        readqery.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.getChildrenCount()==0) {
+                                    donor_msgid = "D001";
+                                    sendDataToDatabase(donor_msgid);
 
 
-                                    } else {
+                                }else {
 
-                                        long countchild = dataSnapshot.getChildrenCount();
-                                        countchild++;
-                                        donor_msgid = "D" + String.format("%03d", countchild);
+                                    long countchild = dataSnapshot.getChildrenCount();
+                                    countchild++;
+                                    donor_msgid="D"+String.format("%03d",countchild);
 
-                                        sendDataToDatabase(donor_msgid);
+                                    sendDataToDatabase(donor_msgid);
 
                                     }
                                 }
@@ -193,9 +190,7 @@ public class NotifiyActivity extends AppCompatActivity {
             }
         });
 
-
     }
-
 
     private void sendDataToDatabase(String donor_msgid) {
 

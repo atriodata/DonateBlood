@@ -1,7 +1,11 @@
 package com.atrio.donateblood.adapter;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +21,7 @@ import com.atrio.donateblood.model.RecipientDetail;
 import java.util.ArrayList;
 
 
-public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.MyViewHolder>{
+public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.MyViewHolder> {
     private Context c;
     ArrayList<RecipientDetail> list_data;
 
@@ -25,7 +29,6 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
         this.c = context;
         this.list_data = arrayList;
     }
-
 
 
     @Override
@@ -36,14 +39,16 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Log.i("type44",""+list_data.get(position).getType());
-        if (list_data.get(position).getType().equals("donorwilling")){
-            holder.tv_text.setText("Donor is willing to donate Blood for "+list_data.get(position).getBloodgroup()
-                    +"\n"+"Contact on this Number"+list_data.get(position).getPhoneno());
-            //holder.msg_id = list_data.get(position).getMsg_id();
-
-        }else{
-            holder.tv_text.setText(list_data.get(position).getBody());
+        holder.msg_id = list_data.get(position).getMsg_id();
+//        Log.i("type44",""+list_data.get(position).getType());
+        if (list_data.get(position).getType().equals("donorwilling")) {
+            holder.donor_string = "Donor is willing to donate Blood for " + list_data.get(position).getBloodgroup()
+                    + "\n" + "Contact on this Number" + list_data.get(position).getPhoneno();
+            holder.tv_text.setText(holder.donor_string);
+            holder.call_no = list_data.get(position).getPhoneno();
+        } else {
+            holder.recipient_string = list_data.get(position).getBody();
+            holder.tv_text.setText(holder.recipient_string);
             holder.msg_id = list_data.get(position).getMsg_id();
 
         }
@@ -54,19 +59,19 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
     public int getItemCount() {
         return list_data.size();
     }
+
     public int getItemViewType(int position) {
         return position;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView tv_text;
         public ImageView img_noti;
-        public String msg_id;
+        public String msg_id, donor_string, recipient_string, call_no;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-
             img_noti = (ImageView) itemView.findViewById(R.id.im_noti);
             tv_text = (TextView) itemView.findViewById(R.id.tv_noti);
             itemView.setOnClickListener(this);
@@ -74,12 +79,27 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
 
         @Override
         public void onClick(View view) {
+            if (tv_text.getText() == recipient_string) {
+                Intent intent = new Intent(view.getContext(), NotifiyActivity.class);
+//                Log.i("tittle44", "" + msg_id);
+                intent.putExtra("msg_id", msg_id);
+                view.getContext().startActivity(intent);
 
-
-            Intent intent = new Intent(view.getContext(), NotifiyActivity.class);
-            Log.i("tittle44",""+msg_id);
-            intent.putExtra("msg_id",msg_id);
-            view.getContext().startActivity(intent);
+            } else {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + call_no));
+                if (ActivityCompat.checkSelfPermission(c, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                view.getContext().startActivity(callIntent);
+            }
 
         }
     }

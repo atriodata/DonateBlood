@@ -94,15 +94,9 @@ public class NotificationActivity extends AppCompatActivity {
                                     recipientDetail.setPhoneno(recipientDetail.phoneno);
                                     recipientDetail.setBloodgroup(recipientDetail.bloodgroup);
                                     donoractivityList.add(recipientDetail);
-
                                 }
 
-
-
                             }
-
-
-
                     }
 
                     RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, donoractivityList);
