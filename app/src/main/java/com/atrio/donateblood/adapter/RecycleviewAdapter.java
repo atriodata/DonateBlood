@@ -38,6 +38,17 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         holder.tv_text.setText(list_data.get(position).getBody());
         holder.msg_id = list_data.get(position).getMsg_id();
+        Log.i("type44",""+list_data.get(position).getType());
+        if (list_data.get(position).getType().equals("donorwilling")){
+            holder.tv_text.setText("Donor is willing to donate Blood for "+list_data.get(position).getBloodgroup()
+                    +"\n"+"Contact on this Number"+list_data.get(position).getPhoneno());
+            //holder.msg_id = list_data.get(position).getMsg_id();
+
+        }else{
+            holder.tv_text.setText(list_data.get(position).getBody());
+            holder.msg_id = list_data.get(position).getMsg_id();
+
+        }
     }
 
 

@@ -391,11 +391,12 @@ public class ResigrationActivity extends AppCompatActivity {
         String grouplast = blood_data.substring(blood_data.length()-1);
 
         if (grouplast.equals("+")){
-          topic = groupFirst+"positive";
+          topic = city_data+groupFirst+"positive";
         }else{
-            topic = groupFirst+"negative";
+            topic = city_data+groupFirst+"negative";
         }
-        FirebaseMessaging.getInstance().subscribeToTopic(city_data+topic);
+        Log.i("sub1234",""+topic);
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
         token = FirebaseInstanceId.getInstance().getToken();
     }
 

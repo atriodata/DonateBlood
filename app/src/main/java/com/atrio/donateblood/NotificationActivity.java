@@ -28,7 +28,7 @@ import dmax.dialog.SpotsDialog;
 
 public class NotificationActivity extends AppCompatActivity {
     RecyclerView rc_donor,rc_recipient;
-    ArrayList<RecipientDetail> arrayList;
+    ArrayList<RecipientDetail> arrayList,donoractivityList;
     DatabaseReference rootRef;
     ArrayList<String> arr;
     String city_donor,blood_group_donor,donor_phn;
@@ -52,8 +52,9 @@ public class NotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
         arrayList = new ArrayList<>();
+        donoractivityList = new ArrayList<>();
         rc_donor = (RecyclerView) findViewById(R.id.rc_donor);
-        rc_recipient = (RecyclerView) findViewById(R.id.rc_donor);
+        rc_recipient = (RecyclerView) findViewById(R.id.rc_recipient);
         dialog = new SpotsDialog(NotificationActivity.this, R.style.Custom);
         dialog.show();
 
@@ -80,37 +81,32 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getChildrenCount()!=0){
-                    /*for ( DataSnapshot data : dataSnapshot.getChildren()){
-                        if (data.getKey().equals(donor_phn)){
-                            Toast.makeText(NotificationActivity.this, ""+data.getKey(), Toast.LENGTH_SHORT).show();
-                            for (DataSnapshot data_info :data.getChildren()){
-                                RecipientDetail recipientDetail = data_info.getValue(RecipientDetail.class);
-                                 rec_phn = recipientDetail.getRec_phn();
-                                 msg_id = recipientDetail.getMsg_id();
-                                Log.i("re_phn77",""+rec_phn);
-                                Log.i("Msg_id77",""+msg_id);
+                    for (DataSnapshot data_info :dataSnapshot.getChildren()) {
+                        Log.i("donateblood11", "" + data_info.getKey());
+                        Log.i("donateblood11", "" + donor_phn);
 
-                                getDonorActivity(rec_phn,msg_id);
+                            if (data_info.getKey().equals(donor_phn)) {
 
-                                //Log.i("re_phn77",""+recipientDetail.getRec_phn());
+                                Log.i("donateif", "" + donor_phn);
+                                for (DataSnapshot data_info1 :data_info.getChildren()){
+                                    RecipientDetail recipientDetail = data_info1.getValue(RecipientDetail.class);
+                                    recipientDetail.setType("donorwilling");
+                                    recipientDetail.setPhoneno(recipientDetail.phoneno);
+                                    recipientDetail.setBloodgroup(recipientDetail.bloodgroup);
+                                    donoractivityList.add(recipientDetail);
+
+                                }
+
+
 
                             }
-                        }
-                    }*/
-                    //Log.i("donateblood11", "" + dataSnapshot.getKey());
-                    for (DataSnapshot data_info :dataSnapshot.getChildren()) {
-
-                        if (data_info.getKey().equals(donor_phn)) {
-                            Log.i("donateblood11", "" + data_info.getKey());
-                            RecipientDetail recipientDetail = data_info.getValue(RecipientDetail.class);
-                            rec_phn = recipientDetail.getRec_phn();
-                            msg_id = recipientDetail.getMsg_id();
-                            Log.i("re_phn77", "" + rec_phn);
-                            Log.i("Msg_id77", "" + msg_id);
 
 
-                        }
+
                     }
+
+                    RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, donoractivityList);
+                    rc_donor.setAdapter(rcAdapter);
                 }
             }
 
@@ -134,12 +130,13 @@ public class NotificationActivity extends AppCompatActivity {
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
                         RecipientDetail r_detail=dataSnapshot1.getValue(RecipientDetail.class);
                         r_detail.setBody(r_detail.body);
+                        r_detail.setType("recipientwilling");
                         arrayList.add(r_detail);
                     }
                     dialog.dismiss();
                     Collections.reverse(arrayList);
                     RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, arrayList);
-                    rc_donor.setAdapter(rcAdapter);
+                    rc_recipient.setAdapter(rcAdapter);
                 }
 
             }
@@ -151,78 +148,13 @@ public class NotificationActivity extends AppCompatActivity {
 
         });
 
-       /* Query query_donorlist = rootRef.child("Notification").child("Recipient").orderByKey().limitToLast(10);
 
-        query_catlist.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getChildrenCount() !=0) {
-//                    arr = new ArrayList<String>();
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                        RecipientDetail r_detail=dataSnapshot1.getValue(RecipientDetail.class);
-                        r_detail.setBody(r_detail.body);
-                        r_detail.setType("Recipient");
-//                        Log.i("array7712555",""+r_detail);
-                        arrayList.add(r_detail);
-
-
-                    }
-//                    Log.i("array7712555",""+arrayList);
-
-                    Collections.reverse(arrayList);
-                    RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, arrayList);
-                    recyclerView.setAdapter(rcAdapter);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });*/
 
 
 
     }
 
-    private void getDonorActivity(String rec_phn, final String msg_id) {
-
-        Query query_recipient= rootRef.child("RecipientNotification").child("Recipient").child("cuttack").child("B+").orderByKey().equalTo(rec_phn);
-        query_recipient.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                if (dataSnapshot.getChildrenCount()!=0){
-                    for (DataSnapshot data1 : dataSnapshot.getChildren()){
-                        for (DataSnapshot data2 :data1.getChildren()){
 
 
-                            if (data2.getKey().equals(msg_id)){
-                                Log.i("key987",data2.getKey());
-                                Log.i("key987",""+data2.getValue());
-
-
-                            }
-
-                        }
-
-
-                    }
-
-                }else{
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
 
 }

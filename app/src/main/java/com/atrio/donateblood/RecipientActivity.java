@@ -204,7 +204,7 @@ public class RecipientActivity extends AppCompatActivity {
                                         store_list.add(send_mail);
                                     }
                                   dialog.dismiss();
-                                    Query readqery = db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(phoneno).orderByKey();
+                                    Query readqery = db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).orderByKey();
                                     readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -247,9 +247,9 @@ public class RecipientActivity extends AppCompatActivity {
                     String groupFirst = blood_data.substring(0,blood_data.length()-1);
                     String grouplast = blood_data.substring(blood_data.length()-1);
                     if (grouplast.equals("+")){
-                        topic = groupFirst+"positive";
+                        topic = city_data+groupFirst+"positive";
                     }else{
-                        topic = groupFirst+"negative";
+                        topic =city_data+ groupFirst+"negative";
                     }
                     JSONObject root = new JSONObject();
                     JSONObject notification = new JSONObject();
@@ -266,8 +266,9 @@ public class RecipientActivity extends AppCompatActivity {
                     root.put("notification", notification);
                     root.put("data", data);
                     root.put("priority","high");
-                    root.put("to","/topics/"+city_data+topic);
+                    root.put("to","/topics/"+topic);
                     String result = postToFCM(root.toString());
+                    Log.i("result55",root.toString());
                     return result;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -326,7 +327,7 @@ public class RecipientActivity extends AppCompatActivity {
         et_date.setText("");
         et_emailid.setText("");
         atvPlaces.setText("");
-        et_phoneno.setText("");
+       // et_phoneno.setText("");
         et_remark.setText("");
         sp_bloodgr.setSelection(0);
         spin_state.setSelection(0);
@@ -358,7 +359,7 @@ public class RecipientActivity extends AppCompatActivity {
             et_emailid.requestFocus();
             return false;
 
-        } else if (et_phoneno.getText().toString().trim().length() < 1 || et_phoneno.getText().toString().trim().length() > 12 || et_phoneno.getText().toString().trim().length() < 10) {
+        } else if (et_phoneno.getText().toString().trim().length() < 1 ) {
             et_phoneno.setError("Please Fill This Field");
             et_phoneno.requestFocus();
             return false;

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -71,7 +72,8 @@ public class NotifiyActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             imsg_id= getIntent().getExtras().getString("msg_id");
             token_id= getIntent().getExtras().getString("token_id");
-            recipient_phn = getIntent().getExtras().getString("phon_no");
+            recipient_phn = getIntent().getExtras().getString("pho_no");
+            Log.i("recipientPhn66",""+recipient_phn);
         }
             db_instance = FirebaseDatabase.getInstance();
             db_ref = db_instance.getReference();
@@ -148,6 +150,7 @@ public class NotifiyActivity extends AppCompatActivity {
 
                     @Override
                     protected void onPostExecute(String result) {
+
 
                         Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).orderByKey();
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
