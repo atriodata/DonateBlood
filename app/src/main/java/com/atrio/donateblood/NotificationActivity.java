@@ -2,6 +2,8 @@ package com.atrio.donateblood;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,33 +59,38 @@ public class NotificationActivity extends AppCompatActivity {
         rc_recipient = (RecyclerView) findViewById(R.id.rc_recipient);
         dialog = new SpotsDialog(NotificationActivity.this, R.style.Custom);
         dialog.show();
+        ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo == null) {
+            dialog.dismiss();
+            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+        } else {
+            LinearLayoutManager lLayoutd = new LinearLayoutManager(NotificationActivity.this);
+            LinearLayoutManager lLayoutr = new LinearLayoutManager(NotificationActivity.this);
 
-        LinearLayoutManager lLayoutd = new LinearLayoutManager(NotificationActivity.this);
-        LinearLayoutManager lLayoutr = new LinearLayoutManager(NotificationActivity.this);
+            rc_donor.setHasFixedSize(true);
+            rc_donor.setLayoutManager(lLayoutd);
+            rc_recipient.setHasFixedSize(true);
+            rc_recipient.setLayoutManager(lLayoutr);
+            mAuth = FirebaseAuth.getInstance();
+            user = mAuth.getCurrentUser();
+            donor_phn = user.getPhoneNumber();
 
-        rc_donor.setHasFixedSize(true);
-        rc_donor.setLayoutManager(lLayoutd);
-        rc_recipient.setHasFixedSize(true);
-        rc_recipient.setLayoutManager(lLayoutr);
-        mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser();
-        donor_phn = user.getPhoneNumber();
+            rootRef = FirebaseDatabase.getInstance().getReference();
+            sharedpreferences = getSharedPreferences(MyPREFERENCES,Context.MODE_PRIVATE);
+            city_donor = sharedpreferences.getString(city,"");
+            blood_group_donor = sharedpreferences.getString(blood_group,"");
+            Log.i("city_donor44",""+city_donor);
+            Log.i("blood_group_donor44",""+blood_group_donor);
 
-        rootRef = FirebaseDatabase.getInstance().getReference();
-        sharedpreferences = getSharedPreferences(MyPREFERENCES,Context.MODE_PRIVATE);
-        city_donor = sharedpreferences.getString(city,"");
-        blood_group_donor = sharedpreferences.getString(blood_group,"");
-        Log.i("city_donor44",""+city_donor);
-        Log.i("blood_group_donor44",""+blood_group_donor);
-
-        Query query_donoractivity= rootRef.child("Notifications").child("Donor").orderByKey();
-        query_donoractivity.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildrenCount()!=0){
-                    for (DataSnapshot data_info :dataSnapshot.getChildren()) {
-                        Log.i("donateblood11", "" + data_info.getKey());
-                        Log.i("donateblood11", "" + donor_phn);
+            Query query_donoractivity= rootRef.child("Notifications").child("Donor").orderByKey();
+            query_donoractivity.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getChildrenCount()!=0){
+                        for (DataSnapshot data_info :dataSnapshot.getChildren()) {
+                            Log.i("donateblood11", "" + data_info.getKey());
+                            Log.i("donateblood11", "" + donor_phn);
 
                             if (data_info.getKey().equals(donor_phn)) {
 
@@ -97,50 +104,58 @@ public class NotificationActivity extends AppCompatActivity {
                                 }
 
                             }
+                        }
+
+                        RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, donoractivityList);
+                        rc_donor.setAdapter(rcAdapter);
                     }
-
-                    RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, donoractivityList);
-                    rc_donor.setAdapter(rcAdapter);
+                    else {
+                        dialog.dismiss();
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
 
 
-        Query query_catlist = rootRef.child("Notifications").child("Recipient").child(city_donor).child(blood_group_donor).orderByKey().limitToLast(10);
+            Query query_catlist = rootRef.child("Notifications").child("Recipient").child(city_donor).child(blood_group_donor).orderByKey().limitToLast(10);
 
-        query_catlist.addListenerForSingleValueEvent(new ValueEventListener() {
+            query_catlist.addListenerForSingleValueEvent(new ValueEventListener() {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getChildrenCount() !=0) {
-                    Toast.makeText(NotificationActivity.this,""+dataSnapshot.getChildrenCount(),Toast.LENGTH_SHORT).show();
-                   // Toast.makeText(NotificationActivity.this,""+dataSnapshot.getChildrenCount(),Toast.LENGTH_SHORT).show();
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getChildrenCount() !=0) {
+//                    Toast.makeText(NotificationActivity.this,""+dataSnapshot.getChildrenCount(),Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(NotificationActivity.this,""+dataSnapshot.getChildrenCount(),Toast.LENGTH_SHORT).show();
 //                    arr = new ArrayList<String>();
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
-                        RecipientDetail r_detail=dataSnapshot1.getValue(RecipientDetail.class);
-                        r_detail.setBody(r_detail.body);
-                        r_detail.setType("recipientwilling");
-                        arrayList.add(r_detail);
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                            RecipientDetail r_detail=dataSnapshot1.getValue(RecipientDetail.class);
+                            r_detail.setBody(r_detail.body);
+                            r_detail.setType("recipientwilling");
+                            arrayList.add(r_detail);
+                        }
+                        dialog.dismiss();
+                        Collections.reverse(arrayList);
+                        RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, arrayList);
+                        rc_recipient.setAdapter(rcAdapter);
                     }
-                    dialog.dismiss();
-                    Collections.reverse(arrayList);
-                    RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, arrayList);
-                    rc_recipient.setAdapter(rcAdapter);
+                    else {
+                        dialog.dismiss();
+                    }
+
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                }
 
-            }
+            });
 
-        });
+        }
 
 
 

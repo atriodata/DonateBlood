@@ -1,8 +1,11 @@
 package com.atrio.donateblood;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import dmax.dialog.SpotsDialog;
 
@@ -18,10 +21,19 @@ public class Notify_RecieverActivity extends AppCompatActivity {
         tv_body = (TextView)findViewById(R.id.tv_confm);
         dialog = new SpotsDialog(Notify_RecieverActivity.this, R.style.Custom);
         dialog.show();
-        if (getIntent().getExtras() != null) {
-            body= getIntent().getExtras().getString("body");
+        ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo == null) {
             dialog.dismiss();
-            tv_body.setText(body);
+            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+        } else {
+            if (getIntent().getExtras() != null) {
+                body= getIntent().getExtras().getString("body");
+                dialog.dismiss();
+                tv_body.setText(body);
+            }
         }
+
+
     }
 }

@@ -1,6 +1,8 @@
 package com.atrio.donateblood;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -43,80 +45,87 @@ public class VerifyOTP extends AppCompatActivity {
         et_verify = (EditText) findViewById(R.id.et_otp);
         btn_resend = (Button) findViewById(R.id.btn_resend);
         btn_Verify = (Button) findViewById(R.id.btn_verify);
+        ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo == null) {
+            dialog.dismiss();
+            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+        } else {
+            dialog = new SpotsDialog(VerifyOTP.this, R.style.Custom);
+            dialog.show();
 
-        dialog = new SpotsDialog(VerifyOTP.this, R.style.Custom);
-        dialog.show();
+            Intent i = getIntent();
+            phn_no = i.getStringExtra("phn_number");
+            mAuth = FirebaseAuth.getInstance();
+            User = mAuth.getCurrentUser();
 
-        Intent i = getIntent();
-        phn_no = i.getStringExtra("phn_number");
-        mAuth = FirebaseAuth.getInstance();
-        User = mAuth.getCurrentUser();
-
-        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            @Override
-            public void onVerificationCompleted(PhoneAuthCredential credential) {
+            mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                @Override
+                public void onVerificationCompleted(PhoneAuthCredential credential) {
 //                dialog.dismiss();
-                signInWithPhoneAuthCredential(credential);
-            }
+                    signInWithPhoneAuthCredential(credential);
+                }
 
-            @Override
-            public void onVerificationFailed(FirebaseException e) {
+                @Override
+                public void onVerificationFailed(FirebaseException e) {
 
-                if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    Log.d("Invalid request", "Invalid request");
-                } else if (e instanceof FirebaseTooManyRequestsException) {
+                    if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                        Log.d("Invalid request", "Invalid request");
+                    } else if (e instanceof FirebaseTooManyRequestsException) {
                         dialog.dismiss();
-                    Toast.makeText(VerifyOTP.this, "sms_qutoa_exceeded_alert", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(VerifyOTP.this, "sms_qutoa_exceeded_alert", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
 
-            }
-
-            @Override
-            public void onCodeAutoRetrievalTimeOut(String s) {
-                super.onCodeAutoRetrievalTimeOut(s);
-                otp = et_verify.getText().toString().trim();
-                if (TextUtils.isEmpty(otp)) {
-                    dialog.dismiss();
-
-                    Toast.makeText(VerifyOTP.this, "Enter OTP", Toast.LENGTH_SHORT).show();
-                } else {
-                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(s, otp);
-                    signInWithPhoneAuthCredential(credential);
-                }
-            }
-
-            @Override
-            public void onCodeSent(String verificationId,
-                                   PhoneAuthProvider.ForceResendingToken token) {
-                mVerificationId = verificationId;
-                dialog.dismiss();
-
-                Toast.makeText(VerifyOTP.this, "OTP is send", Toast.LENGTH_SHORT).show();
-                // ...
-            }
-        };
-        btn_Verify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-                if (TextUtils.isEmpty(et_verify.getText().toString().trim())) {
-                    dialog.dismiss();
-                    Toast.makeText(VerifyOTP.this, "Enter OTP", Toast.LENGTH_SHORT).show();
-                } else {
+                @Override
+                public void onCodeAutoRetrievalTimeOut(String s) {
+                    super.onCodeAutoRetrievalTimeOut(s);
                     otp = et_verify.getText().toString().trim();
-                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
-                    signInWithPhoneAuthCredential(credential);
+                    if (TextUtils.isEmpty(otp)) {
+                        dialog.dismiss();
+
+                        Toast.makeText(VerifyOTP.this, "Enter OTP", Toast.LENGTH_SHORT).show();
+                    } else {
+                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(s, otp);
+                        signInWithPhoneAuthCredential(credential);
+                    }
                 }
-            }
-        });
-        btn_resend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-                fireBasePhLogin(phn_no);
-            }
-        });
-    }
+
+                @Override
+                public void onCodeSent(String verificationId,
+                                       PhoneAuthProvider.ForceResendingToken token) {
+                    mVerificationId = verificationId;
+                    dialog.dismiss();
+
+                    Toast.makeText(VerifyOTP.this, "OTP is send", Toast.LENGTH_SHORT).show();
+                    // ...
+                }
+            };
+            btn_Verify.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.show();
+                    if (TextUtils.isEmpty(et_verify.getText().toString().trim())) {
+                        dialog.dismiss();
+                        Toast.makeText(VerifyOTP.this, "Enter OTP", Toast.LENGTH_SHORT).show();
+                    } else {
+                        otp = et_verify.getText().toString().trim();
+                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
+                        signInWithPhoneAuthCredential(credential);
+                    }
+                }
+            });
+            btn_resend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.show();
+                    fireBasePhLogin(phn_no);
+                }
+            });
+
+        }
+           }
 
     @Override
     protected void onStart() {

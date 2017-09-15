@@ -50,27 +50,28 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String msg_id = remoteMessage.getData().get("msg_id");
         String token_id = remoteMessage.getData().get("token_id");
         String body_donor =remoteMessage.getData().get("body");
-        String phon_no = remoteMessage.getData().get("pho_no");
+        String recipient_phn = remoteMessage.getData().get("recipient_phn");
         String click_action = remoteMessage.getNotification().getClickAction();
         String current_token = FirebaseInstanceId.getInstance().getToken();
 
         bitmap = getBitmapfromUrl(imageUri);
         if (token_id!=null) {
             if (!token_id.equals(current_token)) {
-                sendNotification(tittle, body, bitmap, token_id, msg_id, click_action,body_donor,phon_no);
+                sendNotification(tittle, body, bitmap, token_id, msg_id, click_action,body_donor,recipient_phn);
             }
         }else{
-            sendNotification(tittle, body_donor, bitmap, token_id, msg_id, click_action,body_donor,phon_no);
+            sendNotification(tittle, body_donor, bitmap, token_id, msg_id, click_action,body_donor,recipient_phn);
         }
     }
 
-    private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id,String click_action,String body_donor,String phon_no) {
+    private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id,String click_action,String body_donor,String recipient_phn) {
         Intent intent = new Intent(click_action);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("token_id", token_id);
         intent.putExtra("msg_id", msg_id);
         intent.putExtra("body", body_donor);
-        intent.putExtra("phon_no",phon_no);
+        intent.putExtra("recipient_phn",recipient_phn);
+        Log.i("recipientdata",""+recipient_phn);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

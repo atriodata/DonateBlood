@@ -395,7 +395,7 @@ public class ResigrationActivity extends AppCompatActivity {
         }else{
             topic = city_data+groupFirst+"negative";
         }
-        Log.i("sub1234",""+topic);
+//        Log.i("sub1234",""+topic);
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
         token = FirebaseInstanceId.getInstance().getToken();
     }
