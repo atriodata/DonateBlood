@@ -256,7 +256,7 @@ public class RecipientActivity extends AppCompatActivity {
 
                     notification.put("body", message1);
                     notification.put("title", "Donate Blood");
-                    notification.put("icon", "myicon");
+                    notification.put("icon", "http://res.cloudinary.com/ddky6bjui/image/upload/v1505451080/ic_stat_ic_notification_qcawdk.png");
                     notification.put("click_action","Notifiy_Activity");
 
                     JSONObject data = new JSONObject();

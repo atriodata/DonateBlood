@@ -132,7 +132,7 @@ public class NotifiyActivity extends AppCompatActivity {
               message1 = " I am willing to donate blood."+"\n"+" contact me"+"\n"+donor_phn;
                             notification.put("body", message1);
                             notification.put("title", "Response");
-                            notification.put("icon", "myicon");
+                            notification.put("icon", "http://res.cloudinary.com/ddky6bjui/image/upload/v1505451080/ic_stat_ic_notification_qcawdk.png");
                             notification.put("click_action","Notifiy_Reciever");
 
                             JSONObject data = new JSONObject();
@@ -154,7 +154,7 @@ public class NotifiyActivity extends AppCompatActivity {
                     @Override
                     protected void onPostExecute(String result) {
 
-
+if(recipient_phn!=null){
                         Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).orderByKey();
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -180,6 +180,7 @@ public class NotifiyActivity extends AppCompatActivity {
 
                                 }
                             });
+
                         }
                     }
                 }.execute();
