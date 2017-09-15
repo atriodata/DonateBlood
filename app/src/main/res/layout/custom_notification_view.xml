@@ -34,7 +34,6 @@
             android:paddingBottom="2dp"
             android:paddingTop="2dp"
             android:padding="10dp"
-            android:textColor="@color/colorAccent"
             android:layout_below="@+id/sub_pic"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />

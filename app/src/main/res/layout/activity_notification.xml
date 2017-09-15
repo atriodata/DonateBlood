@@ -52,9 +52,10 @@
                 android:id="@+id/tv_donor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Donor"
-                android:textColor="@color/black"
-                android:textSize="15sp"
+                android:text="Donor Request"
+                android:textColor="@color/colorAccent"
+                android:textSize="17sp"
+
                 android:typeface="normal" />
 
             <android.support.v7.widget.RecyclerView
@@ -75,8 +76,8 @@
                 android:id="@+id/tv_recipient"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Recipient"
-                android:textColor="@color/black"
+                android:text="Recipient Requirement"
+                android:textColor="@color/colorAccent"
                 android:textSize="15sp"
                 android:typeface="normal" />
 
