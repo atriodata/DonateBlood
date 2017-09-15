@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -61,11 +60,11 @@ public class ResigrationActivity extends AppCompatActivity {
     Spinner spin_state, sp_bloodgr, et_age, et_weight;
     RadioButton radioSexButton;
     RadioGroup rg_group;
-    CheckBox cb_never, cb_above, cb_below;
+//    CheckBox cb_never, cb_above, cb_below;
     Button btn_reg, btn_info;
     EditText et_name, et_emailid;
     TextView tv_info;
-    String state_data, blood_data, radio_data, cb_data, name, emailid, age, phoneno, weight, city_data, count, temp, token;
+    String state_data, blood_data, radio_data,  name, emailid, age, phoneno, weight, city_data, count, temp, token;//cb_data
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
@@ -93,9 +92,9 @@ public class ResigrationActivity extends AppCompatActivity {
         spin_state = (Spinner) findViewById(R.id.spin_state);
         sp_bloodgr = (Spinner) findViewById(R.id.spin_bloodGrp);
         rg_group = (RadioGroup) findViewById(R.id.radioSex);
-        cb_never = (CheckBox) findViewById(R.id.cb_never);
-        cb_above = (CheckBox) findViewById(R.id.cb_above);
-        cb_below = (CheckBox) findViewById(R.id.cb_below);
+//        cb_never = (CheckBox) findViewById(R.id.cb_never);
+//        cb_above = (CheckBox) findViewById(R.id.cb_above);
+//        cb_below = (CheckBox) findViewById(R.id.cb_below);
         btn_reg = (Button) findViewById(R.id.bt_reg);
         btn_info = (Button) findViewById(R.id.btn_info);
         et_name = (EditText) findViewById(R.id.input_name);
@@ -176,7 +175,6 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 age = parent.getItemAtPosition(position).toString();
-
             }
 
             @Override
@@ -205,6 +203,7 @@ public class ResigrationActivity extends AppCompatActivity {
         });
 
 
+/*
         if (cb_never.isChecked()) {
             cb_never.setChecked(false);
         } else if (cb_below.isChecked()) {
@@ -242,6 +241,7 @@ public class ResigrationActivity extends AppCompatActivity {
             }
         });
 
+*/
         btn_reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -283,7 +283,7 @@ public class ResigrationActivity extends AppCompatActivity {
 
                                 } else{
                                     dialog.dismiss();
-                                    createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, cb_data, phoneno, count);
+                                    createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data,  phoneno, count);
                                     et_name.setText("");
                                     et_emailid.setText("");
                                     atvPlaces.setText("");
@@ -291,9 +291,9 @@ public class ResigrationActivity extends AppCompatActivity {
                                     et_weight.setSelection(0);
                                     sp_bloodgr.setSelection(0);
                                     spin_state.setSelection(0);
-                                    cb_never.setChecked(false);
+                                    /*cb_never.setChecked(false);
                                     cb_above.setChecked(false);
-                                    cb_below.setChecked(false);
+                                    cb_below.setChecked(false);*/
                                     subscribeToPushService(blood_data);
                                     Toast.makeText(ResigrationActivity.this,"Successsully Registred",Toast.LENGTH_SHORT).show();
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -356,12 +356,12 @@ public class ResigrationActivity extends AppCompatActivity {
                 et_weight.setSelection(0);
                 sp_bloodgr.setSelection(0);
                 spin_state.setSelection(0);
-                cb_never.setChecked(false);
+              /*  cb_never.setChecked(false);
                 cb_above.setChecked(false);
-                cb_below.setChecked(false);
+                cb_below.setChecked(false);*/
             }else {
                 dialog.dismiss();
-                createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, cb_data, phoneno, count);
+                createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data,  phoneno, count);
                 et_name.setText("");
                 et_emailid.setText("");
                 atvPlaces.setText("");
@@ -369,9 +369,9 @@ public class ResigrationActivity extends AppCompatActivity {
                 et_weight.setSelection(0);
                 sp_bloodgr.setSelection(0);
                 spin_state.setSelection(0);
-                cb_never.setChecked(false);
+                /*cb_never.setChecked(false);
                 cb_above.setChecked(false);
-                cb_below.setChecked(false);
+                cb_below.setChecked(false);*/
                 subscribeToPushService(blood_data);
                 Toast.makeText(ResigrationActivity.this, "Successsully Registred ", Toast.LENGTH_SHORT).show();
                 SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -400,7 +400,7 @@ public class ResigrationActivity extends AppCompatActivity {
         token = FirebaseInstanceId.getInstance().getToken();
     }
 
-    private void createUser(String name, String emailid, String age, String weight, String blood_data, String state_data, String city_data, String radio_data, String cb_data, String phoneno, String count) {
+    private void createUser(String name, String emailid, String age, String weight, String blood_data, String state_data, String city_data, String radio_data, String phoneno, String count) {
         UserDetail userDetail = new UserDetail();
 
         userDetail.setName(name);
@@ -412,7 +412,7 @@ public class ResigrationActivity extends AppCompatActivity {
         userDetail.setState(state_data);
         userDetail.setCity(city_data);
         userDetail.setGender(radio_data);
-        userDetail.setTimeperiod(cb_data);
+//        userDetail.setTimeperiod(cb_data);
         userDetail.setCount(count);
 
         db_ref.child("Donor").child(state_data).child(city_data).child(phoneno).setValue(userDetail);
@@ -451,10 +451,10 @@ public class ResigrationActivity extends AppCompatActivity {
             atvPlaces.requestFocus();
             return false;
 
-        } else if (cb_data.equals("")) {
+        } /*else if (cb_data.equals("")) {
             Toast.makeText(getApplicationContext(), "Select Donation Period", Toast.LENGTH_LONG).show();
             return false;
-        } else
+        }*/ else
             return true;
 
     }

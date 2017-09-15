@@ -310,7 +310,7 @@ public class RecipientActivity extends AppCompatActivity {
         recipientDetail.setCity(city_data);
         recipientDetail.setBody(body);
 
-        db_ref.child("RecipientNotification").child("Recipient").child(city_data).child(blood_data).child(phoneno).child(msg_id).setValue(recipientDetail);
+//        db_ref.child("RecipientNotification").child("Recipient").child(city_data).child(blood_data).child(phoneno).child(msg_id).setValue(recipientDetail);
         db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(msg_id).setValue(recipientDetail);
         sendNotificationToUser(regId);
     }
@@ -327,7 +327,6 @@ public class RecipientActivity extends AppCompatActivity {
         et_date.setText("");
         et_emailid.setText("");
         atvPlaces.setText("");
-       // et_phoneno.setText("");
         et_remark.setText("");
         sp_bloodgr.setSelection(0);
         spin_state.setSelection(0);
