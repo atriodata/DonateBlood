@@ -176,7 +176,6 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 age = parent.getItemAtPosition(position).toString();
-
             }
 
             @Override

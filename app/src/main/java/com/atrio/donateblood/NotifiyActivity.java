@@ -148,8 +148,6 @@ public class NotifiyActivity extends AppCompatActivity {
 
                                 JSONObject data = new JSONObject();
                                 data.put("body", message1);
-//                            data.put("pho_no",recipient_phn);
-//
                                 root.put("notification", notification);
                                 root.put("data", data);
                                 root.put("priority", "high");
