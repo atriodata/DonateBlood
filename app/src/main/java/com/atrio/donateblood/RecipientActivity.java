@@ -327,7 +327,8 @@ public class RecipientActivity extends AppCompatActivity {
         et_date.setText("");
         et_emailid.setText("");
         atvPlaces.setText("");
-        et_remark.setText("");
+
+            et_remark.setText("");
         sp_bloodgr.setSelection(0);
         spin_state.setSelection(0);
         dialog.dismiss();

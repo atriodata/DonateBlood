@@ -4,6 +4,7 @@
     <string name="otp_verify">A OTP has been send to your mobile no. Please enter the OTP below to Verify your Mobile Number</string>
     <string name="verify_phn">We will send an SMS message to verify your phone number.Enter your country code and phone number.</string>
     <string name="hint_name">Enter Your Name</string>
+    <string name="hint_spinner">Select the items</string>
     <string name="registrationheader">Registration Form Of Donor</string>
     <string name="hint_age">Enter Your Age. Age is in between 18 to 60</string>
     <string name="hint_weight">weight must be above 45 Kilograms</string>
