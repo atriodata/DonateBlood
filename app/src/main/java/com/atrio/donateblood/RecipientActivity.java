@@ -333,15 +333,17 @@ public class RecipientActivity extends AppCompatActivity {
                     data.put("msg_id", msg_id);
                     data.put("pho_no",phoneno);
                     root.put("notification", notification);
+                    root.put("condition",condition);
                     root.put("data", data);
                     root.put("priority","high");
                     /*root.put("to","/topics/"+topic_negative);*/
-                    root.put("condition",condition);
+
 
 
 
 
                     String result = postToFCM(root.toString());
+                    Log.i("result67",""+result);
                     Log.i("result55",root.toString());
                     return result;
                 } catch (Exception ex) {
@@ -352,6 +354,7 @@ public class RecipientActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String result) {
+                Log.i("result66",""+result);
                         sendmail(store_list);
             }
         }.execute();
@@ -363,37 +366,37 @@ public class RecipientActivity extends AppCompatActivity {
         Log.i("data11",""+data);
 
         if ((data.equals("1"))) {
-            condition = topic_grpAp + " in topics && " + topic_grpAn + " in topics && " + topic_grpOp
-                    + " in topics && " + topic_grpOn + " in topics";
+            condition = "'"+topic_grpAp + "'"+" in topics && " +"'"+ topic_grpAn+ "'"+ " in topics && " +"'"+ topic_grpOp+"'"
+                    + " in topics && " + "'"+topic_grpOn +"'"+ " in topics";
             Log.i("cond33", "" + condition);
         }
             if (data.equals("2")) {
-                condition = topic_grpOp + " in topics && " + topic_grpOn + " in topics";
+                condition = "'"+topic_grpOp+"'" + " in topics && " + "'"+topic_grpOn+"'" + " in topics";
                 Log.i("cond33", "" + condition);
             }if (data.equals("3")){
-                    condition = topic_grpBp +" in topics && "+ topic_grpBn+" in topics && "+topic_grpOp +" in topics && "+ topic_grpOn+" in topics";
+                    condition = "'"+topic_grpBp+"'" +" in topics && "+ "'"+topic_grpBn+"'"+" in topics && "+"'"+topic_grpOp+"'" +" in topics && "+""+ topic_grpOn+"'"+" in topics";
                     Log.i("cond33",""+condition);
                 }if(data.equals("4")){
 
-                    condition = topic_grpAp +" in topics && "+ topic_grpAn+" in topics"+topic_grpBp +" in topics && "+ topic_grpBn+" in topics"
-                   + topic_grpOp +" in topics && "+ topic_grpOn+" in topics && "+topic_grpABp +" in topics && "+ topic_grpABn+" in topics" ;
+                    condition ="'"+ topic_grpAp+"'" +" in topics && "+ "'"+topic_grpAn+"'"+" in topics"+"'"+topic_grpBp +"'"+" in topics && "+"'"+ topic_grpBn+"'"+" in topics"
+                   +"'"+ topic_grpOp+"'" +" in topics && "+"'"+ topic_grpOn+"'"+" in topics && "+"'"+topic_grpABp+"'" +" in topics && "+ "'"+topic_grpABn+"'"+" in topics" ;
                     Log.i("cond33",""+condition);
 
                 }
                 if (data.equals("5") ) {
-                    condition = topic_grpAn +" in topics && "+ topic_grpOn+" in topics";
+                    condition = "'"+topic_grpAn+"'" +" in topics && "+ "'"+topic_grpOn+"'"+" in topics";
                     Log.i("cond33",""+condition);
                 }
                 if (data.equals("6")){
-                    condition = topic_grpOn +" in topics";
+                    condition ="'" +topic_grpOn+"'" +" in topics";
                     Log.i("cond33",""+condition);
 
                 }
                 if (data.equals("7")){
-                    condition = topic_grpBn +" in topics && "+ topic_grpOn+" in topics";
+                    condition = "'"+topic_grpBn+"'" +" in topics && "+"'"+ topic_grpOn+"'"+" in topics";
                     Log.i("cond33",""+condition);
                 }if(data.equals("8")){
-                    condition = topic_grpABn +" in topics && "+ topic_grpAn+" in topics && "+topic_grpBn +" in topics && "+ topic_grpAn+" in topics";
+                    condition = "'"+topic_grpABn+"'" +" in topics && "+ "'"+topic_grpAn+"'"+" in topics && "+"'"+topic_grpBn+"'" +" in topics && "+"'"+ topic_grpAn+"'"+" in topics";
                     Log.i("cond33",""+condition);
 
                 }
