@@ -1,8 +1,6 @@
 package com.atrio.donateblood;
 
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -54,19 +52,11 @@ public class RecipentDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (validate()) {
-                    ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                    if (networkInfo == null) {
-                        dialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
-                    } else {
-                        dialog.show();
-                        name = et_rcName.getText().toString().trim();
-                        phn_no = et_rcPhn.getText().toString().trim();
-                        address = et_rcaddress.getText().toString().trim();
-                        createRecipient(name,phn_no,address);
-                    }
-
+                    dialog.show();
+                    name = et_rcName.getText().toString().trim();
+                    phn_no = et_rcPhn.getText().toString().trim();
+                    address = et_rcaddress.getText().toString().trim();
+                    createRecipient(name,phn_no,address);
                 }
             }
         });
@@ -90,6 +80,7 @@ public class RecipentDetailsActivity extends AppCompatActivity {
                     db_ref.child("Recipient").child(phn_no).setValue(userDetail);
                     Intent intent = new Intent(RecipentDetailsActivity.this, RecipientActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
             @Override

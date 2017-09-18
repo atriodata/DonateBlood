@@ -134,17 +134,17 @@ public class NotifiyActivity extends AppCompatActivity {
 
                     dialog.show();
 
-                    new AsyncTask<String, String, String>() {
-                        @Override
-                        protected String doInBackground(String... params) {
-                            try {
-                                JSONObject root = new JSONObject();
-                                JSONObject notification = new JSONObject();
-                                message1 = " I am willing to donate blood." + "\n" + " contact me" + "\n" + donor_phn;
-                                notification.put("body", message1);
-                                notification.put("title", "Response");
-                                notification.put("icon", "myicon");
-                                notification.put("click_action", "Notifiy_Reciever");
+                new AsyncTask<String, String, String>() {
+                    @Override
+                    protected String doInBackground(String... params) {
+                        try {
+                            JSONObject root = new JSONObject();
+                            JSONObject notification = new JSONObject();
+              message1 = " I am willing to donate blood."+"\n"+" contact me"+"\n"+donor_phn;
+                            notification.put("body", message1);
+                            notification.put("title", "Response");
+                            notification.put("icon", "http://res.cloudinary.com/ddky6bjui/image/upload/v1505451080/ic_stat_ic_notification_qcawdk.png");
+                            notification.put("click_action","Notifiy_Reciever");
 
                                 JSONObject data = new JSONObject();
                                 data.put("body", message1);

@@ -1,8 +1,6 @@
 package com.atrio.donateblood;
 
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -32,44 +30,35 @@ public class MainActivity extends AppCompatActivity {
         ccp = (CountryCodePicker) findViewById(R.id.sp_country);
         et_phn = (EditText) findViewById(R.id.et_phone);
         btn_nxt = (Button) findViewById(R.id.btn_next);
-
-        ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo == null) {
-            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
-        }else {
-
-
-            isd_code = ccp.getSelectedCountryCodeWithPlus();
-            mAuth = FirebaseAuth.getInstance();
-            user = mAuth.getCurrentUser();
-            if (user != null) {
-                startActivity(new Intent(MainActivity.this, HomeActivity.class));
-                finish();
-            } else {
-            }
-            ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
-                @Override
-
-                public void onCountrySelected() {
-                    isd_code = ccp.getSelectedCountryCodeWithPlus();
-                    Toast.makeText(MainActivity.this, "" + ccp.getSelectedCountryCodeWithPlus(), Toast.LENGTH_SHORT).show();
-                }
-            });
-            btn_nxt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!validatePhoneNumber()) {
-                        return;
-                    }
-                    phn_no = isd_code + et_phn.getText().toString().trim();
-                    Intent intent = new Intent(MainActivity.this, VerifyOTP.class);
-                    intent.putExtra("phn_number", phn_no);
-                    startActivity(intent);
-                    finish();
-                }
-            });
+        isd_code = ccp.getSelectedCountryCodeWithPlus();
+        mAuth=FirebaseAuth.getInstance();
+        user= mAuth.getCurrentUser();
+        if (user != null) {
+            startActivity(new Intent(MainActivity.this,HomeActivity.class));
+            finish();
+        } else {
         }
+        ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+            @Override
+
+            public void onCountrySelected() {
+                isd_code = ccp.getSelectedCountryCodeWithPlus();
+                Toast.makeText(MainActivity.this, "" + ccp.getSelectedCountryCodeWithPlus(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        btn_nxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!validatePhoneNumber()) {
+                    return;
+                }
+                phn_no = isd_code + et_phn.getText().toString().trim();
+                Intent intent = new Intent(MainActivity.this, VerifyOTP.class);
+                intent.putExtra("phn_number", phn_no);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private boolean validatePhoneNumber() {
