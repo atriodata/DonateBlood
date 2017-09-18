@@ -57,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         animation.setDuration(3000);  // animation duration
         animation.setFillAfter(true);
         img_drop.startAnimation(animation);
+
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
