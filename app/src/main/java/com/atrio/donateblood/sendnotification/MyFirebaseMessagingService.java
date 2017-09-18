@@ -48,14 +48,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         String tittle = remoteMessage.getNotification().getTitle();
         String body = remoteMessage.getNotification().getBody();
-        String imageUri = remoteMessage.getData().get("image");
+        String imageUri = remoteMessage.getNotification().getIcon();
         String msg_id = remoteMessage.getData().get("msg_id");
         String token_id = remoteMessage.getData().get("token_id");
         String body_donor =remoteMessage.getData().get("body");
         String phon_no = remoteMessage.getData().get("pho_no");
         String click_action = remoteMessage.getNotification().getClickAction();
         String current_token = FirebaseInstanceId.getInstance().getToken();
-        Log.i("phon_no44",""+phon_no);
+        Log.i("imageUri44",""+imageUri);
 
         bitmap = getBitmapfromUrl(imageUri);
         if (token_id!=null) {
@@ -107,11 +107,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             connection.connect();
             InputStream input = connection.getInputStream();
             Bitmap bitmap = BitmapFactory.decodeStream(input);
+            Log.i("Bimap11",""+bitmap);
             return bitmap;
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            Log.i("Bimap11",e.getMessage());
             return null;
 
         }

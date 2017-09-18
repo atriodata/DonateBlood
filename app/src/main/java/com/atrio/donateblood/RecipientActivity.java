@@ -62,7 +62,8 @@ public class RecipientActivity extends AppCompatActivity {
     Spinner spin_state, sp_bloodgr;
     Button btn_send;
     EditText et_phoneno, et_emailid, et_date, et_remark;
-    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, send_mail, regId,msg_id,message1;
+    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, send_mail, regId,msg_id,message1,
+            condition =null;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
@@ -243,14 +244,82 @@ public class RecipientActivity extends AppCompatActivity {
             @Override
             protected String doInBackground(String... params) {
                 try {
-                    String topic = null;
+
+                    String topic_grpAp,topic_grpAn,topic_grpBp,topic_grpBn,topic_grpABp,topic_grpABn,topic_grpOp,topic_grpOn;
+                    String topic_positive = null,topic_negative = null,topic;
                     String groupFirst = blood_data.substring(0,blood_data.length()-1);
                     String grouplast = blood_data.substring(blood_data.length()-1);
-                    if (grouplast.equals("+")){
-                        topic = city_data+groupFirst+"positive";
-                    }else{
-                        topic =city_data+ groupFirst+"negative";
+                    String data1;
+
+                    switch (blood_data){
+                        case "A+":
+                            topic_grpAp = state_data.replace(" ","")+"A"+"positive";
+                            topic_grpAn = state_data.replace(" ","")+"A"+"negative";
+                            topic_grpOp = state_data.replace(" ","")+"O"+"positive";
+                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
+                            data1 ="1";
+                            conditionTopic(topic_grpAp,topic_grpAn,null,null,topic_grpOp,topic_grpOn,null,null,data1);
+                            break;
+                        case "O+":
+                            topic_grpOp = state_data.replace(" ","")+"O"+"positive";
+                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
+                            data1 ="2";
+                            conditionTopic(null,null,null,null,topic_grpOp,topic_grpOn,null,null, data1);
+                            break;
+                        case "B+":
+                            topic_grpBp = state_data.replace(" ","")+"B"+"positive";
+                            topic_grpBn = state_data.replace(" ","")+"B"+"negative";
+                            topic_grpOp = state_data.replace(" ","")+"O"+"positive";
+                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
+                            data1 ="3";
+                            conditionTopic(null,null,topic_grpBp,topic_grpBn,topic_grpOp,topic_grpOn,null,null, data1);
+
+                            break;
+                        case "AB+":
+                            topic_grpAp = state_data.replace(" ","")+"A"+"positive";
+                            topic_grpAn = state_data.replace(" ","")+"A"+"negative";
+                            topic_grpBp = state_data.replace(" ","")+"B"+"positive";
+                            topic_grpBn = state_data.replace(" ","")+"B"+"negative";
+                            topic_grpOp = state_data.replace(" ","")+"O"+"positive";
+                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
+                            topic_grpABp = state_data.replace(" ","")+"AB"+"positive";
+                            topic_grpABn = state_data.replace(" ","")+"AB"+"negative";
+                            data1 ="4";
+                            conditionTopic(topic_grpAp,topic_grpAn,topic_grpBp,topic_grpBn,topic_grpOp,topic_grpOn,topic_grpABp,topic_grpABn, data1);
+                            break;
+                        case "A-":
+                            topic_grpAn = state_data.replace(" ","")+"A"+"negative";
+                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
+                            data1 ="5";
+                            conditionTopic(null,topic_grpAn,null,null,null,topic_grpOn,null,null, data1);
+
+                            break;
+                        case "O-":
+                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
+                            data1 ="6";
+                            conditionTopic(null,null,null,null,null,topic_grpOn,null,null, data1);
+
+                            break;
+                        case "B-":
+                            topic_grpBn = state_data.replace(" ","")+"B"+"negative";
+                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
+                            data1 ="7";
+                            conditionTopic(null,null,null,topic_grpBn,null,topic_grpOn,null,null, data1);
+
+                            break;
+                        case "AB-":
+                            topic_grpABn = state_data.replace(" ","")+"AB"+"negative";
+                            topic_grpAn = state_data.replace(" ","")+"A"+"negative";
+                            topic_grpBn = state_data.replace(" ","")+"B"+"negative";
+                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
+                            data1 ="8";
+                            conditionTopic(null,topic_grpAn,null,topic_grpBn,null,topic_grpOn,null,topic_grpABn, data1);
+                            break;
                     }
+
+
+
+
                     JSONObject root = new JSONObject();
                     JSONObject notification = new JSONObject();
 
@@ -266,7 +335,12 @@ public class RecipientActivity extends AppCompatActivity {
                     root.put("notification", notification);
                     root.put("data", data);
                     root.put("priority","high");
-                    root.put("to","/topics/"+topic);
+                    /*root.put("to","/topics/"+topic_negative);*/
+                    root.put("condition",condition);
+
+
+
+
                     String result = postToFCM(root.toString());
                     Log.i("result55",root.toString());
                     return result;
@@ -281,6 +355,52 @@ public class RecipientActivity extends AppCompatActivity {
                         sendmail(store_list);
             }
         }.execute();
+    }
+
+    private void conditionTopic(String topic_grpAp, String topic_grpAn, String topic_grpBp, String topic_grpBn, String topic_grpOp,
+                                String topic_grpOn, String topic_grpABp, String topic_grpABn, String data) {
+
+        Log.i("data11",""+data);
+
+        if ((data.equals("1"))) {
+            condition = topic_grpAp + " in topics && " + topic_grpAn + " in topics && " + topic_grpOp
+                    + " in topics && " + topic_grpOn + " in topics";
+            Log.i("cond33", "" + condition);
+        }
+            if (data.equals("2")) {
+                condition = topic_grpOp + " in topics && " + topic_grpOn + " in topics";
+                Log.i("cond33", "" + condition);
+            }if (data.equals("3")){
+                    condition = topic_grpBp +" in topics && "+ topic_grpBn+" in topics && "+topic_grpOp +" in topics && "+ topic_grpOn+" in topics";
+                    Log.i("cond33",""+condition);
+                }if(data.equals("4")){
+
+                    condition = topic_grpAp +" in topics && "+ topic_grpAn+" in topics"+topic_grpBp +" in topics && "+ topic_grpBn+" in topics"
+                   + topic_grpOp +" in topics && "+ topic_grpOn+" in topics && "+topic_grpABp +" in topics && "+ topic_grpABn+" in topics" ;
+                    Log.i("cond33",""+condition);
+
+                }
+                if (data.equals("5") ) {
+                    condition = topic_grpAn +" in topics && "+ topic_grpOn+" in topics";
+                    Log.i("cond33",""+condition);
+                }
+                if (data.equals("6")){
+                    condition = topic_grpOn +" in topics";
+                    Log.i("cond33",""+condition);
+
+                }
+                if (data.equals("7")){
+                    condition = topic_grpBn +" in topics && "+ topic_grpOn+" in topics";
+                    Log.i("cond33",""+condition);
+                }if(data.equals("8")){
+                    condition = topic_grpABn +" in topics && "+ topic_grpAn+" in topics && "+topic_grpBn +" in topics && "+ topic_grpAn+" in topics";
+                    Log.i("cond33",""+condition);
+
+                }
+
+
+
+
     }
 
 

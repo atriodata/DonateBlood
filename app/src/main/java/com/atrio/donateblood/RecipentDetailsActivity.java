@@ -80,6 +80,7 @@ public class RecipentDetailsActivity extends AppCompatActivity {
                     db_ref.child("Recipient").child(phn_no).setValue(userDetail);
                     Intent intent = new Intent(RecipentDetailsActivity.this, RecipientActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
             @Override

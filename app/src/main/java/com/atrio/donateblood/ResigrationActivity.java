@@ -102,7 +102,7 @@ public class ResigrationActivity extends AppCompatActivity {
         tv_info = (TextView) findViewById(R.id.tv_info);
         et_age = (Spinner) findViewById(R.id.input_age);
         et_weight = (Spinner) findViewById(R.id.input_weight);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
@@ -391,9 +391,9 @@ public class ResigrationActivity extends AppCompatActivity {
         String grouplast = blood_data.substring(blood_data.length()-1);
 
         if (grouplast.equals("+")){
-          topic = city_data+groupFirst+"positive";
+          topic = state_data.replace(" ","")+groupFirst+"positive";
         }else{
-            topic = city_data+groupFirst+"negative";
+            topic = state_data.replace(" ","")+groupFirst+"negative";
         }
         Log.i("sub1234",""+topic);
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
