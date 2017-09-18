@@ -3,6 +3,7 @@ package com.atrio.donateblood;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -57,13 +58,14 @@ public class ResigrationActivity extends AppCompatActivity {
     AutoCompleteTextView atvPlaces;
     PlacesTask placesTask;
     ParserTask parserTask;
-    Spinner spin_state, sp_bloodgr, et_age, et_weight;
-    RadioButton radioSexButton;
+    Spinner spin_state, sp_bloodgr, et_age, et_weight,spin_country;
+    RadioButton radioSexButton,rb_male,rb_female;
     RadioGroup rg_group;
-//    CheckBox cb_never, cb_above, cb_below;
-    Button btn_reg, btn_info;
+    int index;
+    //    CheckBox cb_never, cb_above, cb_below;
+    Button btn_reg, btn_info, btn_update;
     EditText et_name, et_emailid;
-    TextView tv_info;
+    TextView tv_info,sp_text;
     String state_data, blood_data, radio_data,  name, emailid, age, phoneno, weight, city_data, count, temp, token;//cb_data
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
@@ -87,31 +89,128 @@ public class ResigrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_resigration);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+
         dialog = new SpotsDialog(ResigrationActivity.this, R.style.Custom);
 
+        dialog.show();
         spin_state = (Spinner) findViewById(R.id.spin_state);
         sp_bloodgr = (Spinner) findViewById(R.id.spin_bloodGrp);
+        spin_country = (Spinner) findViewById(R.id.spin_country);
         rg_group = (RadioGroup) findViewById(R.id.radioSex);
+        rb_male = (RadioButton) findViewById(R.id.radioMale);
+        rb_female = (RadioButton) findViewById(R.id.radioFemale);
 //        cb_never = (CheckBox) findViewById(R.id.cb_never);
 //        cb_above = (CheckBox) findViewById(R.id.cb_above);
 //        cb_below = (CheckBox) findViewById(R.id.cb_below);
         btn_reg = (Button) findViewById(R.id.bt_reg);
         btn_info = (Button) findViewById(R.id.btn_info);
+        btn_update = (Button) findViewById(R.id.bt_update);
         et_name = (EditText) findViewById(R.id.input_name);
         et_emailid = (EditText) findViewById(R.id.input_email);
         tv_info = (TextView) findViewById(R.id.tv_info);
         et_age = (Spinner) findViewById(R.id.input_age);
         et_weight = (Spinner) findViewById(R.id.input_weight);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
+        atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        btn_update.setVisibility(View.GONE);
+        btn_reg.setVisibility(View.VISIBLE);
+
+        if (networkInfo == null) {
+            dialog.dismiss();
+            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+        }
 
         phn_nolist = new ArrayList<>();
         present_list = new ArrayList<>();
-
-
-        atvPlaces = (AutoCompleteTextView) findViewById(R.id.atv_places);
         atvPlaces.setThreshold(1);
+        db_instance = FirebaseDatabase.getInstance();
+        db_ref = db_instance.getReference();
+
+        if (user!=null){
+
+            Query getalldata = db_ref.child("Donor").orderByKey();
+
+            getalldata.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getChildrenCount() != 0) {
+                        for (DataSnapshot data : dataSnapshot.getChildren()){
+                            for (DataSnapshot dataSnapshot1 : data.getChildren()){
+                                for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()){
+                                    if (dataSnapshot2.getKey().equals(user.getPhoneNumber())){
+//                                        Log.i("userdetail4",""+dataSnapshot2.getValue());
+                                        UserDetail userDetail = dataSnapshot2.getValue(UserDetail.class);
+
+                                        name = userDetail.getName();
+                                        emailid = userDetail.getEmailid();
+                                        city_data = userDetail.getCity();
+                                        radio_data = userDetail.getGender();
+                                        age=userDetail.getAge();
+                                        weight=userDetail.getWeight();
+                                        blood_data=userDetail.getBloodgroup();
+                                        state_data=userDetail.getState();
+                                        phoneno = user.getPhoneNumber();
+
+                                        dialog.dismiss();
+                                        btn_reg.setVisibility(View.GONE);
+                                        btn_update.setVisibility(View.VISIBLE);
+                                        et_name.setText(name);
+                                        et_name.setTextColor(Color.BLACK);
+                                        et_emailid.setText(emailid);
+                                        et_emailid.setTextColor(Color.BLACK);
+                                        atvPlaces.setText(city_data);
+                                        atvPlaces.setTextColor(Color.BLACK);
+                                        if (rb_male.getText()==radio_data){
+                                            rb_male.setChecked(true);
+                                        }else {
+                                            rb_female.setChecked(true);
+                                        }
+                                        et_age.setSelection(((ArrayAdapter<String>)et_age.getAdapter()).getPosition(age));
+                                        et_weight.setSelection(((ArrayAdapter<String>)et_weight.getAdapter()).getPosition(weight));
+                                        sp_bloodgr.setSelection(((ArrayAdapter<String>)sp_bloodgr.getAdapter()).getPosition(blood_data));
+                                        spin_state.setSelection(((ArrayAdapter<String>)spin_state.getAdapter()).getPosition(state_data));
+                                        et_name.setEnabled(false);
+                                        et_emailid.setEnabled(false);
+                                        et_age.setClickable(false);
+                                        et_weight.setClickable(false);
+                                        sp_bloodgr.setClickable(false);
+                                        spin_country.setClickable(false);
+                                        spin_state.setClickable(false);
+                                        atvPlaces.setEnabled(false);
+                                        rb_male.setClickable(false);
+                                        rb_female.setClickable(false);
+                                    }
+                                    dialog.dismiss();
+
+                                }
+                            }
+                        }
+
+                    } else{
+                        dialog.dismiss();
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+        }else {
+            dialog.dismiss();
+            btn_reg.setVisibility(View.VISIBLE);
+            btn_update.setVisibility(View.GONE);
+        }
+
+
 
         atvPlaces.addTextChangedListener(new TextWatcher() {
 
@@ -156,6 +255,8 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 state_data = parent.getItemAtPosition(position).toString();
+//                String totrim=state_data.replace(" ","");
+                Log.i("statedata",""+state_data);
             }
 
             @Override
@@ -175,6 +276,10 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 age = parent.getItemAtPosition(position).toString();
+//                ((TextView) parent.getChildAt(0)).setTextColor(Color.GRAY);
+//                TextView oTextView = (TextView)et_age.getChildAt(0);
+//                oTextView.setTextColor(Color.BLACK);
+
             }
 
             @Override
@@ -194,6 +299,7 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 weight = parent.getItemAtPosition(position).toString();
+//                ((TextView) parent.getChildAt(0)).setTextColor(Color.GRAY);
             }
 
             @Override
@@ -245,75 +351,76 @@ public class ResigrationActivity extends AppCompatActivity {
         btn_reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
-                ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                if (networkInfo == null) {
-                    dialog.dismiss();
-                    Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
-                } else {
-                    String data = null;
-                    int selectedId = rg_group.getCheckedRadioButtonId();
-                    radioSexButton = (RadioButton) findViewById(selectedId);
-                    name = et_name.getText().toString();
-                    emailid = et_emailid.getText().toString();
-                    city_data = atvPlaces.getText().toString().toLowerCase();
-                    radio_data = radioSexButton.getText().toString();
-                    phoneno = user.getPhoneNumber();
 
-                    if (validate()) {
-                        dialog.dismiss();
-                        phn_nolist.clear();
-                        db_instance = FirebaseDatabase.getInstance();
-                        db_ref = db_instance.getReference();
-                        Query writequery = db_ref.child("Donor").orderByKey();
-                        writequery.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.getChildrenCount() != 0) {
-                                    for (DataSnapshot data : dataSnapshot.getChildren()){
-                                        for (DataSnapshot dataSnapshot1 : data.getChildren()){
-                                            for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()){
-                                                String phn_no = dataSnapshot2.getKey();
-                                                phn_nolist.add(phn_no);
-                                            }
+
+
+
+                dialog.show();
+
+                String data = null;
+                int selectedId = rg_group.getCheckedRadioButtonId();
+                radioSexButton = (RadioButton) findViewById(selectedId);
+                name = et_name.getText().toString();
+                emailid = et_emailid.getText().toString();
+                city_data = atvPlaces.getText().toString().toLowerCase();
+                radio_data = radioSexButton.getText().toString();
+                phoneno = user.getPhoneNumber();
+
+                if (validate()) {
+                    dialog.dismiss();
+                    phn_nolist.clear();
+
+
+                    Query writequery = db_ref.child("Donor").orderByKey();
+                    writequery.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getChildrenCount() != 0) {
+                                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                    for (DataSnapshot dataSnapshot1 : data.getChildren()) {
+                                        for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()) {
+                                            String phn_no = dataSnapshot2.getKey();
+                                            phn_nolist.add(phn_no);
                                         }
                                     }
-                                    sendPhonelist(phn_nolist);
+                                }
+                                sendPhonelist(phn_nolist);
 
-                                } else{
-                                    dialog.dismiss();
-                                    createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data,  phoneno, count);
-                                    et_name.setText("");
-                                    et_emailid.setText("");
-                                    atvPlaces.setText("");
-                                    et_age.setSelection(0);
-                                    et_weight.setSelection(0);
-                                    sp_bloodgr.setSelection(0);
-                                    spin_state.setSelection(0);
+                            } else {
+                                dialog.dismiss();
+                                createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, phoneno, count);
+                                et_name.setText("");
+                                et_emailid.setText("");
+                                atvPlaces.setText("");
+                                et_age.setSelection(0);
+                                et_weight.setSelection(0);
+                                sp_bloodgr.setSelection(0);
+                                spin_state.setSelection(0);
+                                rb_male.setChecked(true);
                                     /*cb_never.setChecked(false);
                                     cb_above.setChecked(false);
                                     cb_below.setChecked(false);*/
-                                    subscribeToPushService(blood_data);
-                                    Toast.makeText(ResigrationActivity.this,"Successsully Registred",Toast.LENGTH_SHORT).show();
-                                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                                    editor.putString(city, city_data);
-                                    editor.putString(state, state_data);
-                                    editor.putString(blood_group, blood_data);
-                                    editor.commit();
-                                }
-
+                                subscribeToPushService(blood_data);
+                                Toast.makeText(ResigrationActivity.this, "Successsully Registred", Toast.LENGTH_SHORT).show();
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.putString(city, city_data);
+                                editor.putString(state, state_data);
+                                editor.putString(blood_group, blood_data);
+                                editor.commit();
                             }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                        }
 
-                            }
-                        });
-                    }else {
-                        dialog.dismiss();
-                    }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }else {
+                    dialog.dismiss();
                 }
+
 
 
             }
@@ -332,6 +439,27 @@ public class ResigrationActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btn_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+               db_ref.child("Donor").child(state_data).child(city_data).child(phoneno).removeValue();
+
+                btn_update.setVisibility(View.GONE);
+                btn_reg.setVisibility(View.VISIBLE);
+                et_name.setEnabled(true);
+                et_emailid.setEnabled(true);
+                et_age.setClickable(true);
+                et_weight.setClickable(true);
+                sp_bloodgr.setClickable(true);
+                spin_country.setClickable(true);
+                spin_state.setClickable(true);
+                atvPlaces.setEnabled(true);
+                rb_male.setClickable(true);
+                rb_female.setClickable(true);
+            }
+
+        });
     }
 
     private void sendPhonelist(ArrayList<String> phn_nolist) {
@@ -348,6 +476,7 @@ public class ResigrationActivity extends AppCompatActivity {
         }
         if (phn_nolist.size()!=0){
             if (present_list.size()!=0) {
+                dialog.dismiss();
                 Toast.makeText(ResigrationActivity.this, "This Number is already  Registred", Toast.LENGTH_SHORT).show();
                 et_name.setText("");
                 et_emailid.setText("");
@@ -356,6 +485,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 et_weight.setSelection(0);
                 sp_bloodgr.setSelection(0);
                 spin_state.setSelection(0);
+                rb_male.setChecked(true);
               /*  cb_never.setChecked(false);
                 cb_above.setChecked(false);
                 cb_below.setChecked(false);*/
@@ -369,6 +499,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 et_weight.setSelection(0);
                 sp_bloodgr.setSelection(0);
                 spin_state.setSelection(0);
+                rb_male.setChecked(true);
                 /*cb_never.setChecked(false);
                 cb_above.setChecked(false);
                 cb_below.setChecked(false);*/
@@ -395,7 +526,7 @@ public class ResigrationActivity extends AppCompatActivity {
         }else{
             topic = state_data.replace(" ","")+groupFirst+"negative";
         }
-        Log.i("sub1234",""+topic);
+//        Log.i("sub1234",""+topic);
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
         token = FirebaseInstanceId.getInstance().getToken();
     }
