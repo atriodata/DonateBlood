@@ -354,9 +354,6 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
-
-
                 dialog.show();
 
                 String data = null;
@@ -393,14 +390,14 @@ public class ResigrationActivity extends AppCompatActivity {
                                 subscribeToPushService(blood_data);
                                 Log.i("printdata34",""+topics);
                                 createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, phoneno, count,topics);
-                                et_name.setText("");
-                                et_emailid.setText("");
-                                atvPlaces.setText("");
-                                et_age.setSelection(0);
-                                et_weight.setSelection(0);
-                                sp_bloodgr.setSelection(0);
-                                spin_state.setSelection(0);
-                                rb_male.setChecked(true);
+//                                et_name.setText("");
+//                                et_emailid.setText("");
+//                                atvPlaces.setText("");
+//                                et_age.setSelection(0);
+//                                et_weight.setSelection(0);
+//                                sp_bloodgr.setSelection(0);
+//                                spin_state.setSelection(0);
+//                                rb_male.setChecked(true);
                                     /*cb_never.setChecked(false);
                                     cb_above.setChecked(false);
                                     cb_below.setChecked(false);*/
@@ -447,8 +444,6 @@ public class ResigrationActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                db_ref.child("Donor").child(state_data).child(city_data).child(phoneno).removeValue();
-
-
                 Log.i("unsub1234",""+topics);
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(topics);
 
@@ -467,6 +462,39 @@ public class ResigrationActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (btn_update.getVisibility()==View.GONE){
+            if (validate()) {
+
+                subscribeToPushService(blood_data);
+                createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, phoneno, count, topics);
+                et_name.setText("");
+                et_emailid.setText("");
+                atvPlaces.setText("");
+                et_age.setSelection(0);
+                et_weight.setSelection(0);
+                sp_bloodgr.setSelection(0);
+                spin_state.setSelection(0);
+                rb_male.setChecked(true);
+                /*cb_never.setChecked(false);
+                cb_above.setChecked(false);
+                cb_below.setChecked(false);*/
+//            Toast.makeText(ResigrationActivity.this, "Successsully Registred ", Toast.LENGTH_SHORT).show();
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(city, city_data);
+                editor.putString(state, state_data);
+                editor.putString(blood_group, blood_data);
+                editor.commit();
+            }else {
+                Toast.makeText(ResigrationActivity.this, "Registration not done ", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
     }
 
     private void sendPhonelist(ArrayList<String> phn_nolist) {
@@ -500,14 +528,14 @@ public class ResigrationActivity extends AppCompatActivity {
                 dialog.dismiss();
                 subscribeToPushService(blood_data);
                 createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data,  phoneno, count,topics);
-                et_name.setText("");
-                et_emailid.setText("");
-                atvPlaces.setText("");
-                et_age.setSelection(0);
-                et_weight.setSelection(0);
-                sp_bloodgr.setSelection(0);
-                spin_state.setSelection(0);
-                rb_male.setChecked(true);
+//                et_name.setText("");
+//                et_emailid.setText("");
+//                atvPlaces.setText("");
+//                et_age.setSelection(0);
+//                et_weight.setSelection(0);
+//                sp_bloodgr.setSelection(0);
+//                spin_state.setSelection(0);
+//                rb_male.setChecked(true);
                 /*cb_never.setChecked(false);
                 cb_above.setChecked(false);
                 cb_below.setChecked(false);*/

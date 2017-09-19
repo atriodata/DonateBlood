@@ -49,6 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
                 app:layout_constraintHorizontal_bias="0.0">
 
                 <EditText
@@ -94,12 +95,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Search city"
+                android:layout_marginLeft="10dp"
                 android:maxLines="1"
                 android:padding="10dp" />
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_layout_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 app:layout_constraintHorizontal_bias="0.0">
 
@@ -116,6 +119,7 @@
                 android:id="@+id/input_layout_phoneno"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 app:layout_constraintHorizontal_bias="0.0">
 
