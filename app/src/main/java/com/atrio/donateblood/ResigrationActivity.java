@@ -66,13 +66,14 @@ public class ResigrationActivity extends AppCompatActivity {
     Button btn_reg, btn_info, btn_update;
     EditText et_name, et_emailid;
     TextView tv_info,sp_text;
-    String state_data, blood_data, radio_data,  name, emailid, age, phoneno, weight, city_data, count, temp, token;//cb_data
+    String state_data, blood_data, radio_data,  name, emailid, age, phoneno, weight, city_data, count, token,groupFirst,groupLast;//cb_data
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     List age_data, weight_data;
     private SpotsDialog dialog;
+    String topics = null;
     ArrayList<String> phn_nolist,present_list;
     SharedPreferences sharedpreferences;
 
@@ -153,6 +154,7 @@ public class ResigrationActivity extends AppCompatActivity {
                                         blood_data=userDetail.getBloodgroup();
                                         state_data=userDetail.getState();
                                         phoneno = user.getPhoneNumber();
+                                        topics=userDetail.getTopics();
 
                                         dialog.dismiss();
                                         btn_reg.setVisibility(View.GONE);
@@ -352,9 +354,6 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
-
-
                 dialog.show();
 
                 String data = null;
@@ -388,19 +387,20 @@ public class ResigrationActivity extends AppCompatActivity {
 
                             } else {
                                 dialog.dismiss();
-                                createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, phoneno, count);
-                                et_name.setText("");
-                                et_emailid.setText("");
-                                atvPlaces.setText("");
-                                et_age.setSelection(0);
-                                et_weight.setSelection(0);
-                                sp_bloodgr.setSelection(0);
-                                spin_state.setSelection(0);
-                                rb_male.setChecked(true);
+                                subscribeToPushService(blood_data);
+                                Log.i("printdata34",""+topics);
+                                createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, phoneno, count,topics);
+//                                et_name.setText("");
+//                                et_emailid.setText("");
+//                                atvPlaces.setText("");
+//                                et_age.setSelection(0);
+//                                et_weight.setSelection(0);
+//                                sp_bloodgr.setSelection(0);
+//                                spin_state.setSelection(0);
+//                                rb_male.setChecked(true);
                                     /*cb_never.setChecked(false);
                                     cb_above.setChecked(false);
                                     cb_below.setChecked(false);*/
-                                subscribeToPushService(blood_data);
                                 Toast.makeText(ResigrationActivity.this, "Successsully Registred", Toast.LENGTH_SHORT).show();
                                 SharedPreferences.Editor editor = sharedpreferences.edit();
                                 editor.putString(city, city_data);
@@ -444,6 +444,8 @@ public class ResigrationActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                db_ref.child("Donor").child(state_data).child(city_data).child(phoneno).removeValue();
+                Log.i("unsub1234",""+topics);
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(topics);
 
                 btn_update.setVisibility(View.GONE);
                 btn_reg.setVisibility(View.VISIBLE);
@@ -460,6 +462,39 @@ public class ResigrationActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (btn_update.getVisibility()==View.GONE){
+            if (validate()) {
+
+                subscribeToPushService(blood_data);
+                createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, phoneno, count, topics);
+                et_name.setText("");
+                et_emailid.setText("");
+                atvPlaces.setText("");
+                et_age.setSelection(0);
+                et_weight.setSelection(0);
+                sp_bloodgr.setSelection(0);
+                spin_state.setSelection(0);
+                rb_male.setChecked(true);
+                /*cb_never.setChecked(false);
+                cb_above.setChecked(false);
+                cb_below.setChecked(false);*/
+//            Toast.makeText(ResigrationActivity.this, "Successsully Registred ", Toast.LENGTH_SHORT).show();
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(city, city_data);
+                editor.putString(state, state_data);
+                editor.putString(blood_group, blood_data);
+                editor.commit();
+            }else {
+                Toast.makeText(ResigrationActivity.this, "Registration not done ", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
     }
 
     private void sendPhonelist(ArrayList<String> phn_nolist) {
@@ -491,19 +526,19 @@ public class ResigrationActivity extends AppCompatActivity {
                 cb_below.setChecked(false);*/
             }else {
                 dialog.dismiss();
-                createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data,  phoneno, count);
-                et_name.setText("");
-                et_emailid.setText("");
-                atvPlaces.setText("");
-                et_age.setSelection(0);
-                et_weight.setSelection(0);
-                sp_bloodgr.setSelection(0);
-                spin_state.setSelection(0);
-                rb_male.setChecked(true);
+                subscribeToPushService(blood_data);
+                createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data,  phoneno, count,topics);
+//                et_name.setText("");
+//                et_emailid.setText("");
+//                atvPlaces.setText("");
+//                et_age.setSelection(0);
+//                et_weight.setSelection(0);
+//                sp_bloodgr.setSelection(0);
+//                spin_state.setSelection(0);
+//                rb_male.setChecked(true);
                 /*cb_never.setChecked(false);
                 cb_above.setChecked(false);
                 cb_below.setChecked(false);*/
-                subscribeToPushService(blood_data);
                 Toast.makeText(ResigrationActivity.this, "Successsully Registred ", Toast.LENGTH_SHORT).show();
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString(city, city_data);
@@ -517,21 +552,21 @@ public class ResigrationActivity extends AppCompatActivity {
     }
 
     private void subscribeToPushService(String blood_data) {
-        String topic = null;
-        String groupFirst = blood_data.substring(0,blood_data.length()-1);
-        String grouplast = blood_data.substring(blood_data.length()-1);
 
-        if (grouplast.equals("+")){
-          topic = state_data.replace(" ","")+groupFirst+"positive";
+        groupFirst = blood_data.substring(0,blood_data.length()-1);
+        groupLast = blood_data.substring(blood_data.length()-1);
+
+        if (groupLast.equals("+")){
+          topics = state_data.replace(" ","")+groupFirst+"positive";
         }else{
-            topic = state_data.replace(" ","")+groupFirst+"negative";
+            topics = state_data.replace(" ","")+groupFirst+"negative";
         }
-//        Log.i("sub1234",""+topic);
-        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+        Log.i("sub1234",""+topics);
+        FirebaseMessaging.getInstance().subscribeToTopic(topics);
         token = FirebaseInstanceId.getInstance().getToken();
     }
 
-    private void createUser(String name, String emailid, String age, String weight, String blood_data, String state_data, String city_data, String radio_data, String phoneno, String count) {
+    private void createUser(String name, String emailid, String age, String weight, String blood_data, String state_data, String city_data, String radio_data, String phoneno, String count,String topics) {
         UserDetail userDetail = new UserDetail();
 
         userDetail.setName(name);
@@ -543,7 +578,7 @@ public class ResigrationActivity extends AppCompatActivity {
         userDetail.setState(state_data);
         userDetail.setCity(city_data);
         userDetail.setGender(radio_data);
-//        userDetail.setTimeperiod(cb_data);
+        userDetail.setTopics(topics);
         userDetail.setCount(count);
 
         db_ref.child("Donor").child(state_data).child(city_data).child(phoneno).setValue(userDetail);

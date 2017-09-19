@@ -17,6 +17,15 @@ public class UserDetail {
     public String emailid;
     public String phoneno;
     public String count;
+    public String topics;
+
+    public String getTopics() {
+        return topics;
+    }
+
+    public void setTopics(String topics) {
+        this.topics = topics;
+    }
 
     public String getAddress() {
         return address;
@@ -31,7 +40,7 @@ public class UserDetail {
     public UserDetail() {
     }
 
-    public UserDetail(String name, String age, String weight, String gender, String state, String bloodgroup, String country, String city, String timeperiod, String emailid, String phoneno, String count) {
+    public UserDetail(String name, String age, String weight, String gender, String state, String bloodgroup, String country, String city, String timeperiod, String emailid, String phoneno, String count,String topics) {
         this.name = name;
         this.age = age;
         this.weight = weight;
@@ -44,6 +53,7 @@ public class UserDetail {
         this.emailid = emailid;
         this.phoneno = phoneno;
         this.count = count;
+        this.topics=topics;
     }
 
     public String getEmailid() {

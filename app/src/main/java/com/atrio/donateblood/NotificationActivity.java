@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.atrio.donateblood.adapter.RecycleviewAdapter;
 import com.atrio.donateblood.model.RecipientDetail;
@@ -97,11 +96,19 @@ public class NotificationActivity extends AppCompatActivity {
                                 }
 
                             }
+                            else {
+                                dialog.dismiss();
+                            }
                     }
-
+                    dialog.dismiss();
                     RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, donoractivityList);
                     rc_donor.setAdapter(rcAdapter);
                 }
+                else {
+                    dialog.dismiss();
+
+                }
+
             }
 
             @Override
@@ -118,7 +125,8 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getChildrenCount() !=0) {
-                    Toast.makeText(NotificationActivity.this,""+dataSnapshot.getChildrenCount(),Toast.LENGTH_SHORT).show();
+//                    dialog.dismiss();
+//                    Toast.makeText(NotificationActivity.this,""+dataSnapshot.getChildrenCount(),Toast.LENGTH_SHORT).show();
                    // Toast.makeText(NotificationActivity.this,""+dataSnapshot.getChildrenCount(),Toast.LENGTH_SHORT).show();
 //                    arr = new ArrayList<String>();
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
@@ -131,6 +139,9 @@ public class NotificationActivity extends AppCompatActivity {
                     Collections.reverse(arrayList);
                     RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, arrayList);
                     rc_recipient.setAdapter(rcAdapter);
+                }else {
+                    dialog.dismiss();
+
                 }
 
             }
