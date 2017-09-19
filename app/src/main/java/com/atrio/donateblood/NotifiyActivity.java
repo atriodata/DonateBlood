@@ -45,7 +45,8 @@ public class NotifiyActivity extends AppCompatActivity {
 
     OkHttpClient mClient;
     String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail,
-            token_id, msg_id, imsg_id = null, message1, donor_phn, recipient_phn, city_donor, blood_group_donor, donor_msgid;
+            token_id, msg_id, imsg_id = null, message1, donor_phn, recipient_phn, city_donor, blood_group_donor, donor_msgid
+            ,blood_grp_noti;
 
     public static final String MyPREFERENCES = "BloodDonate";
     public static final String city = "cityKey";
@@ -87,12 +88,15 @@ public class NotifiyActivity extends AppCompatActivity {
                 imsg_id = getIntent().getExtras().getString("msg_id");
                 token_id = getIntent().getExtras().getString("token_id");
                 recipient_phn = getIntent().getExtras().getString("recipient_phn");
-                Log.i("recipientPhn66", "" + recipient_phn);
+                blood_grp_noti = getIntent().getExtras().getString("blood_group");
+                Log.i("recipientPhn66", "" + blood_grp_noti);
+                Log.i("recipientPhn665", "" + getIntent().getExtras().getString("blood_group"));
+
             }
             db_instance = FirebaseDatabase.getInstance();
             db_ref = db_instance.getReference();
 
-            Query getnotifi = db_ref.child("Notifications").child("Recipient").child(city_donor).child(blood_group_donor).orderByChild("msg_id").equalTo(imsg_id);
+            Query getnotifi = db_ref.child("Notifications").child("Recipient").child(city_donor).child(blood_grp_noti).orderByChild("msg_id").equalTo(imsg_id);
             getnotifi.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

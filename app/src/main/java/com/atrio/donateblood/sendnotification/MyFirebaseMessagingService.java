@@ -29,11 +29,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FirebaseMessageService";
     Bitmap bitmap;
 
+    @Override
+    public void onSendError(String s, Exception e) {
+        super.onSendError(s, e);
+        Log.i("s11",""+s);
+        Log.i("s11",""+e);
+
+    }
+
     /**
      * Called when message is received.
      *
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
      */
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
@@ -53,27 +62,31 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String token_id = remoteMessage.getData().get("token_id");
         String body_donor =remoteMessage.getData().get("body");
         String phon_no = remoteMessage.getData().get("pho_no");
+        String blood_grp = remoteMessage.getData().get("blood_group");
         String click_action = remoteMessage.getNotification().getClickAction();
         String current_token = FirebaseInstanceId.getInstance().getToken();
-        Log.i("imageUri44",""+imageUri);
+        Log.i("imageUri44",""+blood_grp);
 
         bitmap = getBitmapfromUrl(imageUri);
         if (token_id!=null) {
             if (!token_id.equals(current_token)) {
-                sendNotification(tittle, body, bitmap, token_id, msg_id, click_action,body_donor,phon_no);
+                sendNotification(tittle, body, bitmap, token_id, msg_id, click_action,body_donor,phon_no,blood_grp);
             }
         }else{
-            sendNotification(tittle, body_donor, bitmap, token_id, msg_id, click_action,body_donor,phon_no);
+            sendNotification(tittle, body_donor, bitmap, token_id, msg_id, click_action,body_donor,phon_no,blood_grp);
         }
     }
 
-    private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id,String click_action,String body_donor,String phon_no) {
+    private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id,String click_action,
+                                  String body_donor,String phon_no,String blood_grp) {
         Intent intent = new Intent(click_action);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("token_id", token_id);
         intent.putExtra("msg_id", msg_id);
         intent.putExtra("body", body_donor);
         intent.putExtra("phon_no",phon_no);
+        intent.putExtra("blood_grp",blood_grp);
+        Log.i("imageUri44",""+blood_grp);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

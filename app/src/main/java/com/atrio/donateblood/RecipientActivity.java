@@ -62,8 +62,8 @@ public class RecipientActivity extends AppCompatActivity {
     Spinner spin_state, sp_bloodgr;
     Button btn_send;
     EditText et_phoneno, et_emailid, et_date, et_remark;
-    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, send_mail, regId,msg_id,message1,
-            condition =null;
+    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, send_mail, regId, msg_id, message1,
+            condition1 = null, condition2 = null, condition3 = null, condition4 = null,condition = null;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
@@ -71,6 +71,9 @@ public class RecipientActivity extends AppCompatActivity {
     private SpotsDialog dialog;
     ArrayList<String> store_list;
     OkHttpClient mClient;
+    String topic_grpAp, topic_grpAn, topic_grpBp, topic_grpBn, topic_grpABp, topic_grpABn, topic_grpOp, topic_grpOn;
+    String data1;
+    ArrayList<String> arry_condlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +89,8 @@ public class RecipientActivity extends AppCompatActivity {
         et_emailid = (EditText) findViewById(R.id.input_email);
         et_date = (EditText) findViewById(R.id.input_date);
         et_remark = (EditText) findViewById(R.id.et_remark);
+
+        arry_condlist = new ArrayList<>();
 
         et_phoneno.setEnabled(false);
         et_phoneno.setText(user.getPhoneNumber());
@@ -166,12 +171,14 @@ public class RecipientActivity extends AppCompatActivity {
         });
 
 
+
         db_instance = FirebaseDatabase.getInstance();
         db_ref = db_instance.getReference();
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 dialog.show();
+                arry_condlist.clear();
                 ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo == null) {
@@ -187,6 +194,73 @@ public class RecipientActivity extends AppCompatActivity {
                         other_detail = et_remark.getText().toString();
                         dialog.show();
                         message1 = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req;
+
+                        switch (blood_data) {
+                            case "A+":
+                                topic_grpAp = state_data.replace(" ", "") + "A" + "positive";
+                                topic_grpAn = state_data.replace(" ", "") + "A" + "negative";
+                                topic_grpOp = state_data.replace(" ", "") + "O" + "positive";
+                                topic_grpOn = state_data.replace(" ", "") + "O" + "negative";
+                                data1 = "1";
+                                conditionTopic(topic_grpAp, topic_grpAn, null, null, topic_grpOp, topic_grpOn, null, null, data1);
+                                break;
+                            case "O+":
+                                topic_grpOp = state_data.replace(" ", "") + "O" + "positive";
+                                topic_grpOn = state_data.replace(" ", "") + "O" + "negative";
+                                data1 = "2";
+                                conditionTopic(null, null, null, null, topic_grpOp, topic_grpOn, null, null, data1);
+                                break;
+                            case "B+":
+                                topic_grpBp = state_data.replace(" ", "") + "B" + "positive";
+                                topic_grpBn = state_data.replace(" ", "") + "B" + "negative";
+                                topic_grpOp = state_data.replace(" ", "") + "O" + "positive";
+                                topic_grpOn = state_data.replace(" ", "") + "O" + "negative";
+                                data1 = "3";
+                                conditionTopic(null, null, topic_grpBp, topic_grpBn, topic_grpOp, topic_grpOn, null, null, data1);
+
+                                break;
+                            case "AB+":
+                                topic_grpAp = state_data.replace(" ", "") + "A" + "positive";
+                                topic_grpAn = state_data.replace(" ", "") + "A" + "negative";
+                                topic_grpBp = state_data.replace(" ", "") + "B" + "positive";
+                                topic_grpBn = state_data.replace(" ", "") + "B" + "negative";
+                                topic_grpOp = state_data.replace(" ", "") + "O" + "positive";
+                                topic_grpOn = state_data.replace(" ", "") + "O" + "negative";
+                                topic_grpABp = state_data.replace(" ", "") + "AB" + "positive";
+                                topic_grpABn = state_data.replace(" ", "") + "AB" + "negative";
+                                data1 = "4";
+                                conditionTopic(topic_grpAp, topic_grpAn, topic_grpBp, topic_grpBn, topic_grpOp, topic_grpOn, topic_grpABp, topic_grpABn, data1);
+                                break;
+                            case "A-":
+                                topic_grpAn = state_data.replace(" ", "") + "A" + "negative";
+                                topic_grpOn = state_data.replace(" ", "") + "O" + "negative";
+                                data1 = "5";
+                                conditionTopic(null, topic_grpAn, null, null, null, topic_grpOn, null, null, data1);
+
+                                break;
+                            case "O-":
+                                topic_grpOn = state_data.replace(" ", "") + "O" + "negative";
+                                data1 = "6";
+                                conditionTopic(null, null, null, null, null, topic_grpOn, null, null, data1);
+
+                                break;
+                            case "B-":
+                                topic_grpBn = state_data.replace(" ", "") + "B" + "negative";
+                                topic_grpOn = state_data.replace(" ", "") + "O" + "negative";
+                                data1 = "7";
+                                conditionTopic(null, null, null, topic_grpBn, null, topic_grpOn, null, null, data1);
+
+                                break;
+                            case "AB-":
+                                topic_grpABn = state_data.replace(" ", "") + "AB" + "negative";
+                                topic_grpAn = state_data.replace(" ", "") + "A" + "negative";
+                                topic_grpBn = state_data.replace(" ", "") + "B" + "negative";
+                                topic_grpOn = state_data.replace(" ", "") + "O" + "negative";
+                                data1 = "8";
+                                conditionTopic(null, topic_grpAn, null, topic_grpBn, null, topic_grpOn, null, topic_grpABn, data1);
+                                break;
+
+                        }
 
                         Query readqery = db_ref.child("Donor").child(state_data).child(city_data).orderByChild("bloodgroup").equalTo(blood_data);
 
@@ -204,21 +278,22 @@ public class RecipientActivity extends AppCompatActivity {
                                         send_mail = user_info.getEmailid();
                                         store_list.add(send_mail);
                                     }
-                                  dialog.dismiss();
+                                    dialog.dismiss();
                                     Query readqery = db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).orderByKey();
                                     readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                            if(dataSnapshot.getChildrenCount()==0) {
+                                            if (dataSnapshot.getChildrenCount() == 0) {
                                                 msg_id = "001";
                                                 createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1);
-                                            }else {
+                                            } else {
                                                 long countchild = dataSnapshot.getChildrenCount();
                                                 countchild++;
-                                                msg_id=String.format("%03d",countchild);
+                                                msg_id = String.format("%03d", countchild);
                                                 createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1);
                                             }
                                         }
+
                                         @Override
                                         public void onCancelled(DatabaseError databaseError) {
 
@@ -227,6 +302,7 @@ public class RecipientActivity extends AppCompatActivity {
                                     Toast.makeText(RecipientActivity.this, "Request Sent", Toast.LENGTH_SHORT).show();
                                 }
                             }
+
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
 
@@ -239,112 +315,35 @@ public class RecipientActivity extends AppCompatActivity {
         });
     }
 
-    public void sendNotificationToUser(final String regId) {
+
+    public void sendNotificationToUser(final String regId, final String condition) {
         new AsyncTask<String, String, String>() {
             @Override
             protected String doInBackground(String... params) {
                 try {
-
-                    String topic_grpAp,topic_grpAn,topic_grpBp,topic_grpBn,topic_grpABp,topic_grpABn,topic_grpOp,topic_grpOn;
-                    String topic_positive = null,topic_negative = null,topic;
-                    String groupFirst = blood_data.substring(0,blood_data.length()-1);
-                    String grouplast = blood_data.substring(blood_data.length()-1);
-                    String data1;
-
-                    switch (blood_data){
-                        case "A+":
-                            topic_grpAp = state_data.replace(" ","")+"A"+"positive";
-                            topic_grpAn = state_data.replace(" ","")+"A"+"negative";
-                            topic_grpOp = state_data.replace(" ","")+"O"+"positive";
-                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
-                            data1 ="1";
-                            conditionTopic(topic_grpAp,topic_grpAn,null,null,topic_grpOp,topic_grpOn,null,null,data1);
-                            break;
-                        case "O+":
-                            topic_grpOp = state_data.replace(" ","")+"O"+"positive";
-                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
-                            data1 ="2";
-                            conditionTopic(null,null,null,null,topic_grpOp,topic_grpOn,null,null, data1);
-                            break;
-                        case "B+":
-                            topic_grpBp = state_data.replace(" ","")+"B"+"positive";
-                            topic_grpBn = state_data.replace(" ","")+"B"+"negative";
-                            topic_grpOp = state_data.replace(" ","")+"O"+"positive";
-                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
-                            data1 ="3";
-                            conditionTopic(null,null,topic_grpBp,topic_grpBn,topic_grpOp,topic_grpOn,null,null, data1);
-
-                            break;
-                        case "AB+":
-                            topic_grpAp = state_data.replace(" ","")+"A"+"positive";
-                            topic_grpAn = state_data.replace(" ","")+"A"+"negative";
-                            topic_grpBp = state_data.replace(" ","")+"B"+"positive";
-                            topic_grpBn = state_data.replace(" ","")+"B"+"negative";
-                            topic_grpOp = state_data.replace(" ","")+"O"+"positive";
-                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
-                            topic_grpABp = state_data.replace(" ","")+"AB"+"positive";
-                            topic_grpABn = state_data.replace(" ","")+"AB"+"negative";
-                            data1 ="4";
-                            conditionTopic(topic_grpAp,topic_grpAn,topic_grpBp,topic_grpBn,topic_grpOp,topic_grpOn,topic_grpABp,topic_grpABn, data1);
-                            break;
-                        case "A-":
-                            topic_grpAn = state_data.replace(" ","")+"A"+"negative";
-                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
-                            data1 ="5";
-                            conditionTopic(null,topic_grpAn,null,null,null,topic_grpOn,null,null, data1);
-
-                            break;
-                        case "O-":
-                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
-                            data1 ="6";
-                            conditionTopic(null,null,null,null,null,topic_grpOn,null,null, data1);
-
-                            break;
-                        case "B-":
-                            topic_grpBn = state_data.replace(" ","")+"B"+"negative";
-                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
-                            data1 ="7";
-                            conditionTopic(null,null,null,topic_grpBn,null,topic_grpOn,null,null, data1);
-
-                            break;
-                        case "AB-":
-                            topic_grpABn = state_data.replace(" ","")+"AB"+"negative";
-                            topic_grpAn = state_data.replace(" ","")+"A"+"negative";
-                            topic_grpBn = state_data.replace(" ","")+"B"+"negative";
-                            topic_grpOn = state_data.replace(" ","")+"O"+"negative";
-                            data1 ="8";
-                            conditionTopic(null,topic_grpAn,null,topic_grpBn,null,topic_grpOn,null,topic_grpABn, data1);
-                            break;
-                    }
-
-
-
-
                     JSONObject root = new JSONObject();
                     JSONObject notification = new JSONObject();
 
                     notification.put("body", message1);
                     notification.put("title", "Donate Blood");
                     notification.put("icon", "http://res.cloudinary.com/ddky6bjui/image/upload/v1505451080/ic_stat_ic_notification_qcawdk.png");
-                    notification.put("click_action","Notifiy_Activity");
+                    notification.put("click_action", "Notifiy_Activity");
 
                     JSONObject data = new JSONObject();
                     data.put("token_id", regId);
                     data.put("msg_id", msg_id);
-                    data.put("pho_no",phoneno);
+                    data.put("pho_no", phoneno);
+                    data.put("blood_group",blood_data);
                     root.put("notification", notification);
                     root.put("condition",condition);
                     root.put("data", data);
-                    root.put("priority","high");
+                    root.put("priority", "high");
                     /*root.put("to","/topics/"+topic_negative);*/
 
 
-
-
-
                     String result = postToFCM(root.toString());
-                    Log.i("result67",""+result);
-                    Log.i("result55",root.toString());
+                    Log.i("result67", "" + result);
+                    Log.i("result55", root.toString());
                     return result;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -354,8 +353,13 @@ public class RecipientActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String result) {
-                Log.i("result66",""+result);
-                        sendmail(store_list);
+                Log.i("result66", "" + result);
+                et_date.setText("");
+                et_emailid.setText("");
+                atvPlaces.setText("");
+
+                et_remark.setText("");
+
             }
         }.execute();
     }
@@ -363,46 +367,58 @@ public class RecipientActivity extends AppCompatActivity {
     private void conditionTopic(String topic_grpAp, String topic_grpAn, String topic_grpBp, String topic_grpBn, String topic_grpOp,
                                 String topic_grpOn, String topic_grpABp, String topic_grpABn, String data) {
 
-        Log.i("data11",""+data);
+        Log.i("data11", "" + data);
 
         if ((data.equals("1"))) {
-            condition = "'"+topic_grpAp + "'"+" in topics && " +"'"+ topic_grpAn+ "'"+ " in topics && " +"'"+ topic_grpOp+"'"
-                    + " in topics && " + "'"+topic_grpOn +"'"+ " in topics";
-            Log.i("cond33", "" + condition);
+            condition1 = "'" + topic_grpAp + "'" + " in topics || " + "'" + topic_grpAn + "'" + " in topics ";
+            condition2 = "'" + topic_grpOp + "'"
+                    + " in topics || " + "'" + topic_grpOn + "'" + " in topics";
+            arry_condlist.add(condition1);
+            arry_condlist.add(condition2);
         }
-            if (data.equals("2")) {
-                condition = "'"+topic_grpOp+"'" + " in topics && " + "'"+topic_grpOn+"'" + " in topics";
-                Log.i("cond33", "" + condition);
-            }if (data.equals("3")){
-                    condition = "'"+topic_grpBp+"'" +" in topics && "+ "'"+topic_grpBn+"'"+" in topics && "+"'"+topic_grpOp+"'" +" in topics && "+""+ topic_grpOn+"'"+" in topics";
-                    Log.i("cond33",""+condition);
-                }if(data.equals("4")){
+        if (data.equals("2")) {
+            condition1 = "'" + topic_grpOp + "'" + " in topics || " + "'" + topic_grpOn + "'" + " in topics";
+            arry_condlist.add(condition1);
+        }
+        if (data.equals("3")) {
+            condition1 = "'" + topic_grpBp + "'" + " in topics || " + "'" + topic_grpBn + "'" + " in topics";
+            condition2 = "'" + topic_grpOp + "'" + " in topics || " + "" + topic_grpOn + "'" + " in topics";
+            arry_condlist.add(condition1);
+            arry_condlist.add(condition2);
+        }
+        if (data.equals("4")) {
 
-                    condition ="'"+ topic_grpAp+"'" +" in topics && "+ "'"+topic_grpAn+"'"+" in topics"+"'"+topic_grpBp +"'"+" in topics && "+"'"+ topic_grpBn+"'"+" in topics"
-                   +"'"+ topic_grpOp+"'" +" in topics && "+"'"+ topic_grpOn+"'"+" in topics && "+"'"+topic_grpABp+"'" +" in topics && "+ "'"+topic_grpABn+"'"+" in topics" ;
-                    Log.i("cond33",""+condition);
-
-                }
-                if (data.equals("5") ) {
-                    condition = "'"+topic_grpAn+"'" +" in topics && "+ "'"+topic_grpOn+"'"+" in topics";
-                    Log.i("cond33",""+condition);
-                }
-                if (data.equals("6")){
-                    condition ="'" +topic_grpOn+"'" +" in topics";
-                    Log.i("cond33",""+condition);
-
-                }
-                if (data.equals("7")){
-                    condition = "'"+topic_grpBn+"'" +" in topics && "+"'"+ topic_grpOn+"'"+" in topics";
-                    Log.i("cond33",""+condition);
-                }if(data.equals("8")){
-                    condition = "'"+topic_grpABn+"'" +" in topics && "+ "'"+topic_grpAn+"'"+" in topics && "+"'"+topic_grpBn+"'" +" in topics && "+"'"+ topic_grpAn+"'"+" in topics";
-                    Log.i("cond33",""+condition);
-
-                }
+            condition1 = "'" + topic_grpAp + "'" + " in topics || " + "'" + topic_grpAn + "'" + " in topics";
+            condition2 = "'" + topic_grpBp + "'" + " in topics || " + "'" + topic_grpBn + "'" + " in topics";
+            condition3 = "'" + topic_grpOp + "'" + " in topics || " + "'" + topic_grpOn + "'" + " in topics ";
+            condition4 = "'" + topic_grpABp + "'" + " in topics || " + "'" + topic_grpABn + "'" + " in topics";
+            arry_condlist.add(condition1);
+            arry_condlist.add(condition2);
+            arry_condlist.add(condition3);
+            arry_condlist.add(condition4);
+        }
+        if (data.equals("5")) {
+            condition1 = "'" + topic_grpAn + "'" + " in topics || " + "'" + topic_grpOn + "'" + " in topics";
+            arry_condlist.add(condition1);
+        }
+        if (data.equals("6")) {
+            condition1= "'" + topic_grpOn + "'" + " in topics";
+            arry_condlist.add(condition1);
 
 
+        }
+        if (data.equals("7")) {
+            condition1 = "'" + topic_grpBn + "'" + " in topics || " + "'" + topic_grpOn + "'" + " in topics";
+            arry_condlist.add(condition1);
 
+        }
+        if (data.equals("8")) {
+            condition1 = "'" + topic_grpABn + "'" + " in topics || " + "'" + topic_grpAn + "'" + " in topics ";
+            condition2 =  "'" + topic_grpBn + "'" + " in topics || " + "'" + topic_grpAn + "'" + " in topics";
+            arry_condlist.add(condition1);
+            arry_condlist.add(condition2);
+
+        }
 
 
     }
@@ -421,8 +437,8 @@ public class RecipientActivity extends AppCompatActivity {
         return response.body().string();
     }
 
-    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id,String body) {
-        RecipientDetail recipientDetail=new RecipientDetail();
+    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id, String body) {
+        RecipientDetail recipientDetail = new RecipientDetail();
 
         recipientDetail.setReq_date(date_req);
         recipientDetail.setEmailid(emailid);
@@ -436,7 +452,15 @@ public class RecipientActivity extends AppCompatActivity {
 
 //        db_ref.child("RecipientNotification").child("Recipient").child(city_data).child(blood_data).child(phoneno).child(msg_id).setValue(recipientDetail);
         db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(msg_id).setValue(recipientDetail);
-        sendNotificationToUser(regId);
+       //db_ref.CompletionListener (new Com)
+
+       Log.i("size44",""+arry_condlist.size());
+        for (int i =0 ; i<arry_condlist.size();i++){
+            condition = arry_condlist.get(i);
+            sendNotificationToUser(regId,condition);
+        }
+        sendmail(store_list);
+
     }
 
     private void sendmail(final ArrayList<String> store_list) {
@@ -448,13 +472,6 @@ public class RecipientActivity extends AppCompatActivity {
         SendMail sm = new SendMail(this, email, mail_subject, message, store_list);
         sm.execute();
 
-        et_date.setText("");
-        et_emailid.setText("");
-        atvPlaces.setText("");
-
-            et_remark.setText("");
-        sp_bloodgr.setSelection(0);
-        spin_state.setSelection(0);
         dialog.dismiss();
     }
 
@@ -483,7 +500,7 @@ public class RecipientActivity extends AppCompatActivity {
             et_emailid.requestFocus();
             return false;
 
-        } else if (et_phoneno.getText().toString().trim().length() < 1 ) {
+        } else if (et_phoneno.getText().toString().trim().length() < 1) {
             et_phoneno.setError("Please Fill This Field");
             et_phoneno.requestFocus();
             return false;
