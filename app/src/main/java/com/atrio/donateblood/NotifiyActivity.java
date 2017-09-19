@@ -82,7 +82,6 @@ public class NotifiyActivity extends AppCompatActivity {
             if (getIntent().getExtras() != null) {
                 for (String key : getIntent().getExtras().keySet()) {
                     String value = getIntent().getExtras().getString(key);
-
                     Log.i("data88", "Key: " + key + " Value: " + value);
                 }
                 imsg_id = getIntent().getExtras().getString("msg_id");

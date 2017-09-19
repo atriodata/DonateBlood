@@ -61,32 +61,32 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String msg_id = remoteMessage.getData().get("msg_id");
         String token_id = remoteMessage.getData().get("token_id");
         String body_donor =remoteMessage.getData().get("body");
-        String phon_no = remoteMessage.getData().get("pho_no");
-        String blood_grp = remoteMessage.getData().get("blood_group");
+        String recipient_phn = remoteMessage.getData().get("recipient_phn");
+        String blood_group = remoteMessage.getData().get("blood_group");
         String click_action = remoteMessage.getNotification().getClickAction();
         String current_token = FirebaseInstanceId.getInstance().getToken();
-        Log.i("imageUri44",""+blood_grp);
+        Log.i("imageUri44",""+blood_group);
 
         bitmap = getBitmapfromUrl(imageUri);
         if (token_id!=null) {
             if (!token_id.equals(current_token)) {
-                sendNotification(tittle, body, bitmap, token_id, msg_id, click_action,body_donor,phon_no,blood_grp);
+                sendNotification(tittle, body, bitmap, token_id, msg_id, click_action,body_donor,recipient_phn,blood_group);
             }
         }else{
-            sendNotification(tittle, body_donor, bitmap, token_id, msg_id, click_action,body_donor,phon_no,blood_grp);
+            sendNotification(tittle, body_donor, bitmap, token_id, msg_id, click_action,body_donor,recipient_phn,blood_group);
         }
     }
 
     private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id,String click_action,
-                                  String body_donor,String phon_no,String blood_grp) {
+                                  String body_donor,String recipient_phn,String blood_group) {
         Intent intent = new Intent(click_action);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("token_id", token_id);
         intent.putExtra("msg_id", msg_id);
         intent.putExtra("body", body_donor);
-        intent.putExtra("phon_no",phon_no);
-        intent.putExtra("blood_grp",blood_grp);
-        Log.i("imageUri44",""+blood_grp);
+        intent.putExtra("recipient_phn",recipient_phn);
+        intent.putExtra("blood_group",blood_group);
+        Log.i("imageUri44",""+blood_group);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

@@ -332,7 +332,7 @@ public class RecipientActivity extends AppCompatActivity {
                     JSONObject data = new JSONObject();
                     data.put("token_id", regId);
                     data.put("msg_id", msg_id);
-                    data.put("pho_no", phoneno);
+                    data.put("recipient_phn", phoneno);
                     data.put("blood_group",blood_data);
                     root.put("notification", notification);
                     root.put("condition",condition);
