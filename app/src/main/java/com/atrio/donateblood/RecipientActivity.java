@@ -62,7 +62,7 @@ public class RecipientActivity extends AppCompatActivity {
     Spinner spin_state, sp_bloodgr;
     Button btn_send;
     EditText et_phoneno, et_emailid, et_date, et_remark;
-    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, send_mail, regId, msg_id, message1,
+    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, send_mail, bloodgrp_mail,regId, msg_id, message1,
             condition1 = null, condition2 = null, condition3 = null, condition4 = null,condition = null;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
@@ -179,6 +179,7 @@ public class RecipientActivity extends AppCompatActivity {
             public void onClick(final View v) {
                 dialog.show();
                 arry_condlist.clear();
+
                 ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(getApplicationContext().CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                 if (networkInfo == null) {
@@ -262,7 +263,7 @@ public class RecipientActivity extends AppCompatActivity {
 
                         }
 
-                        Query readqery = db_ref.child("Donor").child(state_data).child(city_data).orderByChild("bloodgroup").equalTo(blood_data);
+                        Query readqery = db_ref.child("Donor").child(state_data).child(city_data).orderByKey();//.orderByChild("bloodgroup").equalTo(blood_data);
 
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -271,13 +272,211 @@ public class RecipientActivity extends AppCompatActivity {
                                     dialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "No Donor Available", Toast.LENGTH_LONG).show();
                                 } else {
-                                    Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
-                                    while (item.hasNext()) {
-                                        DataSnapshot items = item.next();
-                                        UserDetail user_info = items.getValue(UserDetail.class);
-                                        send_mail = user_info.getEmailid();
-                                        store_list.add(send_mail);
+                                    if (blood_data.equals("A+")){
+                                        Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
+                                        while (item.hasNext()) {
+                                            DataSnapshot items = item.next();
+                                            UserDetail user_info = items.getValue(UserDetail.class);
+                                            bloodgrp_mail=user_info.getBloodgroup();
+                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            if (bloodgrp_mail.equals("A+")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("A-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("O+")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("O-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            Log.i("mailadd",""+store_list);
+
+                                        }
+
                                     }
+                                    if (blood_data.equals("A-")){
+                                        Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
+                                        while (item.hasNext()) {
+                                            DataSnapshot items = item.next();
+                                            UserDetail user_info = items.getValue(UserDetail.class);
+                                            bloodgrp_mail=user_info.getBloodgroup();
+                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            if (bloodgrp_mail.equals("A-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("O-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            Log.i("mailadd",""+store_list);
+
+                                        }
+
+                                    }
+                                    if (blood_data.equals("B+")){
+                                        Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
+                                        while (item.hasNext()) {
+                                            DataSnapshot items = item.next();
+                                            UserDetail user_info = items.getValue(UserDetail.class);
+                                            bloodgrp_mail=user_info.getBloodgroup();
+                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            if (bloodgrp_mail.equals("B+")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("B-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("O+")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("O-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            Log.i("mailadd",""+store_list);
+
+                                        }
+
+                                    }
+                                    if (blood_data.equals("B-")){
+                                        Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
+                                        while (item.hasNext()) {
+                                            DataSnapshot items = item.next();
+                                            UserDetail user_info = items.getValue(UserDetail.class);
+                                            bloodgrp_mail=user_info.getBloodgroup();
+                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            if (bloodgrp_mail.equals("B-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("O-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            Log.i("mailadd",""+store_list);
+
+                                        }
+
+                                    }
+                                    if (blood_data.equals("O+")){
+                                        Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
+                                        while (item.hasNext()) {
+                                            DataSnapshot items = item.next();
+                                            UserDetail user_info = items.getValue(UserDetail.class);
+                                            bloodgrp_mail=user_info.getBloodgroup();
+                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            if (bloodgrp_mail.equals("O+")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("O-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            Log.i("mailadd",""+store_list);
+
+                                        }
+
+                                    }
+                                    if (blood_data.equals("O-")){
+                                        Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
+                                        while (item.hasNext()) {
+                                            DataSnapshot items = item.next();
+                                            UserDetail user_info = items.getValue(UserDetail.class);
+                                            bloodgrp_mail=user_info.getBloodgroup();
+                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            if (bloodgrp_mail.equals("O-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            Log.i("mailadd",""+store_list);
+
+                                        }
+
+                                    }
+                                    if (blood_data.equals("AB+")){
+                                        Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
+                                        while (item.hasNext()) {
+                                            DataSnapshot items = item.next();
+                                            UserDetail user_info = items.getValue(UserDetail.class);
+                                            bloodgrp_mail=user_info.getBloodgroup();
+                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            if (bloodgrp_mail.equals("A+")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("A-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("O+")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("O-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("B+")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("B-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("AB+")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("AB-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            Log.i("mailadd",""+store_list);
+
+                                        }
+
+                                    }
+                                    if (blood_data.equals("AB-")){
+                                        Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
+                                        while (item.hasNext()) {
+                                            DataSnapshot items = item.next();
+                                            UserDetail user_info = items.getValue(UserDetail.class);
+                                            bloodgrp_mail=user_info.getBloodgroup();
+                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            if (bloodgrp_mail.equals("AB-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("A-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("B-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            if (bloodgrp_mail.equals("O-")){
+                                                send_mail = user_info.getEmailid();
+                                                store_list.add(send_mail);
+                                            }
+                                            Log.i("mailadd",""+store_list);
+
+                                        }
+
+                                    }
+
                                     dialog.dismiss();
                                     Query readqery = db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).orderByKey();
                                     readqery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -464,6 +663,7 @@ public class RecipientActivity extends AppCompatActivity {
     }
 
     private void sendmail(final ArrayList<String> store_list) {
+        Log.i("mailadd2",""+store_list);
 
         String email = "info@atriodata.com";
         String mail_subject = "Blood Required";
@@ -471,7 +671,7 @@ public class RecipientActivity extends AppCompatActivity {
                 ".\n\n\nDetails of Recipient:\n\nEmail-Id:" + emailid + "\nPhone No: " + phoneno + "\nOther Details: " + other_detail;
         SendMail sm = new SendMail(this, email, mail_subject, message, store_list);
         sm.execute();
-
+//        store_list.clear();
         dialog.dismiss();
     }
 

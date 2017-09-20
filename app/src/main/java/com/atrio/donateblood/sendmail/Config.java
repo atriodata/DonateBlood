@@ -5,6 +5,10 @@ package com.atrio.donateblood.sendmail;
  */
 
 public class Config {
-    public static final String EMAIL ="atriodataservices@gmail.com";
-    public static final String PASSWORD ="Ajitha@920$";
+        public static final String EMAIL ="atriodataservices@gmail.com";
+    public static final String PASSWORD ="Atrio@920$";
+//    public static final String EMAIL = "noreply@atrio.co.in";
+//    public static final String PASSWORD = "Noreply@123";
+//public static final String EMAIL ="twinklesingh3893@gmail.com";
+//    public static final String PASSWORD ="twinkle$ingh";
 }

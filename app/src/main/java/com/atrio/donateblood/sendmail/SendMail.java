@@ -3,6 +3,7 @@ package com.atrio.donateblood.sendmail;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -60,6 +61,13 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
 
+//        props.put("mail.smtp.host", "webmail.atriodata.com");
+//        props.put("mail.smtp.socketFactory.port", "465");
+//        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+//        props.put("mail.smtp.auth", "true");
+//        props.put("mail.smtp.port", "465");
+        Log.i("checkmail",""+props);
+
         session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             //Authenticating the password
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -73,9 +81,12 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
             for (int i = 0; i < my2mail.size(); i++) {
                 mm.addRecipient(Message.RecipientType.BCC, new InternetAddress(my2mail.get(i)));
             }
+
             mm.setSubject(mail_subject);
+//            mm.setFrom();
             mm.setText(message);
             Transport.send(mm);
+            Log.i("checkmailfrom",""+mm);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
