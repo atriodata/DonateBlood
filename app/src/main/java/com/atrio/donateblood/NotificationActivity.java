@@ -39,15 +39,11 @@ public class NotificationActivity extends AppCompatActivity {
     SharedPreferences sharedpreferences;
     private SpotsDialog dialog;
     String rec_phn,msg_id,noti_bloodGroup,noti_bloodGroup1,noti_bloodGroup2,noti_bloodGroup3,noti_bloodGroup4,noti_bloodGroup5
-            ,noti_bloodGroup6,noti_bloodGroup7,noti_bloodGroup8;
-
-
+            ,noti_bloodGroup6,noti_bloodGroup7;
     public static final String MyPREFERENCES = "BloodDonate" ;
     public static final String city = "cityKey";
     public static final String state = "stateKey";
     public static final String blood_group = "blood_groupKey";
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
