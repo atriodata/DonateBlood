@@ -138,9 +138,6 @@ public class NotificationActivity extends AppCompatActivity {
                                         recipientDetail.setBloodgroup(recipientDetail.bloodgroup);
                                             donoractivityList.add(recipientDetail);
                                         }
-
-
-
                                 }
                                 else {
                                     dialog.dismiss();
