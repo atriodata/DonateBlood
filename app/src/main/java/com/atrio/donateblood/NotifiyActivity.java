@@ -46,7 +46,7 @@ public class NotifiyActivity extends AppCompatActivity {
     OkHttpClient mClient;
     String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail,
             token_id, msg_id, imsg_id = null, message1, donor_phn, recipient_phn, city_donor, blood_group_donor, donor_msgid
-            ,blood_grp_noti;
+            ,blood_grp_noti,blood_grp_notiRc;
 
     public static final String MyPREFERENCES = "BloodDonate";
     public static final String city = "cityKey";
@@ -88,6 +88,7 @@ public class NotifiyActivity extends AppCompatActivity {
                 token_id = getIntent().getExtras().getString("token_id");
                 recipient_phn = getIntent().getExtras().getString("recipient_phn");
                 blood_grp_noti = getIntent().getExtras().getString("blood_group");
+                blood_grp_notiRc =getIntent().getExtras().getString("blood_data");
                 Log.i("recipientPhn66", "" + blood_grp_noti);
                 Log.i("recipientPhn665", "" + getIntent().getExtras().getString("blood_group"));
 
@@ -95,36 +96,70 @@ public class NotifiyActivity extends AppCompatActivity {
             db_instance = FirebaseDatabase.getInstance();
             db_ref = db_instance.getReference();
 
-            Query getnotifi = db_ref.child("Notifications").child("Recipient").child(city_donor).child(blood_grp_noti).orderByChild("msg_id").equalTo(imsg_id);
-            getnotifi.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getChildrenCount() != 0) {
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            RecipientDetail recipientDetail = child.getValue(RecipientDetail.class);
+            if (blood_grp_noti!=null) {
+                Query getnotifi = db_ref.child("Notifications").child("Recipient").child(city_donor).child(blood_grp_noti).orderByChild("msg_id").equalTo(imsg_id);
+                getnotifi.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() != 0) {
+                            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                RecipientDetail recipientDetail = child.getValue(RecipientDetail.class);
 
-                            date_req = recipientDetail.getReq_date();
-                            emailid = recipientDetail.getEmailid();
-                            phoneno = recipientDetail.getPhoneno();
-                            msg_id = recipientDetail.getMsg_id();
-                            other_detail = recipientDetail.getOther_detail();
-                            blood_data = recipientDetail.getBloodgroup();
-                            state_data = recipientDetail.getState();
-                            city_data = recipientDetail.getCity();
+                                date_req = recipientDetail.getReq_date();
+                                emailid = recipientDetail.getEmailid();
+                                phoneno = recipientDetail.getPhoneno();
+                                msg_id = recipientDetail.getMsg_id();
+                                other_detail = recipientDetail.getOther_detail();
+                                blood_data = recipientDetail.getBloodgroup();
+                                state_data = recipientDetail.getState();
+                                city_data = recipientDetail.getCity();
 
-                            String message = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req +
-                                    ".\n\n\nDetails of Recipient:\n\nEmail-Id:" + emailid + "\nPhone No: " + phoneno + "\nOther Details: " + other_detail;
-                            dialog.dismiss();
-                            rec_tv.setText(message);
+                                String message = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req +
+                                        ".\n\n\nDetails of Recipient:\n\nEmail-Id:" + emailid + "\nPhone No: " + phoneno + "\nOther Details: " + other_detail;
+                                dialog.dismiss();
+                                rec_tv.setText(message);
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+                    }
+                });
+            }else {
+                Query getnotifi = db_ref.child("Notifications").child("Recipient").child(city_donor).child(blood_grp_notiRc).orderByChild("msg_id").equalTo(imsg_id);
+                getnotifi.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() != 0) {
+                            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                RecipientDetail recipientDetail = child.getValue(RecipientDetail.class);
+
+                                date_req = recipientDetail.getReq_date();
+                                emailid = recipientDetail.getEmailid();
+                                phoneno = recipientDetail.getPhoneno();
+                                msg_id = recipientDetail.getMsg_id();
+                                other_detail = recipientDetail.getOther_detail();
+                                blood_data = recipientDetail.getBloodgroup();
+                                state_data = recipientDetail.getState();
+                                city_data = recipientDetail.getCity();
+
+                                String message = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req +
+                                        ".\n\n\nDetails of Recipient:\n\nEmail-Id:" + emailid + "\nPhone No: " + phoneno + "\nOther Details: " + other_detail;
+                                dialog.dismiss();
+                                rec_tv.setText(message);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
             btn_no.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
