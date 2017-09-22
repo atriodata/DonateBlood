@@ -56,7 +56,6 @@ public class NotificationActivity extends AppCompatActivity {
         rc_recipient = (RecyclerView) findViewById(R.id.rc_recipient);
         dialog = new SpotsDialog(NotificationActivity.this, R.style.Custom);
         dialog.show();
-
         LinearLayoutManager lLayoutd = new LinearLayoutManager(NotificationActivity.this);
         LinearLayoutManager lLayoutr = new LinearLayoutManager(NotificationActivity.this);
 
@@ -132,6 +131,7 @@ public class NotificationActivity extends AppCompatActivity {
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
                         RecipientDetail r_detail=dataSnapshot1.getValue(RecipientDetail.class);
                         r_detail.setBody(r_detail.body);
+                        Log.i("bodydata",""+r_detail.body);
                         r_detail.setType("recipientwilling");
                         arrayList.add(r_detail);
                     }
@@ -158,7 +158,6 @@ public class NotificationActivity extends AppCompatActivity {
 
 
     }
-
 
 
 

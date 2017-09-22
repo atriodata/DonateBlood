@@ -15,7 +15,7 @@
         android:padding="5dp"
         android:text="  Notification"
         android:textColor="@color/red"
-        android:drawableTop="@drawable/noti_icon"
+        android:drawableTop="@mipmap/notify_icon"
         android:background="@drawable/edittext_border"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">

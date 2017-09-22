@@ -1,10 +1,14 @@
 package com.atrio.donateblood;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,6 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dmax.dialog.SpotsDialog;
 
 public class HomeActivity extends AppCompatActivity {
@@ -32,6 +39,8 @@ public class HomeActivity extends AppCompatActivity {
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private SpotsDialog dialog;
+    String[] permissions;
+    public static final int MAKE_CALL_PERMISSION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +54,10 @@ public class HomeActivity extends AppCompatActivity {
         btn_donate.setVisibility(View.GONE);
         btn_recive.setVisibility(View.GONE);
         img_bgdrop.setVisibility(View.GONE);
+        permissions = new String[]{
+                android.Manifest.permission.CALL_PHONE
+        };
+        checkPermissions();
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -132,7 +145,32 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+    private boolean checkPermissions() {
+//        Log.i("permissioncheck1",""+checkPermissions());
 
+        int result;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p : permissions) {
+            result = ContextCompat.checkSelfPermission(this, p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 100);
+            return false;
+        }
+        return true;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i("permissioncheck","permission_granted");
+            }
+            return;
+        }
+    }
     @Override
     public void onBackPressed() {
         super.onBackPressed();

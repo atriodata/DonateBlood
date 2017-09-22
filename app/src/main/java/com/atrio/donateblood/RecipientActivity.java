@@ -552,7 +552,7 @@ public class RecipientActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String result) {
-                Log.i("result66", "" + result);
+//                Log.i("result66", "" + result);
                 et_date.setText("");
                 et_emailid.setText("");
                 atvPlaces.setText("");

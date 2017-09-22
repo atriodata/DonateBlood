@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,15 +79,16 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
 
         @Override
         public void onClick(View view) {
-            if (tv_text.getText() == recipient_string) {
+            if (tv_text.getText() != donor_string) {
                 Intent intent = new Intent(view.getContext(), NotifiyActivity.class);
-//                Log.i("tittle44", "" + msg_id);
                 intent.putExtra("msg_id", msg_id);
                 view.getContext().startActivity(intent);
 
             } else {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + call_no));
+                Log.i("tittlec44", "" + call_no);
+
                 if (ActivityCompat.checkSelfPermission(c, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
@@ -98,10 +100,15 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
                     return;
                 }
                 view.getContext().startActivity(callIntent);
+
             }
 
         }
     }
+
+
+
+
 }
 
 
