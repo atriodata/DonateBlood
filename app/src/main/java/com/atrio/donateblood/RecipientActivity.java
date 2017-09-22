@@ -127,6 +127,7 @@ public class RecipientActivity extends AppCompatActivity {
                                 // set day of month , month and year value in the edit text
                                 et_date.setText(dayOfMonth + "/"
                                         + (monthOfYear + 1) + "/" + year);
+//                                et_date.setText(year + "/"+ (monthOfYear + 1) + "/" + dayOfMonth);
 
                             }
                         }, mYear, mMonth, mDay);
