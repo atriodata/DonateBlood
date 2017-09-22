@@ -19,7 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 import dmax.dialog.SpotsDialog;
@@ -74,6 +76,8 @@ public class NotificationActivity extends AppCompatActivity {
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         city_donor = sharedpreferences.getString(city, "");
         blood_group_donor = sharedpreferences.getString(blood_group, "");
+        Calendar c = Calendar.getInstance();
+        System.out.println("Current time => " + c.getTime());
         Log.i("city_donor44", "" + city_donor);
         Log.i("blood_group_donor44", "" + blood_group_donor);
 
@@ -210,6 +214,7 @@ public class NotificationActivity extends AppCompatActivity {
 //                    arr = new ArrayList<String>();
                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                             RecipientDetail r_detail = dataSnapshot1.getValue(RecipientDetail.class);
+
                             Log.i("r_detail.body11",""+r_detail.body);
                             r_detail.setBody(r_detail.body);
                             r_detail.setType("recipientwilling");
