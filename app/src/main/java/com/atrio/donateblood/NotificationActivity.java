@@ -150,7 +150,6 @@ public class NotificationActivity extends AppCompatActivity {
                 arry_bloolist.add(noti_bloodGroup1);
                 break;
 
-
         }
 
         Query query_donoractivity = rootRef.child("Notifications").child("Donor").orderByKey().limitToLast(10);
@@ -187,7 +186,6 @@ public class NotificationActivity extends AppCompatActivity {
                 }
 
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
