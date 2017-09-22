@@ -44,12 +44,12 @@ public class NotificationActivity extends AppCompatActivity {
     Date now,parsed;
     SimpleDateFormat sdf;
 
+    String rec_phn,msg_id,noti_bloodGroup,noti_bloodGroup1,noti_bloodGroup2,noti_bloodGroup3,noti_bloodGroup4,noti_bloodGroup5
+            ,noti_bloodGroup6,noti_bloodGroup7;
     public static final String MyPREFERENCES = "BloodDonate" ;
     public static final String city = "cityKey";
     public static final String state = "stateKey";
     public static final String blood_group = "blood_groupKey";
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,18 +68,91 @@ public class NotificationActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         donor_phn = user.getPhoneNumber();
+        arry_bloolist = new ArrayList<>();
 
         rootRef = FirebaseDatabase.getInstance().getReference();
         sharedpreferences = getSharedPreferences(MyPREFERENCES,Context.MODE_PRIVATE);
         city_donor = sharedpreferences.getString(city,"");
         blood_group_donor = sharedpreferences.getString(blood_group,"");
 
+        switch (blood_group_donor) {
+            case "A+":
+                noti_bloodGroup = "A+";
+                noti_bloodGroup1 = "AB+";
+                arry_bloolist.add(noti_bloodGroup);
+                arry_bloolist.add(noti_bloodGroup1);
+                break;
+            case "O+":
+                noti_bloodGroup = "O+";
+                noti_bloodGroup1 = "A+";
+                noti_bloodGroup2 = "B+";
+                noti_bloodGroup3 = "AB+";
+                arry_bloolist.add(noti_bloodGroup);
+                arry_bloolist.add(noti_bloodGroup1);
+                arry_bloolist.add(noti_bloodGroup2);
+                arry_bloolist.add(noti_bloodGroup3);
+                break;
+            case "B+":
+                noti_bloodGroup = "B+";
+                noti_bloodGroup1 = "AB+";
+                arry_bloolist.add(noti_bloodGroup);
+                arry_bloolist.add(noti_bloodGroup1);
+                break;
+            case "AB+":
+                noti_bloodGroup = "AB+";
+                arry_bloolist.add(noti_bloodGroup);
+                arry_bloolist.add(noti_bloodGroup1);
+                break;
+            case "A-":
+                noti_bloodGroup = "O+";
+                noti_bloodGroup1 = "A+";
+                noti_bloodGroup2 = "B+";
+                noti_bloodGroup3 = "AB+";
+                arry_bloolist.add(noti_bloodGroup);
+                arry_bloolist.add(noti_bloodGroup1);
+                arry_bloolist.add(noti_bloodGroup2);
+                arry_bloolist.add(noti_bloodGroup3);
+                break;
+            case "O-":
+                noti_bloodGroup = "O+";
+                noti_bloodGroup1 = "A+";
+                noti_bloodGroup2 = "B+";
+                noti_bloodGroup3 = "AB+";
+                noti_bloodGroup4 = "O-";
+                noti_bloodGroup5 = "A-";
+                noti_bloodGroup6 = "B-";
+                noti_bloodGroup7 = "AB-";
+                arry_bloolist.add(noti_bloodGroup);
+                arry_bloolist.add(noti_bloodGroup1);
+                arry_bloolist.add(noti_bloodGroup2);
+                arry_bloolist.add(noti_bloodGroup3);
+                arry_bloolist.add(noti_bloodGroup4);
+                arry_bloolist.add(noti_bloodGroup5);
+                arry_bloolist.add(noti_bloodGroup6);
+                arry_bloolist.add(noti_bloodGroup7);
+                break;
+            case "B-":
+                noti_bloodGroup = "B+";
+                noti_bloodGroup1 = "B-";
+                noti_bloodGroup2 = "AB+";
+                noti_bloodGroup3 = "AB_";
+                arry_bloolist.add(noti_bloodGroup);
+                arry_bloolist.add(noti_bloodGroup1);
+                arry_bloolist.add(noti_bloodGroup2);
+                arry_bloolist.add(noti_bloodGroup3);
+                break;
+            case "AB-":
+                noti_bloodGroup = "AB+";
+                noti_bloodGroup1 = "AB-";
+                arry_bloolist.add(noti_bloodGroup);
+                arry_bloolist.add(noti_bloodGroup1);
+                break;
 
+        }
 
         donoractivityList = new ArrayList<>();
 
-        Query query_donoractivity= rootRef.child("Notifications").child("Donor").orderByKey();
-
+        Query query_donoractivity = rootRef.child("Notifications").child("Donor").orderByKey().limitToLast(10);
         query_donoractivity.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -101,10 +174,10 @@ public class NotificationActivity extends AppCompatActivity {
                         }
                     }
                     dialog.dismiss();
+                    Collections.reverse(donoractivityList);
                     RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, donoractivityList);
                     rc_donor.setAdapter(rcAdapter);
-                }
-                else {
+                } else {
                     dialog.dismiss();
 
                 }
@@ -122,57 +195,10 @@ public class NotificationActivity extends AppCompatActivity {
                 dialog.show();
                 donoractivityList = new ArrayList<>();
 
-                Query query_donoractivity= rootRef.child("Notifications").child("Donor").orderByKey();
-
-                query_donoractivity.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getChildrenCount()!=0){
-                            for (DataSnapshot data_info :dataSnapshot.getChildren()) {
-                                if (data_info.getKey().equals(donor_phn)) {
-
-                                    for (DataSnapshot data_info1 :data_info.getChildren()){
-                                        RecipientDetail recipientDetail = data_info1.getValue(RecipientDetail.class);
-                                        recipientDetail.setType("donorwilling");
-                                        recipientDetail.setPhoneno(recipientDetail.phoneno);
-                                        recipientDetail.setBloodgroup(recipientDetail.bloodgroup);
-                                        donoractivityList.add(recipientDetail);
-                                    }
-
-
-
-                                }
-                                else {
-                                    dialog.dismiss();
-                                }
-                            }
-                            dialog.dismiss();
-                            RecycleviewAdapter rcAdapter = new RecycleviewAdapter(NotificationActivity.this, donoractivityList);
-                            rc_donor.setAdapter(rcAdapter);
-                        }
-                        else {
-                            dialog.dismiss();
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-            }
-        });
-
-
-        tv_recipient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-                arrayList = new ArrayList<>();
-                Query query_catlist = rootRef.child("Notifications").child("Recipient").child(city_donor).child(blood_group_donor).orderByKey().limitToLast(10);
+        for (int i = 0; i < arry_bloolist.size(); i++) {
+            blood_group_donor = arry_bloolist.get(i);
+            Log.i("blood_group_donor11",""+blood_group_donor);
+            Query query_catlist = rootRef.child("Notifications").child("Recipient").child(city_donor).child(blood_group_donor).orderByKey().limitToLast(5);
 
                 query_catlist.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -216,7 +242,7 @@ public class NotificationActivity extends AppCompatActivity {
             }
         });
 
-
+    }
 
 
 
