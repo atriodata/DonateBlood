@@ -5,6 +5,14 @@ package com.atrio.donateblood.model;
  */
 
 public class RecipientDetail {
+    public String getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
+    }
+
     public String bloodgroup;
     public String req_date;
     public String state;
@@ -13,6 +21,7 @@ public class RecipientDetail {
     public String other_detail;
     public String emailid;
     public String phoneno;
+    public  String tokenId;
 
     public String getRec_phn() {
         return rec_phn;
@@ -42,7 +51,7 @@ public class RecipientDetail {
     }
 
     public RecipientDetail(String bloodgroup, String req_date, String state, String country, String city, String other_detail,
-                           String emailid, String phoneno, String msg_id,String body,String type,String rec_phn) {
+                           String emailid, String phoneno, String msg_id,String body,String type,String rec_phn,String tokenId) {
         this.bloodgroup = bloodgroup;
         this.req_date = req_date;
         this.state = state;
@@ -55,6 +64,7 @@ public class RecipientDetail {
         this.body=body;
         this.rec_phn =rec_phn;
         this.type = type;
+        this.tokenId = tokenId;
     }
 
     public String getBloodgroup() {

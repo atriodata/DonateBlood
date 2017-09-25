@@ -108,7 +108,6 @@ public class NotificationActivity extends AppCompatActivity {
             case "AB+":
                 noti_bloodGroup = "AB+";
                 arry_bloolist.add(noti_bloodGroup);
-                arry_bloolist.add(noti_bloodGroup1);
                 break;
             case "A-":
                 noti_bloodGroup = "O+";
@@ -251,6 +250,7 @@ public class NotificationActivity extends AppCompatActivity {
                 for (int i = 0; i < arry_bloolist.size(); i++) {
                     blood_group_donor = arry_bloolist.get(i);
                     Log.i("blood_group_donor11",""+blood_group_donor);
+
                     Query query_catlist = rootRef.child("Notifications").child("Recipient").child(city_donor).child(blood_group_donor).orderByKey().limitToLast(5);
 
                     query_catlist.addListenerForSingleValueEvent(new ValueEventListener() {
