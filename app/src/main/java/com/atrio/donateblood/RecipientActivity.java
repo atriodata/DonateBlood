@@ -657,9 +657,7 @@ public class RecipientActivity extends AppCompatActivity {
         recipientDetail.setBody(body);
         recipientDetail.setTokenId(regId);
 
-//        db_ref.child("RecipientNotification").child("Recipient").child(city_data).child(blood_data).child(phoneno).child(msg_id).setValue(recipientDetail);
         db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(msg_id).setValue(recipientDetail);
-       //db_ref.CompletionListener (new Com)
 
        Log.i("size44",""+arry_condlist.size());
         for (int i =0 ; i<arry_condlist.size();i++){
