@@ -63,11 +63,11 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
         props.put("mail.smtp.port", "465");
 //        props.put("mail.smtp.from", "info@atriodata.com");
 
-//        props.put("mail.smtp.host", "webmail.atriodata.com");
-//        props.put("mail.smtp.socketFactory.port", "465");
-//        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
-//        props.put("mail.smtp.auth", "true");
-//        props.put("mail.smtp.port", "465");
+       /* props.put("mail.smtp.host", "sg3plvcpnl16686.prod.sin3.secureserver.net");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");*/
         Log.i("checkmail",""+props);
 
         session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
