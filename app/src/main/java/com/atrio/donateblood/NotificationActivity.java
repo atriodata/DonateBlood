@@ -108,7 +108,6 @@ public class NotificationActivity extends AppCompatActivity {
             case "AB+":
                 noti_bloodGroup = "AB+";
                 arry_bloolist.add(noti_bloodGroup);
-                arry_bloolist.add(noti_bloodGroup1);
                 break;
             case "A-":
                 noti_bloodGroup = "O+";

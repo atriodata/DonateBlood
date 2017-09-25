@@ -46,7 +46,7 @@ public class NotifiyActivity extends AppCompatActivity {
     OkHttpClient mClient;
     String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail,
             token_id, msg_id, imsg_id = null, message1, donor_phn, recipient_phn, city_donor, blood_group_donor, donor_msgid
-            ,blood_grp_noti,blood_grp_notiRc;
+            ,blood_grp_noti,blood_grp_notiRc,recipent_token;
 
     public static final String MyPREFERENCES = "BloodDonate";
     public static final String city = "cityKey";

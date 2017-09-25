@@ -35,6 +35,7 @@ public class RecipientDetail {
     public String msg_id;
     public String body;
     public String type;
+    public String reci_token;
 
 
     public RecipientDetail() {

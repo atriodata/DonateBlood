@@ -45,7 +45,7 @@
         android:layout_marginLeft="8dp"
         android:background="@drawable/ripple_effect"
         android:padding="10dp"
-        android:text="Donor Request"
+        android:text="Donor Details"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="12sp"
@@ -58,7 +58,7 @@
 
     <Button
         android:id="@+id/tv_recipient"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -78,7 +79,7 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
         try {
             MimeMessage mm = new MimeMessage(session);
 //            mm.setFrom(new InternetAddress("Blood Donate" + "<" + "no-reply@domain.com" + ">"));
-//            mm.setFrom(new InternetAddress("BloodDonate","info@atriodata.com"));
+            mm.setFrom(new InternetAddress("info@atriodata.com","BloodDonate"));
 //            MimeUtility.encodeText(Config.EMAIL);
 //            mm.setReplyTo(new InternetAddress[] { new InternetAddress("info@atriodata.com") });
 //            mm.setSender("info@atriodata.com");
@@ -97,11 +98,11 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
             Log.i("checkmailfromexception",""+e);
 
-        } /*catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             Log.i("checkmailfromexception1",""+e);
 
-        }*/
+        }
         return null;
     }
 }

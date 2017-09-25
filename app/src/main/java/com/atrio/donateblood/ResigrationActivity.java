@@ -353,7 +353,6 @@ public class ResigrationActivity extends AppCompatActivity {
         btn_reg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dialog.show();
 
                 String data = null;
@@ -369,7 +368,7 @@ public class ResigrationActivity extends AppCompatActivity {
                     dialog.dismiss();
                     phn_nolist.clear();
 
-
+                    dialog.show();
                     Query writequery = db_ref.child("Donor").orderByKey();
                     writequery.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -390,17 +389,18 @@ public class ResigrationActivity extends AppCompatActivity {
                                 subscribeToPushService(blood_data);
                                 Log.i("printdata34",""+topics);
                                 createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, phoneno, count,topics);
-//                                et_name.setText("");
-//                                et_emailid.setText("");
-//                                atvPlaces.setText("");
-//                                et_age.setSelection(0);
-//                                et_weight.setSelection(0);
-//                                sp_bloodgr.setSelection(0);
-//                                spin_state.setSelection(0);
-//                                rb_male.setChecked(true);
-                                    /*cb_never.setChecked(false);
-                                    cb_above.setChecked(false);
-                                    cb_below.setChecked(false);*/
+                                et_name.setEnabled(false);
+                                et_emailid.setEnabled(false);
+                                et_age.setClickable(false);
+                                et_weight.setClickable(false);
+                                sp_bloodgr.setClickable(false);
+                                spin_country.setClickable(false);
+                                spin_state.setClickable(false);
+                                atvPlaces.setEnabled(false);
+                                rb_male.setClickable(false);
+                                rb_female.setClickable(false);
+                                btn_reg.setVisibility(View.GONE);
+                                btn_update.setVisibility(View.VISIBLE);
                                 Toast.makeText(ResigrationActivity.this, "Successsully Registred", Toast.LENGTH_SHORT).show();
                                 SharedPreferences.Editor editor = sharedpreferences.edit();
                                 editor.putString(city, city_data);
@@ -528,17 +528,21 @@ public class ResigrationActivity extends AppCompatActivity {
                 dialog.dismiss();
                 subscribeToPushService(blood_data);
                 createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data,  phoneno, count,topics);
-//                et_name.setText("");
-//                et_emailid.setText("");
-//                atvPlaces.setText("");
-//                et_age.setSelection(0);
-//                et_weight.setSelection(0);
-//                sp_bloodgr.setSelection(0);
-//                spin_state.setSelection(0);
-//                rb_male.setChecked(true);
-                /*cb_never.setChecked(false);
-                cb_above.setChecked(false);
-                cb_below.setChecked(false);*/
+                et_name.setTextColor(Color.BLACK);
+                et_name.setEnabled(false);
+                et_emailid.setTextColor(Color.BLACK);
+                et_emailid.setEnabled(false);
+                et_age.setClickable(false);
+                et_weight.setClickable(false);
+                sp_bloodgr.setClickable(false);
+                spin_country.setClickable(false);
+                spin_state.setClickable(false);
+                atvPlaces.setTextColor(Color.BLACK);
+                atvPlaces.setEnabled(false);
+                rb_male.setClickable(false);
+                rb_female.setClickable(false);
+                btn_reg.setVisibility(View.GONE);
+                btn_update.setVisibility(View.VISIBLE);
                 Toast.makeText(ResigrationActivity.this, "Successsully Registred ", Toast.LENGTH_SHORT).show();
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString(city, city_data);
