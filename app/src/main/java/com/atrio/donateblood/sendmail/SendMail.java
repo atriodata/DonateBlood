@@ -85,6 +85,8 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
 //            mm.setSender("info@atriodata.com");
 //            mm.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
             for (int i = 0; i < my2mail.size(); i++) {
+                Log.i("checkmailfrom55",""+my2mail.get(i));
+
                 mm.addRecipient(Message.RecipientType.BCC, new InternetAddress(my2mail.get(i)));
             }
 

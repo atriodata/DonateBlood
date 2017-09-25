@@ -273,6 +273,10 @@ public class RecipientActivity extends AppCompatActivity {
                                     dialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "No Donor Available", Toast.LENGTH_LONG).show();
                                 } else {
+                                    Log.i("blood_data22",""+blood_data);
+
+
+                                    store_list.clear();
                                     if (blood_data.equals("A+")){
                                         Iterator<DataSnapshot> item = dataSnapshot.getChildren().iterator();
                                         while (item.hasNext()) {
