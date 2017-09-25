@@ -485,12 +485,12 @@ public class RecipientActivity extends AppCompatActivity {
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             if (dataSnapshot.getChildrenCount() == 0) {
                                                 msg_id = "001";
-                                                createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1);
+                                                createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1,regId);
                                             } else {
                                                 long countchild = dataSnapshot.getChildrenCount();
                                                 countchild++;
                                                 msg_id = String.format("%03d", countchild);
-                                                createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1);
+                                                createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1,regId);
                                             }
                                         }
 
@@ -639,7 +639,7 @@ public class RecipientActivity extends AppCompatActivity {
 
     }
 
-    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id, String body) {
+    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id, String body,String regId) {
         RecipientDetail recipientDetail = new RecipientDetail();
 
         recipientDetail.setReq_date(date_req);
@@ -651,6 +651,7 @@ public class RecipientActivity extends AppCompatActivity {
         recipientDetail.setState(state_data);
         recipientDetail.setCity(city_data);
         recipientDetail.setBody(body);
+        recipientDetail.setTokenId(regId);
 
 //        db_ref.child("RecipientNotification").child("Recipient").child(city_data).child(blood_data).child(phoneno).child(msg_id).setValue(recipientDetail);
         db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(msg_id).setValue(recipientDetail);

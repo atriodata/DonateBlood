@@ -46,11 +46,12 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
                     + "\n" + "Contact on this Number" + list_data.get(position).getPhoneno();
             holder.tv_text.setText(holder.donor_string);
             holder.call_no = list_data.get(position).getPhoneno();
-            holder.tokenId = list_data.get(position).getTokenId();
+
         } else {
             holder.recipient_string = list_data.get(position).getBody();
             holder.tv_text.setText(holder.recipient_string);
             holder.msg_id = list_data.get(position).getMsg_id();
+            holder.tokenId = list_data.get(position).getTokenId();
             holder.blood_data = list_data.get(position).getBloodgroup();
 
 

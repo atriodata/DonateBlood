@@ -46,7 +46,7 @@ public class NotifiyActivity extends AppCompatActivity {
     OkHttpClient mClient;
     String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail,
             token_id, msg_id, imsg_id = null, message1, donor_phn, recipient_phn, city_donor, blood_group_donor, donor_msgid
-            ,blood_grp_noti,blood_grp_notiRc;
+            ,blood_grp_noti,blood_grp_notiRc,tokeninfo;
 
     public static final String MyPREFERENCES = "BloodDonate";
     public static final String city = "cityKey";
@@ -89,7 +89,9 @@ public class NotifiyActivity extends AppCompatActivity {
                 recipient_phn = getIntent().getExtras().getString("recipient_phn");
                 blood_grp_noti = getIntent().getExtras().getString("blood_group");
                 blood_grp_notiRc =getIntent().getExtras().getString("blood_data");
-                Log.i("recipientPhn66", "" + blood_grp_noti);
+                Log.i("recipientPhn66", "" + token_id);
+
+
                 Log.i("recipientPhn665", "" + getIntent().getExtras().getString("blood_group"));
 
             }
@@ -248,7 +250,6 @@ public class NotifiyActivity extends AppCompatActivity {
         recipientDetail.setMsg_id(imsg_id);
         recipientDetail.setRec_phn(recipient_phn);
         recipientDetail.setBloodgroup(blood_group_donor);
-        recipientDetail.setTokenId(token_id);
 
         db_ref.child("Notifications").child("Donor").child(recipient_phn).child(donor_msgid).setValue(recipientDetail);
 
