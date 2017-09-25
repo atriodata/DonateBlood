@@ -248,6 +248,7 @@ public class NotifiyActivity extends AppCompatActivity {
         recipientDetail.setMsg_id(imsg_id);
         recipientDetail.setRec_phn(recipient_phn);
         recipientDetail.setBloodgroup(blood_group_donor);
+        recipientDetail.setTokenId(token_id);
 
         db_ref.child("Notifications").child("Donor").child(recipient_phn).child(donor_msgid).setValue(recipientDetail);
 

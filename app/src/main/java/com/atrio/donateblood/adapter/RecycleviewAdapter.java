@@ -46,6 +46,7 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
                     + "\n" + "Contact on this Number" + list_data.get(position).getPhoneno();
             holder.tv_text.setText(holder.donor_string);
             holder.call_no = list_data.get(position).getPhoneno();
+            holder.tokenId = list_data.get(position).getTokenId();
         } else {
             holder.recipient_string = list_data.get(position).getBody();
             holder.tv_text.setText(holder.recipient_string);
@@ -70,7 +71,7 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
 
         public TextView tv_text;
         public ImageView img_noti;
-        public String msg_id, donor_string, recipient_string, call_no,blood_data;
+        public String msg_id, donor_string, recipient_string, call_no,blood_data,tokenId;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -85,6 +86,7 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
                 Intent intent = new Intent(view.getContext(), NotifiyActivity.class);
                 intent.putExtra("msg_id", msg_id);
                 intent.putExtra("blood_data", blood_data);
+                intent.putExtra("token_id",tokenId);
 
                 view.getContext().startActivity(intent);
 
