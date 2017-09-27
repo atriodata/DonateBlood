@@ -59,7 +59,7 @@ public class ResigrationActivity extends AppCompatActivity {
     PlacesTask placesTask;
     ParserTask parserTask;
     Spinner spin_state, sp_bloodgr, et_age, et_weight,spin_country;
-    RadioButton radioSexButton,rb_male,rb_female;
+    RadioButton radioSexButton,rb_male,rb_female,rb_other;
     RadioGroup rg_group;
     int index;
     //    CheckBox cb_never, cb_above, cb_below;
@@ -100,6 +100,7 @@ public class ResigrationActivity extends AppCompatActivity {
         rg_group = (RadioGroup) findViewById(R.id.radioSex);
         rb_male = (RadioButton) findViewById(R.id.radioMale);
         rb_female = (RadioButton) findViewById(R.id.radioFemale);
+        rb_other = (RadioButton) findViewById(R.id.radioOther);
 //        cb_never = (CheckBox) findViewById(R.id.cb_never);
 //        cb_above = (CheckBox) findViewById(R.id.cb_above);
 //        cb_below = (CheckBox) findViewById(R.id.cb_below);
@@ -165,10 +166,14 @@ public class ResigrationActivity extends AppCompatActivity {
                                         et_emailid.setTextColor(Color.BLACK);
                                         atvPlaces.setText(city_data);
                                         atvPlaces.setTextColor(Color.BLACK);
+//                                        Log.i("userdetail4",""+radio_data);
+
                                         if (rb_male.getText()==radio_data){
                                             rb_male.setChecked(true);
-                                        }else {
+                                        } if (rb_female.getText()==radio_data){
                                             rb_female.setChecked(true);
+                                        }else {
+                                            rb_other.setChecked(true);
                                         }
                                         et_age.setSelection(((ArrayAdapter<String>)et_age.getAdapter()).getPosition(age));
                                         et_weight.setSelection(((ArrayAdapter<String>)et_weight.getAdapter()).getPosition(weight));
@@ -184,6 +189,7 @@ public class ResigrationActivity extends AppCompatActivity {
                                         atvPlaces.setEnabled(false);
                                         rb_male.setClickable(false);
                                         rb_female.setClickable(false);
+                                        rb_other.setClickable(false);
                                     }
                                     dialog.dismiss();
 
@@ -399,6 +405,7 @@ public class ResigrationActivity extends AppCompatActivity {
                                 atvPlaces.setEnabled(false);
                                 rb_male.setClickable(false);
                                 rb_female.setClickable(false);
+                                rb_other.setClickable(false);
                                 btn_reg.setVisibility(View.GONE);
                                 btn_update.setVisibility(View.VISIBLE);
                                 Toast.makeText(ResigrationActivity.this, "Successsully Registred", Toast.LENGTH_SHORT).show();
@@ -459,6 +466,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 atvPlaces.setEnabled(true);
                 rb_male.setClickable(true);
                 rb_female.setClickable(true);
+                rb_other.setClickable(true);
             }
 
         });
@@ -541,6 +549,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 atvPlaces.setEnabled(false);
                 rb_male.setClickable(false);
                 rb_female.setClickable(false);
+                rb_other.setClickable(false);
                 btn_reg.setVisibility(View.GONE);
                 btn_update.setVisibility(View.VISIBLE);
                 Toast.makeText(ResigrationActivity.this, "Successsully Registred ", Toast.LENGTH_SHORT).show();

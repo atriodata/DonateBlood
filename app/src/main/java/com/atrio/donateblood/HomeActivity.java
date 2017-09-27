@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -40,7 +39,6 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseDatabase db_instance;
     private SpotsDialog dialog;
     String[] permissions;
-    public static final int MAKE_CALL_PERMISSION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +53,7 @@ public class HomeActivity extends AppCompatActivity {
         btn_recive.setVisibility(View.GONE);
         img_bgdrop.setVisibility(View.GONE);
         permissions = new String[]{
-                android.Manifest.permission.CALL_PHONE
+                android.Manifest.permission.CALL_PHONE,
         };
         checkPermissions();
 
@@ -119,8 +117,13 @@ public class HomeActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getChildrenCount() != 0) {
                                 dialog.dismiss();
-                                Intent intent = new Intent(HomeActivity.this, RecipientActivity.class);
-                                startActivity(intent);
+                                try {
+                                    Intent intent = new Intent(HomeActivity.this, RecipientActivity.class);
+                                    startActivity(intent);
+                                }catch (Exception e){
+
+                                }
+
                             } else {
                                 dialog.dismiss();
                                 Intent intent = new Intent(HomeActivity.this, RecipentDetailsActivity.class);

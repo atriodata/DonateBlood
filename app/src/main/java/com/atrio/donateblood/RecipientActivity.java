@@ -530,7 +530,7 @@ public class RecipientActivity extends AppCompatActivity {
 
                     notification.put("body", message1);
                     notification.put("title", "Donate Blood");
-                    notification.put("icon", "http://res.cloudinary.com/ddky6bjui/image/upload/v1505451080/ic_stat_ic_notification_qcawdk.png");
+//                    notification.put("icon", "http://res.cloudinary.com/ddky6bjui/image/upload/v1505451080/ic_stat_ic_notification_qcawdk.png");
                     notification.put("click_action", "Notifiy_Activity");
 
                     JSONObject data = new JSONObject();
@@ -538,6 +538,7 @@ public class RecipientActivity extends AppCompatActivity {
                     data.put("msg_id", msg_id);
                     data.put("recipient_phn", phoneno);
                     data.put("blood_group",blood_data);
+                    data.put("icon","myicon");
                     root.put("notification", notification);
                     root.put("condition",condition);
                     root.put("data", data);
