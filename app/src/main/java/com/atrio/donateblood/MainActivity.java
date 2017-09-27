@@ -11,26 +11,21 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.hbb20.CountryCodePicker;
-
 public class MainActivity extends AppCompatActivity {
 
     private EditText et_phn;
     private Button btn_nxt;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private String phn_no, isd_code;
-    CountryCodePicker ccp;
+    private String phn_no;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ccp = (CountryCodePicker) findViewById(R.id.sp_country);
         et_phn = (EditText) findViewById(R.id.et_phone);
         btn_nxt = (Button) findViewById(R.id.btn_next);
-        isd_code = ccp.getSelectedCountryCodeWithPlus();
         mAuth=FirebaseAuth.getInstance();
         user= mAuth.getCurrentUser();
         if (user != null) {
@@ -38,21 +33,13 @@ public class MainActivity extends AppCompatActivity {
             finish();
         } else {
         }
-        ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
-            @Override
-
-            public void onCountrySelected() {
-                isd_code = ccp.getSelectedCountryCodeWithPlus();
-                Toast.makeText(MainActivity.this, "" + ccp.getSelectedCountryCodeWithPlus(), Toast.LENGTH_SHORT).show();
-            }
-        });
         btn_nxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!validatePhoneNumber()) {
                     return;
                 }
-                phn_no = isd_code + et_phn.getText().toString().trim();
+                phn_no = "+91" + et_phn.getText().toString().trim();
                 Intent intent = new Intent(MainActivity.this, VerifyOTP.class);
                 intent.putExtra("phn_number", phn_no);
                 startActivity(intent);

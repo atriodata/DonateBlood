@@ -38,7 +38,7 @@ public class Notify_RecieverActivity extends AppCompatActivity {
             tv_body.setText(body);
             call_no=body.substring(body.lastIndexOf("+"),body.length());
 
-            Log.i("call_no",call_no);
+            /*Log.i("call_no",call_no);*/
         }
 
         btn_call.setOnClickListener(new View.OnClickListener() {
@@ -46,7 +46,7 @@ public class Notify_RecieverActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + call_no));
-                Log.i("tittlec44", "" + call_no);
+                /*Log.i("tittlec44", "" + call_no);*/
 
                 if (ActivityCompat.checkSelfPermission(Notify_RecieverActivity.this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling

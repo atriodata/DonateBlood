@@ -63,7 +63,7 @@ public class VerifyOTP extends AppCompatActivity {
             public void onVerificationFailed(FirebaseException e) {
 
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    Log.d("Invalid request", "Invalid request");
+                  /*  Log.d("Invalid request", "Invalid request");*/
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                         dialog.dismiss();
                     Toast.makeText(VerifyOTP.this, "sms_qutoa_exceeded_alert", Toast.LENGTH_SHORT).show();

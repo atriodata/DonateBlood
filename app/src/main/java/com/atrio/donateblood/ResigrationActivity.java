@@ -258,7 +258,7 @@ public class ResigrationActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 state_data = parent.getItemAtPosition(position).toString();
 //                String totrim=state_data.replace(" ","");
-                Log.i("statedata",""+state_data);
+               /* Log.i("statedata",""+state_data);*/
             }
 
             @Override
@@ -387,7 +387,7 @@ public class ResigrationActivity extends AppCompatActivity {
                             } else {
                                 dialog.dismiss();
                                 subscribeToPushService(blood_data);
-                                Log.i("printdata34",""+topics);
+                               /* Log.i("printdata34",""+topics);*/
                                 createUser(name, emailid, age, weight, blood_data, state_data, city_data, radio_data, phoneno, count,topics);
                                 et_name.setEnabled(false);
                                 et_emailid.setEnabled(false);
@@ -444,7 +444,7 @@ public class ResigrationActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                db_ref.child("Donor").child(state_data).child(city_data).child(phoneno).removeValue();
-                Log.i("unsub1234",""+topics);
+               /* Log.i("unsub1234",""+topics);*/
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(topics);
 
                 btn_update.setVisibility(View.GONE);
@@ -565,7 +565,7 @@ public class ResigrationActivity extends AppCompatActivity {
         }else{
             topics = state_data.replace(" ","")+groupFirst+"negative";
         }
-        Log.i("sub1234",""+topics);
+   /*     Log.i("sub1234",""+topics);*/
         FirebaseMessaging.getInstance().subscribeToTopic(topics);
         token = FirebaseInstanceId.getInstance().getToken();
     }

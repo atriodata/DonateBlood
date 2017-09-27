@@ -79,8 +79,8 @@ public class NotificationActivity extends AppCompatActivity {
         blood_group_donor = sharedpreferences.getString(blood_group, "");
         Calendar c = Calendar.getInstance();
         System.out.println("Current time => " + c.getTime());
-        Log.i("city_donor44", "" + city_donor);
-        Log.i("blood_group_donor44", "" + blood_group_donor);
+        /*Log.i("city_donor44", "" + city_donor);*/
+        /*Log.i("blood_group_donor44", "" + blood_group_donor);*/
 
         switch (blood_group_donor) {
             case "A+":
@@ -162,12 +162,12 @@ public class NotificationActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getChildrenCount() != 0) {
                     for (DataSnapshot data_info : dataSnapshot.getChildren()) {
-                        Log.i("donateblood11", "" + data_info.getKey());
-                        Log.i("donateblood11", "" + donor_phn);
+                        /*Log.i("donateblood11", "" + data_info.getKey());*/
+                        /*Log.i("donateblood11", "" + donor_phn);*/
 
                         if (data_info.getKey().equals(donor_phn)) {
 
-                            Log.i("donateif", "" + donor_phn);
+                            /*Log.i("donateif", "" + donor_phn);*/
                             for (DataSnapshot data_info1 : data_info.getChildren()) {
                                 RecipientDetail recipientDetail = data_info1.getValue(RecipientDetail.class);
                                 recipientDetail.setType("donorwilling");
@@ -206,12 +206,12 @@ public class NotificationActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getChildrenCount() != 0) {
                             for (DataSnapshot data_info : dataSnapshot.getChildren()) {
-                                Log.i("donateblood11", "" + data_info.getKey());
-                                Log.i("donateblood11", "" + donor_phn);
+                                /*Log.i("donateblood11", "" + data_info.getKey());*/
+                                /*Log.i("donateblood11", "" + donor_phn);*/
 
                                 if (data_info.getKey().equals(donor_phn)) {
 
-                                    Log.i("donateif", "" + donor_phn);
+                                    /*Log.i("donateif", "" + donor_phn);*/
                                     for (DataSnapshot data_info1 : data_info.getChildren()) {
                                         RecipientDetail recipientDetail = data_info1.getValue(RecipientDetail.class);
                                         recipientDetail.setType("donorwilling");
@@ -249,7 +249,7 @@ public class NotificationActivity extends AppCompatActivity {
                 arrayList = new ArrayList<>();
                 for (int i = 0; i < arry_bloolist.size(); i++) {
                     blood_group_donor = arry_bloolist.get(i);
-                    Log.i("blood_group_donor11",""+blood_group_donor);
+                    /*Log.i("blood_group_donor11",""+blood_group_donor);*/
 
                     Query query_catlist = rootRef.child("Notifications").child("Recipient").child(city_donor).child(blood_group_donor).orderByKey().limitToLast(5);
 
@@ -261,7 +261,7 @@ public class NotificationActivity extends AppCompatActivity {
                                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                     RecipientDetail r_detail = dataSnapshot1.getValue(RecipientDetail.class);
 
-                                    Log.i("r_detail.body11",""+r_detail.body);
+                                    /*Log.i("r_detail.body11",""+r_detail.body);*/
                                     r_detail.setBody(r_detail.body);
                                     r_detail.setType("recipientwilling");
                                     req_date = r_detail.getReq_date();

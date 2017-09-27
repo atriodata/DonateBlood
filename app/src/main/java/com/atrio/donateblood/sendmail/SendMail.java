@@ -68,7 +68,7 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
         props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");*/
-        Log.i("checkmail",""+props);
+       /* Log.i("checkmail",""+props);*/
 
         session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             //Authenticating the password
@@ -85,7 +85,7 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
 //            mm.setSender("info@atriodata.com");
 //            mm.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
             for (int i = 0; i < my2mail.size(); i++) {
-                Log.i("checkmailfrom55",""+my2mail.get(i));
+                /*Log.i("checkmailfrom55",""+my2mail.get(i));*/
 
                 mm.addRecipient(Message.RecipientType.BCC, new InternetAddress(my2mail.get(i)));
             }
@@ -93,16 +93,16 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
 
             mm.setSubject(mail_subject);
             mm.setText(message);
-            Log.i("checkmailfrom",""+mm);
+            /*Log.i("checkmailfrom",""+mm);*/
             Transport.send(mm);
-            Log.i("checkmailfrom1",""+mm);
+            /*Log.i("checkmailfrom1",""+mm);*/
         } catch (MessagingException e) {
             e.printStackTrace();
-            Log.i("checkmailfromexception",""+e);
+            /*Log.i("checkmailfromexception",""+e);*/
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            Log.i("checkmailfromexception1",""+e);
+            /*Log.i("checkmailfromexception1",""+e);*/
 
         }
         return null;

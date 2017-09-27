@@ -88,13 +88,12 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
                 intent.putExtra("msg_id", msg_id);
                 intent.putExtra("blood_data", blood_data);
                 intent.putExtra("token_id",tokenId);
-
                 view.getContext().startActivity(intent);
 
             } else {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + call_no));
-                Log.i("tittlec44", "" + call_no);
+               //* Log.i("tittlec44", "" + call_no);*/
 
                 if (ActivityCompat.checkSelfPermission(c, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling

@@ -32,8 +32,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onSendError(String s, Exception e) {
         super.onSendError(s, e);
-        Log.i("s11",""+s);
-        Log.i("s11",""+e);
+        /*Log.i("s11",""+s);*/
+        /*Log.i("s11",""+e);*/
 
     }
 
@@ -65,7 +65,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String blood_group = remoteMessage.getData().get("blood_group");
         String click_action = remoteMessage.getNotification().getClickAction();
         String current_token = FirebaseInstanceId.getInstance().getToken();
-        Log.i("imageUri44",""+blood_group);
+       // Log.i("imageUri44",""+imageUri);
+
 
         bitmap = getBitmapfromUrl(imageUri);
         if (token_id!=null) {
@@ -86,7 +87,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("body", body_donor);
         intent.putExtra("recipient_phn",recipient_phn);
         intent.putExtra("blood_group",blood_group);
-        Log.i("imageUri44",""+blood_group);
+       // Log.i("imageUri445",""+blood_group);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -126,7 +127,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Log.i("Bimap11",e.getMessage());
+            /*Log.i("Bimap11",e.getMessage());*/
             return null;
 
         }

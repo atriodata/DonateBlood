@@ -166,7 +166,7 @@ public class HomeActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (requestCode == 100) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i("permissioncheck","permission_granted");
+                /*Log.i("permissioncheck","permission_granted");*/
             }
             return;
         }

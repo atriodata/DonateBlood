@@ -82,17 +82,19 @@ public class NotifiyActivity extends AppCompatActivity {
             if (getIntent().getExtras() != null) {
                 for (String key : getIntent().getExtras().keySet()) {
                     String value = getIntent().getExtras().getString(key);
-                    Log.i("data88", "Key: " + key + " Value: " + value);
+                    /*Log.i("data88", "Key: " + key + " Value: " + value);*/
                 }
                 imsg_id = getIntent().getExtras().getString("msg_id");
                 token_id = getIntent().getExtras().getString("token_id");
                 recipient_phn = getIntent().getExtras().getString("recipient_phn");
                 blood_grp_noti = getIntent().getExtras().getString("blood_group");
                 blood_grp_notiRc =getIntent().getExtras().getString("blood_data");
+/*
                 Log.i("recipientPhn66", "" + token_id);
+*/
 
 
-                Log.i("recipientPhn665", "" + getIntent().getExtras().getString("blood_group"));
+                /*Log.i("recipientPhn665", "" + getIntent().getExtras().getString("blood_group"));*/
 
             }
             db_instance = FirebaseDatabase.getInstance();

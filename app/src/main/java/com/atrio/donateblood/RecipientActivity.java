@@ -273,7 +273,7 @@ public class RecipientActivity extends AppCompatActivity {
                                     dialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "No Donor Available", Toast.LENGTH_LONG).show();
                                 } else {
-                                    Log.i("blood_data22",""+blood_data);
+                                  /*  Log.i("blood_data22",""+blood_data);*/
 
 
                                     store_list.clear();
@@ -283,7 +283,7 @@ public class RecipientActivity extends AppCompatActivity {
                                             DataSnapshot items = item.next();
                                             UserDetail user_info = items.getValue(UserDetail.class);
                                             bloodgrp_mail=user_info.getBloodgroup();
-                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                           /* Log.i("mailadd22",""+bloodgrp_mail);*/
                                             if (bloodgrp_mail.equals("A+")){
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
@@ -300,7 +300,7 @@ public class RecipientActivity extends AppCompatActivity {
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            Log.i("mailadd",""+store_list);
+                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
@@ -311,7 +311,7 @@ public class RecipientActivity extends AppCompatActivity {
                                             DataSnapshot items = item.next();
                                             UserDetail user_info = items.getValue(UserDetail.class);
                                             bloodgrp_mail=user_info.getBloodgroup();
-                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            /*Log.i("mailadd22",""+bloodgrp_mail);*/
                                             if (bloodgrp_mail.equals("A-")){
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
@@ -320,7 +320,7 @@ public class RecipientActivity extends AppCompatActivity {
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            Log.i("mailadd",""+store_list);
+                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
@@ -331,7 +331,7 @@ public class RecipientActivity extends AppCompatActivity {
                                             DataSnapshot items = item.next();
                                             UserDetail user_info = items.getValue(UserDetail.class);
                                             bloodgrp_mail=user_info.getBloodgroup();
-                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            /*Log.i("mailadd22",""+bloodgrp_mail);*/
                                             if (bloodgrp_mail.equals("B+")){
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
@@ -348,7 +348,7 @@ public class RecipientActivity extends AppCompatActivity {
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            Log.i("mailadd",""+store_list);
+                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
@@ -359,7 +359,7 @@ public class RecipientActivity extends AppCompatActivity {
                                             DataSnapshot items = item.next();
                                             UserDetail user_info = items.getValue(UserDetail.class);
                                             bloodgrp_mail=user_info.getBloodgroup();
-                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            /*Log.i("mailadd22",""+bloodgrp_mail);*/
                                             if (bloodgrp_mail.equals("B-")){
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
@@ -368,7 +368,7 @@ public class RecipientActivity extends AppCompatActivity {
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            Log.i("mailadd",""+store_list);
+                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
@@ -379,7 +379,7 @@ public class RecipientActivity extends AppCompatActivity {
                                             DataSnapshot items = item.next();
                                             UserDetail user_info = items.getValue(UserDetail.class);
                                             bloodgrp_mail=user_info.getBloodgroup();
-                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            /*Log.i("mailadd22",""+bloodgrp_mail);*/
                                             if (bloodgrp_mail.equals("O+")){
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
@@ -388,7 +388,7 @@ public class RecipientActivity extends AppCompatActivity {
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            Log.i("mailadd",""+store_list);
+                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
@@ -399,12 +399,12 @@ public class RecipientActivity extends AppCompatActivity {
                                             DataSnapshot items = item.next();
                                             UserDetail user_info = items.getValue(UserDetail.class);
                                             bloodgrp_mail=user_info.getBloodgroup();
-                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            /*Log.i("mailadd22",""+bloodgrp_mail);*/
                                             if (bloodgrp_mail.equals("O-")){
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            Log.i("mailadd",""+store_list);
+                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
@@ -415,7 +415,7 @@ public class RecipientActivity extends AppCompatActivity {
                                             DataSnapshot items = item.next();
                                             UserDetail user_info = items.getValue(UserDetail.class);
                                             bloodgrp_mail=user_info.getBloodgroup();
-                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            /*Log.i("mailadd22",""+bloodgrp_mail);*/
                                             if (bloodgrp_mail.equals("A+")){
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
@@ -448,7 +448,7 @@ public class RecipientActivity extends AppCompatActivity {
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            Log.i("mailadd",""+store_list);
+                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
@@ -459,7 +459,7 @@ public class RecipientActivity extends AppCompatActivity {
                                             DataSnapshot items = item.next();
                                             UserDetail user_info = items.getValue(UserDetail.class);
                                             bloodgrp_mail=user_info.getBloodgroup();
-                                            Log.i("mailadd22",""+bloodgrp_mail);
+                                            /*Log.i("mailadd22",""+bloodgrp_mail);*/
                                             if (bloodgrp_mail.equals("AB-")){
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
@@ -476,7 +476,7 @@ public class RecipientActivity extends AppCompatActivity {
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            Log.i("mailadd",""+store_list);
+                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
@@ -546,8 +546,8 @@ public class RecipientActivity extends AppCompatActivity {
 
 
                     String result = postToFCM(root.toString());
-                    Log.i("result67", "" + result);
-                    Log.i("result55", root.toString());
+                    /*Log.i("result67", "" + result);*/
+                   // Log.i("result55", root.toString());
                     return result;
                 } catch (Exception ex) {
                     ex.printStackTrace();
