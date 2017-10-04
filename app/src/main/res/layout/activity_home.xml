@@ -29,7 +29,6 @@
         android:layout_marginTop="0dp"
         android:background="@drawable/badge_background"
         android:elevation="10dp"
-        android:text="105"
         android:gravity="center"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/btn_notify"

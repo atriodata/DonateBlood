@@ -133,7 +133,6 @@
                 android:id="@+id/spin_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/state_arrays"
                 android:padding="10dp"
                 android:spinnerMode="dialog" />
 

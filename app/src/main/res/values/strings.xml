@@ -23,9 +23,10 @@
     </string-array>
 
     <string-array name="country_arrays">
-        <item>INDIA </item>
+        <item>INDIA</item>
+        <item>NIGERIA</item>
     </string-array>
-    <string-array name="state_arrays">
+    <string-array name="india_state_arrays">
         <item>Select Your State or Union territory</item>
         <item>Andaman and Nicobar Islands</item>
         <item>Andhra Pradesh </item>
@@ -63,6 +64,46 @@
         <item>Uttar Pradesh</item>
         <item>Uttarakhand</item>
         <item>West Bengal</item>
+    </string-array>
+    <string-array name="nigeria_state_arrays">
+        <item>Select Your State or Union territory</item>
+        <item>Abia</item>
+        <item>Adamawa</item>
+        <item>Anambra</item>
+        <item>Akwa Ibom</item>
+        <item>Bauchi</item>
+        <item>Bayelsa</item>
+        <item>Benue</item>
+        <item>Borno</item>
+        <item>Cross River</item>
+        <item>Delta</item>
+        <item>Ebonyi</item>
+        <item>Enugu</item>
+        <item>Edo</item>
+        <item>Ekiti</item>
+        <item>Federal Capital Territory</item>
+        <item>Gombe</item>
+        <item>Imo</item>
+        <item>Jigawa</item>
+        <item>Kaduna</item>
+        <item>Kano</item>
+        <item>Katsina</item>
+        <item>Kebbi</item>
+        <item>Kogi</item>
+        <item>Kwara</item>
+        <item>Lagos</item>
+        <item>Nasarawa</item>
+        <item>Niger</item>
+        <item>Ogun</item>
+        <item>Ondo</item>
+        <item>Osun</item>
+        <item>Oyo</item>
+        <item>Plateau</item>
+        <item>Rivers</item>
+        <item>Sokoto</item>
+        <item>Taraba</item>
+        <item>Yobe</item>
+        <item>Zamfara</item>
     </string-array>
 
     <string name="radio_male">Male</string>

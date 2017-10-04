@@ -65,7 +65,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/ripple_effect"
+        android:background="@drawable/disable_btn"
         android:padding="10dp"
         android:text="Recipient Requirement"
         android:textColor="@color/white"

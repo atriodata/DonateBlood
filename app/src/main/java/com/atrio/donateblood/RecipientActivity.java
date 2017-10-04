@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -59,10 +60,10 @@ public class RecipientActivity extends AppCompatActivity {
     AutoCompleteTextView atvPlaces;
     PlacesTask placesTask;
     ParserTask parserTask;
-    Spinner spin_state, sp_bloodgr;
+    Spinner spin_state,spin_country, sp_bloodgr;
     Button btn_send;
     EditText et_phoneno, et_emailid, et_date, et_remark;
-    String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, send_mail, bloodgrp_mail,regId, msg_id, message1,
+    String state_data,country_data,country_iso, blood_data, emailid, phoneno, date_req, city_data, other_detail, send_mail, bloodgrp_mail,regId, msg_id, message1,
             condition1 = null, condition2 = null, condition3 = null, condition4 = null,condition = null;
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
@@ -71,7 +72,7 @@ public class RecipientActivity extends AppCompatActivity {
     private SpotsDialog dialog;
     ArrayList<String> store_list;
     OkHttpClient mClient;
-    String topic_grpAp, topic_grpAn, topic_grpBp, topic_grpBn, topic_grpABp, topic_grpABn, topic_grpOp, topic_grpOn;
+    String topic_grpAp, topic_grpAn, topic_grpBp, topic_grpBn, topic_grpABp, topic_grpABn, topic_grpOp, topic_grpOn,yesbtn_status,groupFirst,groupLast,topicssend;
     String data1;
     ArrayList<String> arry_condlist;
 
@@ -84,12 +85,21 @@ public class RecipientActivity extends AppCompatActivity {
         dialog = new SpotsDialog(RecipientActivity.this, R.style.Custom);
         spin_state = (Spinner) findViewById(R.id.spin_state);
         sp_bloodgr = (Spinner) findViewById(R.id.spin_bloodGrp);
+        spin_country = (Spinner) findViewById(R.id.spin_country);
         btn_send = (Button) findViewById(R.id.bt_reg);
         et_phoneno = (EditText) findViewById(R.id.input_phoneno);
         et_emailid = (EditText) findViewById(R.id.input_email);
         et_date = (EditText) findViewById(R.id.input_date);
         et_remark = (EditText) findViewById(R.id.et_remark);
-
+        if (phoneno.startsWith("+91")){
+            country_data="INDIA";
+        }
+        else {
+            country_data="NIGERIA";
+        }
+//        country_data="NIGERIA";
+        spin_country.setSelection(((ArrayAdapter<String>) spin_country.getAdapter()).getPosition(country_data));
+//        spin_country.setEnabled(false);
         arry_condlist = new ArrayList<>();
 
         et_phoneno.setEnabled(false);
@@ -103,6 +113,7 @@ public class RecipientActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 blood_data = parent.getItemAtPosition(position).toString();
+
             }
 
             @Override
@@ -135,10 +146,43 @@ public class RecipientActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+        spin_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                country_data = parent.getItemAtPosition(position).toString();
+                if (country_data.equals("INDIA")){
+                    country_iso="IN";
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(RecipientActivity.this, R.array.india_state_arrays,android.R.layout.simple_spinner_item);
+                    spin_state.setAdapter(adapter);
+                }else {
+                    country_iso="NG";
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(RecipientActivity.this, R.array.nigeria_state_arrays,android.R.layout.simple_spinner_item);
+                    spin_state.setAdapter(adapter);
+
+                }
+//                String totrim=state_data.replace(" ","");
+//                Log.i("statedata45",""+country_data);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         spin_state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 state_data = parent.getItemAtPosition(position).toString();
+                groupFirst = blood_data.substring(0,blood_data.length()-1);
+                groupLast = blood_data.substring(blood_data.length()-1);
+
+                if (groupLast.equals("+")){
+                    topicssend = state_data.replace(" ","")+groupFirst+"positive";
+                }else{
+                    topicssend = state_data.replace(" ","")+groupFirst+"negative";
+                }
+                Log.i("mailadd22",""+topicssend);
             }
 
             @Override
@@ -172,7 +216,7 @@ public class RecipientActivity extends AppCompatActivity {
         });
 
 
-
+        yesbtn_status="no";
         db_instance = FirebaseDatabase.getInstance();
         db_ref = db_instance.getReference();
         btn_send.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +308,7 @@ public class RecipientActivity extends AppCompatActivity {
 
                         }
 
-                        Query readqery = db_ref.child("Donor").child(state_data).child(city_data).orderByKey();//.orderByChild("bloodgroup").equalTo(blood_data);
+                        Query readqery = db_ref.child("Donor").child(country_data).child(state_data).child(city_data).orderByKey();//.orderByChild("bloodgroup").equalTo(blood_data);
 
                         readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -388,7 +432,6 @@ public class RecipientActivity extends AppCompatActivity {
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
@@ -399,12 +442,10 @@ public class RecipientActivity extends AppCompatActivity {
                                             DataSnapshot items = item.next();
                                             UserDetail user_info = items.getValue(UserDetail.class);
                                             bloodgrp_mail=user_info.getBloodgroup();
-                                            /*Log.i("mailadd22",""+bloodgrp_mail);*/
                                             if (bloodgrp_mail.equals("O-")){
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
@@ -415,7 +456,6 @@ public class RecipientActivity extends AppCompatActivity {
                                             DataSnapshot items = item.next();
                                             UserDetail user_info = items.getValue(UserDetail.class);
                                             bloodgrp_mail=user_info.getBloodgroup();
-                                            /*Log.i("mailadd22",""+bloodgrp_mail);*/
                                             if (bloodgrp_mail.equals("A+")){
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
@@ -448,7 +488,6 @@ public class RecipientActivity extends AppCompatActivity {
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
@@ -459,7 +498,6 @@ public class RecipientActivity extends AppCompatActivity {
                                             DataSnapshot items = item.next();
                                             UserDetail user_info = items.getValue(UserDetail.class);
                                             bloodgrp_mail=user_info.getBloodgroup();
-                                            /*Log.i("mailadd22",""+bloodgrp_mail);*/
                                             if (bloodgrp_mail.equals("AB-")){
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
@@ -476,25 +514,26 @@ public class RecipientActivity extends AppCompatActivity {
                                                 send_mail = user_info.getEmailid();
                                                 store_list.add(send_mail);
                                             }
-                                            /*Log.i("mailadd",""+store_list);*/
 
                                         }
 
                                     }
 
                                     dialog.dismiss();
-                                    Query readqery = db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).orderByKey();
+                                    Query readqery = db_ref.child("Notifications").child(country_data).child(topicssend).child("Recipient").orderByKey();
+                                    Log.i("mailadd222",""+topicssend);
+
                                     readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             if (dataSnapshot.getChildrenCount() == 0) {
                                                 msg_id = "001";
-                                                createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1,regId);
+                                                createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1,regId,yesbtn_status);
                                             } else {
                                                 long countchild = dataSnapshot.getChildrenCount();
                                                 countchild++;
                                                 msg_id = String.format("%03d", countchild);
-                                                createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1,regId);
+                                                createRecipientDetail(state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail, msg_id, message1,regId,yesbtn_status);
                                             }
                                         }
 
@@ -539,6 +578,7 @@ public class RecipientActivity extends AppCompatActivity {
                     data.put("recipient_phn", phoneno);
                     data.put("blood_group",blood_data);
                     data.put("icon","myicon");
+
                     root.put("notification", notification);
                     root.put("condition",condition);
                     root.put("data", data);
@@ -547,8 +587,6 @@ public class RecipientActivity extends AppCompatActivity {
 
 
                     String result = postToFCM(root.toString());
-                    /*Log.i("result67", "" + result);*/
-                   // Log.i("result55", root.toString());
                     return result;
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -558,7 +596,6 @@ public class RecipientActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(String result) {
-//                Log.i("result66", "" + result);
                 et_date.setText("");
                 et_emailid.setText("");
                 atvPlaces.setText("");
@@ -572,7 +609,6 @@ public class RecipientActivity extends AppCompatActivity {
     private void conditionTopic(String topic_grpAp, String topic_grpAn, String topic_grpBp, String topic_grpBn, String topic_grpOp,
                                 String topic_grpOn, String topic_grpABp, String topic_grpABn, String data) {
 
-        Log.i("data11", "" + data);
 
         if ((data.equals("1"))) {
             condition1 = "'" + topic_grpAp + "'" + " in topics || " + "'" + topic_grpAn + "'" + " in topics ";
@@ -639,12 +675,13 @@ public class RecipientActivity extends AppCompatActivity {
                 .addHeader("Authorization", "key=AIzaSyB0xP6z55MHoQJkx2uK6rgbXcuYouBNPXM")
                 .build();
         Response response = mClient.newCall(request).execute();
-        Log.i("print44",""+response);
         return response.body().string();
 
     }
 
-    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id, String body,String regId) {
+    private void createRecipientDetail(String state_data, String blood_data, String emailid, String phoneno, String date_req, String city_data, String other_detail, String msg_id, String body,String regId,String yesbtn_status) {
+
+
         RecipientDetail recipientDetail = new RecipientDetail();
 
         recipientDetail.setReq_date(date_req);
@@ -657,10 +694,12 @@ public class RecipientActivity extends AppCompatActivity {
         recipientDetail.setCity(city_data);
         recipientDetail.setBody(body);
         recipientDetail.setTokenId(regId);
+        recipientDetail.setYesbtn_status(yesbtn_status);
 
-        db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(msg_id).setValue(recipientDetail);
 
-       Log.i("size44",""+arry_condlist.size());
+//        db_ref.child("Notifications").child("Recipient").child(city_data).child(blood_data).child(msg_id).setValue(recipientDetail);
+        db_ref.child("Notifications").child(country_data).child(topicssend).child("Recipient").child(msg_id).setValue(recipientDetail);
+
         for (int i =0 ; i<arry_condlist.size();i++){
             condition = arry_condlist.get(i);
             sendNotificationToUser(regId,condition);
@@ -670,7 +709,6 @@ public class RecipientActivity extends AppCompatActivity {
     }
 
     private void sendmail(final ArrayList<String> store_list) {
-        Log.i("mailadd2",""+store_list);
 
         String email = "info@atriodata.com";
         String mail_subject = "Blood Required";
@@ -743,7 +781,7 @@ public class RecipientActivity extends AppCompatActivity {
             String parameters = input + "&" + types + "&" + sensor + "&" + key;
             String output = "json";
             String url =
-                    "https://maps.googleapis.com/maps/api/place/autocomplete/" + output + "?" + parameters + "&components=country:IN";
+                    "https://maps.googleapis.com/maps/api/place/autocomplete/" + output + "?" + parameters + "&components=country:"+country_iso;
             try {
                 data = downloadUrl(url);
             } catch (Exception e) {
@@ -793,7 +831,7 @@ public class RecipientActivity extends AppCompatActivity {
         protected List<HashMap<String, String>> doInBackground(String... jsonData) {
 
             List<HashMap<String, String>> places = null;
-            PlaceJSONParser placeJsonParser = new PlaceJSONParser(state_data);
+            PlaceJSONParser placeJsonParser = new PlaceJSONParser(state_data,country_data);
             try {
                 jObject = new JSONObject(jsonData[0]);
                 places = placeJsonParser.parse(jObject);

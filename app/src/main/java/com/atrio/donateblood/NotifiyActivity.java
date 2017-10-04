@@ -46,12 +46,14 @@ public class NotifiyActivity extends AppCompatActivity {
     OkHttpClient mClient;
     String state_data, blood_data, emailid, phoneno, date_req, city_data, other_detail,
             token_id, msg_id, imsg_id = null, message1, donor_phn, recipient_phn, city_donor, blood_group_donor, donor_msgid
-            ,blood_grp_noti,blood_grp_notiRc,tokeninfo;
+            ,blood_grp_noti,blood_grp_notiRc,tokeninfo,yesbtn_status="no",topic_subs;
 
     public static final String MyPREFERENCES = "BloodDonate";
     public static final String city = "cityKey";
     public static final String state = "stateKey";
     public static final String blood_group = "blood_groupKey";
+    public static final String topicsubs = "topicsubs";
+
     SharedPreferences sharedpreferences;
 
     @Override
@@ -62,6 +64,7 @@ public class NotifiyActivity extends AppCompatActivity {
         btn_yes = (Button) findViewById(R.id.btn_no);
         btn_no = (Button) findViewById(R.id.btn_yes);
         dialog = new SpotsDialog(NotifiyActivity.this, R.style.Custom);
+        btn_yes.setEnabled(true);
 
         dialog.show();
 
@@ -79,29 +82,30 @@ public class NotifiyActivity extends AppCompatActivity {
             sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
             city_donor = sharedpreferences.getString(city, "");
             blood_group_donor = sharedpreferences.getString(blood_group, "");
+            topic_subs = sharedpreferences.getString(topicsubs, "");
+
             if (getIntent().getExtras() != null) {
                 for (String key : getIntent().getExtras().keySet()) {
                     String value = getIntent().getExtras().getString(key);
-                    /*Log.i("data88", "Key: " + key + " Value: " + value);*/
+                    Log.i("data88", "Key: " + key + " Value: " + value);
                 }
                 imsg_id = getIntent().getExtras().getString("msg_id");
                 token_id = getIntent().getExtras().getString("token_id");
                 recipient_phn = getIntent().getExtras().getString("recipient_phn");
                 blood_grp_noti = getIntent().getExtras().getString("blood_group");
                 blood_grp_notiRc =getIntent().getExtras().getString("blood_data");
-/*
                 Log.i("recipientPhn66", "" + token_id);
-*/
 
 
-                /*Log.i("recipientPhn665", "" + getIntent().getExtras().getString("blood_group"));*/
+                Log.i("recipientPhn665", "" + getIntent().getExtras().getString("blood_group"));
 
             }
             db_instance = FirebaseDatabase.getInstance();
             db_ref = db_instance.getReference();
 
             if (blood_grp_noti!=null) {
-                Query getnotifi = db_ref.child("Notifications").child("Recipient").child(city_donor).child(blood_grp_noti).orderByChild("msg_id").equalTo(imsg_id);
+//                Query getnotifi = db_ref.child("Notifications").child("Recipient").child(city_donor).child(blood_grp_noti).orderByChild("msg_id").equalTo(imsg_id);
+                Query getnotifi = db_ref.child("Notifications").child("NIGERIA").child(topic_subs).child("Recipient").orderByChild("msg_id").equalTo(imsg_id);
                 getnotifi.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -117,10 +121,21 @@ public class NotifiyActivity extends AppCompatActivity {
                                 blood_data = recipientDetail.getBloodgroup();
                                 state_data = recipientDetail.getState();
                                 city_data = recipientDetail.getCity();
+                                yesbtn_status=recipientDetail.getYesbtn_status();
+                                Log.i("yesbtn_status11",""+yesbtn_status);
 
                                 String message = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req +
                                         ".\n\n\nDetails of Recipient:\n\nEmail-Id:" + emailid + "\nPhone No: " + phoneno + "\nOther Details: " + other_detail;
                                 dialog.dismiss();
+                                if (yesbtn_status.equals("yes")){
+                                    btn_yes.setBackgroundResource(R.drawable.disable_btn);
+                                    btn_yes.setEnabled(false);
+
+                                }else {
+                                    btn_yes.setBackgroundResource(R.drawable.ripple_effect);
+                                    btn_yes.setEnabled(true);
+
+                                }
                                 rec_tv.setText(message);
                             }
                         }
@@ -132,7 +147,8 @@ public class NotifiyActivity extends AppCompatActivity {
                     }
                 });
             }else {
-                Query getnotifi = db_ref.child("Notifications").child("Recipient").child(city_donor).child(blood_grp_notiRc).orderByChild("msg_id").equalTo(imsg_id);
+//                Query getnotifi = db_ref.child("Notifications").child("Recipient").child(city_donor).child(blood_grp_notiRc).orderByChild("msg_id").equalTo(imsg_id);
+                Query getnotifi = db_ref.child("Notifications").child("NIGERIA").child(topic_subs).child("Recipient").orderByChild("msg_id").equalTo(imsg_id);
                 getnotifi.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -148,10 +164,21 @@ public class NotifiyActivity extends AppCompatActivity {
                                 blood_data = recipientDetail.getBloodgroup();
                                 state_data = recipientDetail.getState();
                                 city_data = recipientDetail.getCity();
+                                yesbtn_status=recipientDetail.getYesbtn_status();
 
+                                Log.i("yesbtn_status1",""+yesbtn_status);
                                 String message = "There is requirement of blood group " + blood_data + " in " + city_data + " on " + date_req +
                                         ".\n\n\nDetails of Recipient:\n\nEmail-Id:" + emailid + "\nPhone No: " + phoneno + "\nOther Details: " + other_detail;
                                 dialog.dismiss();
+                                if (yesbtn_status.equals("yes")){
+                                    btn_yes.setBackgroundResource(R.drawable.disable_btn);
+                                    btn_yes.setEnabled(false);
+
+                                }else {
+                                    btn_yes.setBackgroundResource(R.drawable.ripple_effect);
+                                    btn_yes.setEnabled(true);
+
+                                }
                                 rec_tv.setText(message);
                             }
                         }
@@ -174,8 +201,8 @@ public class NotifiyActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    dialog.show();
 
+                    dialog.show();
                 new AsyncTask<String, String, String>() {
                     @Override
                     protected String doInBackground(String... params) {
@@ -205,8 +232,17 @@ public class NotifiyActivity extends AppCompatActivity {
 
                         @Override
                         protected void onPostExecute(String result) {
+//                            Query getnotifi = db_ref.child("Notifications").child("NIGERIA").child(topic_subs).child("Recipient").orderByChild("msg_id").equalTo(imsg_id);
+                            db_ref.child("Notifications").child("NIGERIA").child(topic_subs).child("Recipient").child(imsg_id).child("yesbtn_status").setValue("yes");
+                            btn_yes.setBackgroundResource(R.drawable.disable_btn);
+                            btn_yes.setEnabled(false);
+                            Log.i("yesbtn_status15",""+recipient_phn);
+
                             if (recipient_phn != null) {
+                                Log.i("yesbtn_status1",""+recipient_phn);
+
                                 Query readqery = db_ref.child("Notifications").child("Donor").child(recipient_phn).orderByKey();
+                                Log.i("yesbtn_status1",""+recipient_phn);
 
                                 readqery.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -244,6 +280,7 @@ public class NotifiyActivity extends AppCompatActivity {
     }
 
     private void sendDataToDatabase(String donor_msgid) {
+        Log.i("yesbtn_status12",""+donor_msgid);
 
         RecipientDetail recipientDetail = new RecipientDetail();
 

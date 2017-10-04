@@ -4,6 +4,8 @@ package com.atrio.donateblood;
  * Created by Arpita Patel on 14-08-2017.
  */
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,10 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class PlaceJSONParser {
-    String state_data;
+    String state_data,country_data;
 
-    public PlaceJSONParser(String state_data) {
+    public PlaceJSONParser(String state_data, String country_data) {
         this.state_data=state_data;
+        this.country_data=country_data;
     }
 
     public List<HashMap<String, String>> parse(JSONObject jObject) {
@@ -62,13 +65,16 @@ public class PlaceJSONParser {
 
             desdata = description.contains(state_data);//.substring(description.indexOf(state_data));
             if (desdata==true){
+//                Log.i("statedata8989",""+description);
+
                 place.put("description", description.substring(0,description.indexOf(",")));
                 place.put("_id", id);
                 place.put("reference", reference);
             }
             else {
-                if (!description.contains("India")){
-                    place.put("description", description);
+                if (description.contains(country_data)){
+//                    Log.i("statedata89",""+description);
+                    place.put("description", description.substring(0,description.indexOf(",")));
                     place.put("_id", id);
                     place.put("reference", reference);
                 }

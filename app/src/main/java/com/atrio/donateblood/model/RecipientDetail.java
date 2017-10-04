@@ -22,6 +22,15 @@ public class RecipientDetail {
     public String emailid;
     public String phoneno;
     public  String tokenId;
+    public  String yesbtn_status;
+
+    public String getYesbtn_status() {
+        return yesbtn_status;
+    }
+
+    public void setYesbtn_status(String yesbtn_status) {
+        this.yesbtn_status = yesbtn_status;
+    }
 
     public String getRec_phn() {
         return rec_phn;
@@ -52,7 +61,7 @@ public class RecipientDetail {
     }
 
     public RecipientDetail(String bloodgroup, String req_date, String state, String country, String city, String other_detail,
-                           String emailid, String phoneno, String msg_id,String body,String type,String rec_phn,String tokenId) {
+                           String emailid, String phoneno, String msg_id,String body,String type,String rec_phn,String tokenId,String yesbtn_status) {
         this.bloodgroup = bloodgroup;
         this.req_date = req_date;
         this.state = state;
@@ -66,6 +75,7 @@ public class RecipientDetail {
         this.rec_phn =rec_phn;
         this.type = type;
         this.tokenId = tokenId;
+        this.yesbtn_status=yesbtn_status;
     }
 
     public String getBloodgroup() {

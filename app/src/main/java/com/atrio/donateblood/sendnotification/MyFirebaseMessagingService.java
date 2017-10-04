@@ -28,6 +28,9 @@ import java.net.URL;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FirebaseMessageService";
     Bitmap bitmap;
+    int count=0;
+
+
 
     @Override
     public void onSendError(String s, Exception e) {
@@ -46,8 +49,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-
+count++;
         if (remoteMessage.getData().size() > 0) {
+
+            Log.i("msgcount",""+count);
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
         }
 
@@ -80,6 +85,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(String tittle, String messageBody, Bitmap image, String token_id, String msg_id,String click_action,
                                   String body_donor,String recipient_phn,String blood_group) {
+
         Intent intent = new Intent(click_action);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("token_id", token_id);
@@ -87,7 +93,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("body", body_donor);
         intent.putExtra("recipient_phn",recipient_phn);
         intent.putExtra("blood_group",blood_group);
-       // Log.i("imageUri445",""+blood_group);
+        Log.i("imageUri445",""+blood_group);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

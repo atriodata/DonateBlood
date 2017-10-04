@@ -98,11 +98,11 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
             /*Log.i("checkmailfrom1",""+mm);*/
         } catch (MessagingException e) {
             e.printStackTrace();
-            /*Log.i("checkmailfromexception",""+e);*/
+            Log.i("checkmailfromexception",""+e);
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            /*Log.i("checkmailfromexception1",""+e);*/
+            Log.i("checkmailfromexception1",""+e);
 
         }
         return null;

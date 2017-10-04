@@ -11,6 +11,7 @@
     <color name="endcolor">#940320</color>
     <color name="black">#000000</color>
     <color name="view_col">#847e7e</color>
+    <color name="black_overlay">#66000000</color>
 
 
 </resources>

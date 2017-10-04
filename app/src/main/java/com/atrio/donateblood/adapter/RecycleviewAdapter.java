@@ -52,6 +52,7 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
             holder.msg_id = list_data.get(position).getMsg_id();
             holder.tokenId = list_data.get(position).getTokenId();
             holder.blood_data = list_data.get(position).getBloodgroup();
+            holder.recipient_phn=list_data.get(position).getPhoneno();
 
 
         }
@@ -71,7 +72,7 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
 
         public TextView tv_text;
         public ImageView img_noti;
-        public String msg_id, donor_string, recipient_string, call_no,blood_data,tokenId;
+        public String msg_id, donor_string, recipient_string, call_no,blood_data,tokenId,recipient_phn;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -87,6 +88,7 @@ public class RecycleviewAdapter extends RecyclerView.Adapter<RecycleviewAdapter.
                 intent.putExtra("msg_id", msg_id);
                 intent.putExtra("blood_data", blood_data);
                 intent.putExtra("token_id",tokenId);
+                intent.putExtra("recipient_phn",recipient_phn);
                 view.getContext().startActivity(intent);
 
             } else {

@@ -1,6 +1,8 @@
 package com.atrio.donateblood;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -8,12 +10,14 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +36,7 @@ import dmax.dialog.SpotsDialog;
 
 public class HomeActivity extends AppCompatActivity {
     ImageView img_drop,img_bgdrop;
+    TextView tv_notiNo;
     Button btn_donate,btn_recive,btn_notify;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
@@ -39,6 +44,14 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseDatabase db_instance;
     private SpotsDialog dialog;
     String[] permissions;
+    SharedPreferences sharedpreferences;
+    long count=0;
+
+    String city_donor=null,blood_group_donor=null,countnoti;
+    public static final String MyPREFERENCES = "BloodDonate" ;
+    public static final String city = "cityKey";
+    public static final String state = "stateKey";
+    public static final String blood_group = "blood_groupKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         img_drop = (ImageView) findViewById(R.id.img_animation);
         img_bgdrop = (ImageView) findViewById(R.id.img_bgdrop);
+        tv_notiNo = (TextView) findViewById(R.id.tv_notiNo);
         btn_notify = (Button) findViewById(R.id.btn_notify);
         btn_donate = (Button) findViewById(R.id.btn_doner);
         btn_recive = (Button) findViewById(R.id.btn_reciver);
@@ -56,7 +70,8 @@ public class HomeActivity extends AppCompatActivity {
                 android.Manifest.permission.CALL_PHONE,
         };
         checkPermissions();
-
+        db_instance = FirebaseDatabase.getInstance();
+        db_ref = db_instance.getReference();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         dialog = new SpotsDialog(HomeActivity.this, R.style.Custom);
@@ -68,7 +83,50 @@ public class HomeActivity extends AppCompatActivity {
         animation.setDuration(3000);  // animation duration
         animation.setFillAfter(true);
         img_drop.startAnimation(animation);
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        city_donor = sharedpreferences.getString(city, "");
+        blood_group_donor = sharedpreferences.getString(blood_group, "");
+        Log.i("data45",""+city_donor+blood_group_donor);
+        countnoti= String.valueOf(count);
+        tv_notiNo.setVisibility(View.GONE);
+        tv_notiNo.setText(String.valueOf(count));
 
+
+
+//        Query query_noticount = db_ref.child("Notifications").child("Recipient").child(city_donor).orderByChild(blood_group_donor).limitToLast(5);
+        Log.i("data415",""+city_donor+blood_group_donor);
+
+
+/*
+        query_noticount.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                count=dataSnapshot.getChildrenCount();
+                tv_notiNo.setText(String.valueOf(count));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                count=dataSnapshot.getChildrenCount();
+                tv_notiNo.setText(String.valueOf(count));
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                tv_notiNo.setText(String.valueOf(count));
+            }
+        });
+*/
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -109,8 +167,7 @@ public class HomeActivity extends AppCompatActivity {
                     dialog.dismiss();
                     Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
                 } else {
-                    db_instance = FirebaseDatabase.getInstance();
-                    db_ref = db_instance.getReference();
+
                     Query query_id = db_ref.child("Recipient").orderByKey().equalTo(user.getPhoneNumber());
                     query_id.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override

@@ -61,12 +61,11 @@ public class ResigrationActivity extends AppCompatActivity {
     Spinner spin_state, sp_bloodgr, et_age, et_weight,spin_country;
     RadioButton radioSexButton,rb_male,rb_female,rb_other;
     RadioGroup rg_group;
-    int index;
     //    CheckBox cb_never, cb_above, cb_below;
     Button btn_reg, btn_info, btn_update;
     EditText et_name, et_emailid;
     TextView tv_info,sp_text;
-    String state_data, blood_data, radio_data,  name, emailid, age, phoneno, weight, city_data, count, token,groupFirst,groupLast;//cb_data
+    String state_data,country_data,country_iso, blood_data, radio_data,  name, emailid, age, phoneno, weight, city_data, count, token,groupFirst,groupLast;//cb_data
     private DatabaseReference db_ref;
     private FirebaseDatabase db_instance;
     private FirebaseUser user;
@@ -82,7 +81,7 @@ public class ResigrationActivity extends AppCompatActivity {
     public static final String city = "cityKey";
     public static final String state = "stateKey";
     public static final String blood_group = "blood_groupKey";
-
+    public static final String topicsubs = "topicsubs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +118,17 @@ public class ResigrationActivity extends AppCompatActivity {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         btn_update.setVisibility(View.GONE);
         btn_reg.setVisibility(View.VISIBLE);
-
+        phoneno = user.getPhoneNumber();
+        if (phoneno.startsWith("+91")){
+            country_data="INDIA";
+        }
+        else {
+            country_data="NIGERIA";
+        }
+//        country_data="NIGERIA";
+        spin_country.setSelection(((ArrayAdapter<String>) spin_country.getAdapter()).getPosition(country_data));
+        spin_country.setEnabled(false);
+        Log.i("countrydata6777",""+country_data);
         if (networkInfo == null) {
             dialog.dismiss();
             Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
@@ -133,7 +142,7 @@ public class ResigrationActivity extends AppCompatActivity {
 
         if (user!=null){
 
-            Query getalldata = db_ref.child("Donor").orderByKey();
+            Query getalldata = db_ref.child("Donor").child("NIGERIA").orderByKey();
 
             getalldata.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -154,7 +163,6 @@ public class ResigrationActivity extends AppCompatActivity {
                                         weight=userDetail.getWeight();
                                         blood_data=userDetail.getBloodgroup();
                                         state_data=userDetail.getState();
-                                        phoneno = user.getPhoneNumber();
                                         topics=userDetail.getTopics();
 
                                         dialog.dismiss();
@@ -166,19 +174,28 @@ public class ResigrationActivity extends AppCompatActivity {
                                         et_emailid.setTextColor(Color.BLACK);
                                         atvPlaces.setText(city_data);
                                         atvPlaces.setTextColor(Color.BLACK);
-//                                        Log.i("userdetail4",""+radio_data);
-
-                                        if (rb_male.getText()==radio_data){
+//                                        Log.i("userdetail41",""+country_data);
+                                        if (rb_male.getText().equals(radio_data)){
+//                                            Log.i("userdetail41",""+radio_data);
                                             rb_male.setChecked(true);
-                                        } if (rb_female.getText()==radio_data){
+                                            rb_female.setChecked(false);
+                                            rb_other.setChecked(false);
+                                        }else if (rb_female.getText().equals(radio_data)){
+//                                            Log.i("userdetail42",""+radio_data);
+                                            rb_male.setChecked(false);
+                                            rb_other.setChecked(false);
                                             rb_female.setChecked(true);
-                                        }else {
+                                        }else if (rb_other.getText().equals(radio_data)){
+//                                            Log.i("userdetail43",""+radio_data);
                                             rb_other.setChecked(true);
+                                            rb_female.setChecked(false);
+                                            rb_male.setChecked(false);
                                         }
                                         et_age.setSelection(((ArrayAdapter<String>)et_age.getAdapter()).getPosition(age));
                                         et_weight.setSelection(((ArrayAdapter<String>)et_weight.getAdapter()).getPosition(weight));
                                         sp_bloodgr.setSelection(((ArrayAdapter<String>)sp_bloodgr.getAdapter()).getPosition(blood_data));
                                         spin_state.setSelection(((ArrayAdapter<String>)spin_state.getAdapter()).getPosition(state_data));
+                                        spin_country.setSelection(((ArrayAdapter<String>) spin_country.getAdapter()).getPosition(country_data));
                                         et_name.setEnabled(false);
                                         et_emailid.setEnabled(false);
                                         et_age.setClickable(false);
@@ -209,10 +226,9 @@ public class ResigrationActivity extends AppCompatActivity {
 
                 }
             });
-
-
-
         }else {
+            Log.i("userdetail44",""+country_data);
+            spin_country.setSelection(((ArrayAdapter<String>) spin_country.getAdapter()).getPosition(country_data));
             dialog.dismiss();
             btn_reg.setVisibility(View.VISIBLE);
             btn_update.setVisibility(View.GONE);
@@ -258,6 +274,29 @@ public class ResigrationActivity extends AppCompatActivity {
 
             }
         });
+        spin_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                country_data = parent.getItemAtPosition(position).toString();
+                if (country_data.equals("INDIA")){
+                    country_iso="IN";
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ResigrationActivity.this, R.array.india_state_arrays,android.R.layout.simple_spinner_item);
+                    spin_state.setAdapter(adapter);
+                }else {
+                    country_iso="NG";
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ResigrationActivity.this, R.array.nigeria_state_arrays,android.R.layout.simple_spinner_item);
+                    spin_state.setAdapter(adapter);
+
+                }
+//                String totrim=state_data.replace(" ","");
+                Log.i("statedata45",""+country_data);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         spin_state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -284,9 +323,6 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 age = parent.getItemAtPosition(position).toString();
-//                ((TextView) parent.getChildAt(0)).setTextColor(Color.GRAY);
-//                TextView oTextView = (TextView)et_age.getChildAt(0);
-//                oTextView.setTextColor(Color.BLACK);
 
             }
 
@@ -307,7 +343,6 @@ public class ResigrationActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 weight = parent.getItemAtPosition(position).toString();
-//                ((TextView) parent.getChildAt(0)).setTextColor(Color.GRAY);
             }
 
             @Override
@@ -413,6 +448,7 @@ public class ResigrationActivity extends AppCompatActivity {
                                 editor.putString(city, city_data);
                                 editor.putString(state, state_data);
                                 editor.putString(blood_group, blood_data);
+                                editor.putString(topicsubs,topics);
                                 editor.commit();
                             }
 
@@ -461,7 +497,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 et_age.setClickable(true);
                 et_weight.setClickable(true);
                 sp_bloodgr.setClickable(true);
-                spin_country.setClickable(true);
+                spin_country.setClickable(false);
                 spin_state.setClickable(true);
                 atvPlaces.setEnabled(true);
                 rb_male.setClickable(true);
@@ -471,6 +507,8 @@ public class ResigrationActivity extends AppCompatActivity {
 
         });
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -496,6 +534,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 editor.putString(city, city_data);
                 editor.putString(state, state_data);
                 editor.putString(blood_group, blood_data);
+                editor.putString(topicsubs,topics);
                 editor.commit();
             }else {
                 Toast.makeText(ResigrationActivity.this, "Registration not done ", Toast.LENGTH_SHORT).show();
@@ -557,6 +596,7 @@ public class ResigrationActivity extends AppCompatActivity {
                 editor.putString(city, city_data);
                 editor.putString(state, state_data);
                 editor.putString(blood_group, blood_data);
+                editor.putString(topicsubs,topics);
                 editor.commit();
             }
 
@@ -594,7 +634,7 @@ public class ResigrationActivity extends AppCompatActivity {
         userDetail.setTopics(topics);
         userDetail.setCount(count);
 
-        db_ref.child("Donor").child(state_data).child(city_data).child(phoneno).setValue(userDetail);
+        db_ref.child("Donor").child(country_data).child(state_data).child(city_data).child(phoneno).setValue(userDetail);
 
     }
 
@@ -660,7 +700,7 @@ public class ResigrationActivity extends AppCompatActivity {
             String sensor = "sensor=false";
             String parameters = input + "&" + types + "&" + sensor + "&" + key;
             String output = "json";
-            String url ="https://maps.googleapis.com/maps/api/place/autocomplete/" + output + "?" + parameters + "&components=country:IN";
+            String url ="https://maps.googleapis.com/maps/api/place/autocomplete/" + output + "?" + parameters + "&components=country:"+country_iso;
 
             try {
                 data = downloadUrl(url);
@@ -721,7 +761,7 @@ public class ResigrationActivity extends AppCompatActivity {
 
             List<HashMap<String, String>> places = null;
 
-            PlaceJSONParser placeJsonParser = new PlaceJSONParser(state_data);
+            PlaceJSONParser placeJsonParser = new PlaceJSONParser(state_data,country_data);
 
             try {
                 jObject = new JSONObject(jsonData[0]);
