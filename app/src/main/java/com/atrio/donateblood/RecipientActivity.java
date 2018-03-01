@@ -93,8 +93,7 @@ public class RecipientActivity extends AppCompatActivity {
         et_date = (EditText) findViewById(R.id.input_date);
         et_remark = (EditText) findViewById(R.id.et_remark);
 //        country_data="NIGERIA";
-        spin_country.setSelection(((ArrayAdapter<String>) spin_country.getAdapter()).getPosition(country_data));
-        spin_country.setEnabled(false);
+
         arry_condlist = new ArrayList<>();
 
         et_phoneno.setEnabled(false);
@@ -111,6 +110,9 @@ public class RecipientActivity extends AppCompatActivity {
         else {
             country_data="NIGERIA";
         }
+
+        spin_country.setSelection(((ArrayAdapter<String>) spin_country.getAdapter()).getPosition(country_data));
+        spin_country.setEnabled(false);
 
         sp_bloodgr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
