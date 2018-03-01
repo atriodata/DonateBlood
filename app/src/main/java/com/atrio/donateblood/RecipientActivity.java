@@ -92,7 +92,6 @@ public class RecipientActivity extends AppCompatActivity {
         et_emailid = (EditText) findViewById(R.id.input_email);
         et_date = (EditText) findViewById(R.id.input_date);
         et_remark = (EditText) findViewById(R.id.et_remark);
-
 //        country_data="NIGERIA";
         spin_country.setSelection(((ArrayAdapter<String>) spin_country.getAdapter()).getPosition(country_data));
         spin_country.setEnabled(false);
