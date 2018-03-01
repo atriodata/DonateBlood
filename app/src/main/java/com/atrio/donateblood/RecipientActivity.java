@@ -139,8 +139,7 @@ public class RecipientActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
-                                et_date.setText(dayOfMonth + "/"
-                                        + (monthOfYear + 1) + "/" + year);
+                                et_date.setText(dayOfMonth + "/"+ (monthOfYear + 1) + "/" + year);
 //                                et_date.setText(year + "/"+ (monthOfYear + 1) + "/" + dayOfMonth);
 
                             }
