@@ -79,7 +79,7 @@ public class SendMail extends AsyncTask<Void, Void, Void> {
         try {
             MimeMessage mm = new MimeMessage(session);
 //            mm.setFrom(new InternetAddress("Blood Donate" + "<" + "no-reply@domain.com" + ">"));
-            mm.setFrom(new InternetAddress("info@atriodata.com","BloodDonate"));
+            mm.setFrom(new InternetAddress("info@atrio.co.in","BloodDonate"));
 //            MimeUtility.encodeText(Config.EMAIL);
 //            mm.setReplyTo(new InternetAddress[] { new InternetAddress("info@atriodata.com") });
 //            mm.setSender("info@atriodata.com");

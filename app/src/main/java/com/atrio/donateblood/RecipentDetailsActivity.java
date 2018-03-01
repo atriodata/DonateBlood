@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import dmax.dialog.SpotsDialog;
 
-public class RecipentDetailsActivity extends AppCompatActivity {
+public class  RecipentDetailsActivity extends AppCompatActivity {
     private EditText et_rcName, et_rcPhn,et_rcaddress;
     private FirebaseUser user;
     private FirebaseAuth mAuth;

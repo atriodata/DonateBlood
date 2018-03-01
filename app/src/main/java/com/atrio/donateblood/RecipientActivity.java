@@ -82,6 +82,7 @@ public class RecipientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipient);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+        phoneno = user.getPhoneNumber();
         dialog = new SpotsDialog(RecipientActivity.this, R.style.Custom);
         spin_state = (Spinner) findViewById(R.id.spin_state);
         sp_bloodgr = (Spinner) findViewById(R.id.spin_bloodGrp);
@@ -91,15 +92,10 @@ public class RecipientActivity extends AppCompatActivity {
         et_emailid = (EditText) findViewById(R.id.input_email);
         et_date = (EditText) findViewById(R.id.input_date);
         et_remark = (EditText) findViewById(R.id.et_remark);
-        if (phoneno.startsWith("+91")){
-            country_data="INDIA";
-        }
-        else {
-            country_data="NIGERIA";
-        }
+
 //        country_data="NIGERIA";
         spin_country.setSelection(((ArrayAdapter<String>) spin_country.getAdapter()).getPosition(country_data));
-//        spin_country.setEnabled(false);
+        spin_country.setEnabled(false);
         arry_condlist = new ArrayList<>();
 
         et_phoneno.setEnabled(false);
@@ -109,6 +105,14 @@ public class RecipientActivity extends AppCompatActivity {
         store_list = new ArrayList<>();
         regId = FirebaseInstanceId.getInstance().getToken();
         mClient = new OkHttpClient();
+
+        if (phoneno.startsWith("+91")){
+            country_data="INDIA";
+        }
+        else {
+            country_data="NIGERIA";
+        }
+
         sp_bloodgr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
